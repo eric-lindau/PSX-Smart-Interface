@@ -1,7 +1,7 @@
 # Aerowinx PSX Smart Interface
 An add-on for Aerowinx PSX that combines inputs from multi-pilot setups that are not mechanically linked.
 
-This add-on allows a user to differentiate hardware components as either "Captain" or "First Officer" controls, combining inputs logically while interfacing with the main PSX server. This allows setups without mechanically synchronized pilot and co-pilot controls to operate logically.
+This add-on allows a user to differentiate hardware components as either "Captain" or "First Officer" controls, combining inputs logically while interfacing with the main PSX server. This allows physical setups without mechanically synchronized pilot and co-pilot controls to operate logically.
 
 ## Usage
 **Note:** This software is an add-on for [*Aerowinx PSX*](http://www.aerowinx.com/). PSX is required and should be running for this add-on to operate properly.
