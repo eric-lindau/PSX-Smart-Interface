@@ -4,6 +4,9 @@ An interface for Aerowinx PSX that combines inputs from multi-pilot setups that 
 This interface allows the user to define which hardware components serve specific functions as they relate to PSX, combining inputs
 logically while interfacing with the main PSX server, updating values as needed.
 
+## Usage
+**Note:** This software cannot be used properly without [*Aerowinx PSX*](http://www.aerowinx.com/).
+
 ## Built with
 * [JInput](https://github.com/jinput/jinput) - Used to detect and interface with hardware controllers
 * [Aerowinx Network](http://aerowinx.com/assets/networkers/Network%20Documentation.txt) - Used to interface with PSX over network (**documentation only**)
