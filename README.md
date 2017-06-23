@@ -6,6 +6,7 @@ logically while interfacing with the main PSX server, updating values as needed.
 
 ## Usage
 **Note:** This software cannot be used properly without [*Aerowinx PSX*](http://www.aerowinx.com/).
+
 Currently, the *SmartInterface* folder contains an Intellij IDEA project and Java source code for the latest version of the software.
 
 ## Built with
