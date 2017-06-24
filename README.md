@@ -18,5 +18,3 @@ Currently, the *SmartInterface* folder contains an Intellij IDEA project, Java s
 ## Built with
 * [JInput](https://github.com/jinput/jinput) - Used to detect and interface with hardware controllers
 * [Aerowinx Network](http://aerowinx.com/assets/networkers/Network%20Documentation.txt) - Used to interface with PSX over network (**documentation only**)
-
-### This software is currently in development.
