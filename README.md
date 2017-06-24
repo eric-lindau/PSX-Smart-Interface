@@ -1,6 +1,5 @@
 # Aerowinx PSX Smart Interface
-&nbsp;
-[![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)]()
+[![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](LICENSE.md)
 
 An add-on for Aerowinx PSX that combines inputs from multi-pilot setups that are not mechanically linked.
 
@@ -18,8 +17,5 @@ Currently, the *SmartInterface* folder contains an Intellij IDEA project, Java s
 ## Built with
 * [JInput](https://github.com/jinput/jinput) - Used to detect and interface with hardware controllers
 * [Aerowinx Network](http://aerowinx.com/assets/networkers/Network%20Documentation.txt) - Used to interface with PSX over network (**documentation only**)
-
-## License
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ### This software is currently in development.
