@@ -10,7 +10,7 @@ This add-on allows a user to differentiate hardware components as either "Captai
 This add-on relies on TCP port **10747** to interface with the PSX server, so the server must be active with port 10747 unrestricted on the network.
 
 ### General
-Currently, the *SmartInterface* folder contains an Intellij IDEA project, Java source code, and Java binaries for the latest version of the software. There is not currently a *.jar* executable to run the add-on, as it is not yet completed.
+Currently, the *SmartInterface* folder contains an Intellij IDEA project, Java source code, and Java binaries for the latest version of the software. There is not currently a *.jar* executable to run the add-on.
 
 ## Built with
 * [JInput](https://github.com/jinput/jinput) - Used to detect and interface with hardware controllers
