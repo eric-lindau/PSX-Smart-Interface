@@ -3,12 +3,17 @@ import net.java.games.input.Controller;
 import net.java.games.input.Component;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 
 /**
+ * Primary class that handles client creation, UI, calculations, and
+ * server interaction.
  *
+ * @author Eric Lindau
+ * @version 1.0
  */
-public class Interface {
+public class SmartInterface {
 
     static int aileronCpt, aileronFo;
     static int elevatorCpt, elevatorFo;
@@ -23,6 +28,8 @@ public class Interface {
     }
 
     public static void main(String[] args) throws IOException {
+        Client client = new Client("localhost", 10747);
+
         // Get a list of all recognized system controllers
         Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
         for(int i=0; i<controllers.length; i++)
@@ -32,14 +39,15 @@ public class Interface {
         // UI INITIALIZATION START
         JPanel panel = new JPanel();
 
-        JFrame frame = new JFrame("PSX Smart Interface");
-        frame.setSize(800, 600);
+        JFrame frame = new JFrame("PSX Smart SmartInterface");
+        frame.setPreferredSize(new Dimension(800, 600));
         frame.setLocation(600, 100);
         frame.getContentPane().add(panel);
         frame.pack();
         frame.setVisible(true);
         // UI INITIALIZATION END
 
+        // TO BE REMOVED LATER
         System.exit(0);
     }
 
