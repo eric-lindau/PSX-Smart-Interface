@@ -1,5 +1,6 @@
 # Aerowinx PSX Smart Interface
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](LICENSE.md)
+[![Packagist](https://img.shields.io/badge/status-in%20development-orange.svg]()
 
 An add-on for Aerowinx PSX that combines inputs from multi-pilot setups that are not mechanically linked.
 
