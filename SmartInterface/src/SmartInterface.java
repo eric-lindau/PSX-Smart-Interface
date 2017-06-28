@@ -19,33 +19,45 @@ import java.util.Arrays;
  */
 public class SmartInterface {
 
+    private static ArrayList<Controller> controllers;
+
     static int aileronCpt, aileronFo;
     static int elevatorCpt, elevatorFo;
     static int rudderCpt, rudderFo;
     static int tillerCpt, tillerFo;
 
-    private static void printComponents(Controller controller) {
-        System.out.println(controller.getName().toUpperCase());
-        Component[] components = controller.getComponents();
-        for(int j=0; j < components.length; j++)
-            System.out.println("Component " + j + ": " + components[j].getName());
-    }
-
     public static void main(String[] args) throws IOException {
         Client client = new Client("localhost", 10747);
 
-        // Get a list of all recognized system controllers
-        ArrayList<Controller> controllers = new ArrayList<>
-                (Arrays.asList(ControllerEnvironment.getDefaultEnvironment()
-                        .getControllers()));
+        getControllers();
+
+        initUI();
+
+        try {
+            while (true)
+                pollControllers();
+        } catch(Exception e) {System.exit(0);}
+    }
+
+    private static void getControllers() {
+        controllers = new ArrayList<>(Arrays.asList(ControllerEnvironment
+                .getDefaultEnvironment().getControllers()));
         for(int i = 0; i < controllers.size(); i++)
-            if(controllers.get(i).getName().toUpperCase().contains("KEYBOARD") ||
-                    controllers.get(i).getName().toUpperCase().contains("MOUSE")) {
+            if(shouldIgnore(controllers.get(i))) {
                 controllers.remove(i);
                 i--;
             }
+    }
 
-        // UI INITIALIZATION START
+    private static void pollControllers() {
+        for(Controller controller : controllers) {
+            controller.poll();
+            for(Component component : controller.getComponents())
+                System.out.println(component.getName() + ": " + component.getPollData());
+        }
+    }
+
+    private static void initUI() {
         int components = 0;
         for(Controller controller : controllers)
             for(Component component : controller.getComponents())
@@ -53,12 +65,12 @@ public class SmartInterface {
         GridLayout grid = new GridLayout(components, 4, 10, 0);
         JPanel panel = new JPanel();
         panel.setLayout(grid);
-        panel.setPreferredSize(new Dimension(800, components*20));
+        panel.setPreferredSize(new Dimension(800, components*30));
         JLabel label;
         int counter = 0;
         for(Controller controller : controllers) {
             for(Component component : controller.getComponents()) {
-                label = new JLabel("  " + Integer.toString(counter) + ". " + component.getName());
+                label = new JLabel("  " + Integer.toString(counter) + ". " + controller.getName() + " - " +  component.getName());
                 panel.add(label);
                 counter++;
             }
@@ -80,10 +92,12 @@ public class SmartInterface {
             }
         });
         frame.setVisible(true);
-        // UI INITIALIZATION END
+    }
 
-        // TO BE REMOVED LATER
-        //System.exit(0);
+    private static boolean shouldIgnore(Controller controller) {
+        return controller.getName().toUpperCase().contains("KEYBOARD") ||
+                controller.getName().toUpperCase().contains("MOUSE") ||
+                controller.getName().toUpperCase().contains("RAZER");
     }
 
 }
