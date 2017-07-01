@@ -26,9 +26,9 @@ public class Client {
         try {
             this.socket = new Socket(address, port);
             this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.output = new PrintWriter(socket.getOutputStream());
+            this.output = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException ioe) {
-            System.out.println("Invalid input!");
+            System.out.println("Invalid input or connection failed!");
         }
     }
 
@@ -43,6 +43,11 @@ public class Client {
             System.exit(1);
         }
 
+    }
+
+    public void send(String data) {
+        if(!data.isEmpty())
+            this.output.println(data);
     }
 
 }
