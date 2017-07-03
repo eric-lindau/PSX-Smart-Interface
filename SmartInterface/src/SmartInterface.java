@@ -9,7 +9,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -42,14 +41,15 @@ public class SmartInterface {
 
     // TODO Use these variables instead of too many local ones
     // TODO See if variables can be local
-    private static Component[] currComponents;
     private static Component currComponent;
     private static JLabel currLabel;
 
-    static Component aileronCpt, aileronFo;
-    static Component elevatorCpt, elevatorFo;
-    static Component rudderCpt, rudderFo;
-    static Component tillerCpt, tillerFo;
+    private static Component aileronCpt, aileronFo;
+    private static Component elevatorCpt, elevatorFo;
+    private static Component rudderCpt, rudderFo;
+    private static Component tillerCpt, tillerFo;
+
+    private static int aileron, elevator, rudder, tiller = 0;
 
     /**
      * Standard main method.
@@ -58,8 +58,9 @@ public class SmartInterface {
         client = new Client("localhost", 10747);
 
         getControllers();
-
         initUI();
+        for(int i = 0; i < 500; i++)
+            client.receive();
 
         try {
             while (true)
@@ -71,26 +72,43 @@ public class SmartInterface {
         return Math.round(component.getPollData() * 999) % 1000;
     }
 
+    private static boolean isPushed(Component component) {
+        return component.getPollData() > 0;
+    }
+
     /**
      * Updates all controller values and UI labels
      */
-    private static void update() {
-        for(Controller controller : controllers) {
+    private static void update() throws IOException {
+        for(Controller controller : controllers)
             controller.poll();
-            currComponents = controller.getComponents();
-            for(int i = 0; i < currComponents.length; i++) {
-                currComponent = currComponents[i];
-                currLabel = valueLabels.get(i);
-                if(!currComponent.isAnalog())
-                    if(currComponent.getPollData() > 0)
-                        currLabel.setText("Pushed");
-                    else
-                        currLabel.setText("");
+        for(int i = 0; i < components.size(); i++) {
+            currComponent = components.get(i);
+            currLabel = valueLabels.get(i);
+            if (!currComponent.isAnalog())
+                if (isPushed(currComponent))
+                    currLabel.setText("Pushed");
                 else
-                    currLabel.setText(Integer.toString(getAnalogValue(
-                            currComponent)));
-            }
+                    currLabel.setText("");
+            else
+                currLabel.setText(Integer.toString(getAnalogValue(
+                        currComponent)));
         }
+
+        aileron = 0;
+        if(aileronCpt != null)
+            aileron += getAnalogValue(aileronCpt);
+        if(aileronFo != null)
+            aileron += getAnalogValue(aileronFo);
+        if(aileron < -999)
+            aileron = -999;
+        else if(aileron > 999)
+            aileron = 999;
+
+//        System.out.println("Qs120=0;" + Integer.toString(aileron) + ";0;");
+//        client.send("Qs120=0;" + Integer.toString(aileron) + ";0;");
+        //TODO Remove this (shouldn't apply to throttle)
+        client.send("Qs436=0;0;" + aileron + ";0");
     }
 
     /**
@@ -136,15 +154,34 @@ public class SmartInterface {
         ItemListener itemListener = new ItemListener() {
             public void itemStateChanged(ItemEvent itemEvent) {
                 ComboBox combo = (ComboBox)itemEvent.getSource();
-                System.out.println(combo.getIndex());
-//                switch((String)itemEvent.getItem()) {
-//                    case "Aileron (1)":
-//                        aileronCpt = components.get(index);
-//                        break;
-//                    case "Aileron (2)":
-//                        aileronFo = components.get(index);
-//                        break;
-//                }
+                int index = combo.getIndex();
+                currComponent = components.get(index);
+                switch((String)itemEvent.getItem()) {
+                    case "Aileron (1)":
+                        aileronCpt = currComponent;
+                        break;
+                    case "Aileron (2)":
+                        aileronFo = currComponent;
+                        break;
+                    case "Elevator (1)":
+                        elevatorCpt = currComponent;
+                        break;
+                    case "Elevator (2)":
+                        elevatorFo = currComponent;
+                        break;
+                    case "Rudder (1)":
+                        rudderCpt = currComponent;
+                        break;
+                    case "Rudder(2)":
+                        rudderFo = currComponent;
+                        break;
+                    case "Tiller (1)":
+                        tillerCpt = currComponent;
+                        break;
+                    case "Tiller(2)":
+                        tillerFo = currComponent;
+                        break;
+                }
             }
         };
 

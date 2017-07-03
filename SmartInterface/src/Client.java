@@ -50,4 +50,8 @@ public class Client {
             this.output.println(data);
     }
 
+    public void receive() throws IOException {
+        input.read();
+    }
+
 }
