@@ -27,6 +27,9 @@ import java.util.Arrays;
  */
 public class SmartInterface {
 
+    // TODO Cleanup + efficiency
+    // TODO Minimize repeated use of get() calls (efficiency)
+
     private static Client client;
 
     /**
@@ -38,6 +41,7 @@ public class SmartInterface {
     private static ArrayList<JLabel> valueLabels;
 
     // TODO Use these variables instead of too many local ones
+    // TODO See if variables can be local
     private static Component[] currComponents;
     private static Component currComponent;
     private static JLabel currLabel;
@@ -83,7 +87,8 @@ public class SmartInterface {
                     else
                         currLabel.setText("");
                 else
-                    currLabel.setText(Integer.toString(getAnalogValue(currComponent)));
+                    currLabel.setText(Integer.toString(getAnalogValue(
+                            currComponent)));
             }
         }
     }
@@ -106,26 +111,16 @@ public class SmartInterface {
      * Initializes the UI
      */
     private static void initUI() {
-        //* GridLayout init and config
-        int components = 0;
-        // Get # of components
-        for(Controller controller : controllers)
-            components += controller.getComponents().length;
-        // Grid has 3 columns and as many rows as # of components
-        GridLayout grid = new GridLayout(components, 3, 10, 0);
-        //*
+        components = new ArrayList<>();
 
         //* JPanel init and config
         JPanel panel = new JPanel();
-        panel.setLayout(grid);
-        // Panel should be over-sized for scrollbar
-        panel.setPreferredSize(new Dimension(780, components*30));
         //*
 
         //* Looped addition of each component to UI
         // JLabel/JComboBox declarations used to temporarily/efficiently hold
         // swing components as they are added to the panel
-        JComboBox comboBox;
+        ComboBox comboBox;
         JLabel label;
         // Permanent array initialized to be used for options in each JComboBox
         String[] dropBoxStrings = {"None", "Aileron (1)", "Aileron (2)",
@@ -137,17 +132,27 @@ public class SmartInterface {
         // Counter used to number component labels
         int counter = 0;
 
+        // TODO: Fix setting back to "None"
         ItemListener itemListener = new ItemListener() {
             public void itemStateChanged(ItemEvent itemEvent) {
-                System.out.println("Item: " + itemEvent.getItem());
-                // Second/third number inside brackets / 30 = number/index of component to set!
-                System.out.println(itemEvent.getItemSelectable());
+                ComboBox combo = (ComboBox)itemEvent.getSource();
+                System.out.println(combo.getIndex());
+//                switch((String)itemEvent.getItem()) {
+//                    case "Aileron (1)":
+//                        aileronCpt = components.get(index);
+//                        break;
+//                    case "Aileron (2)":
+//                        aileronFo = components.get(index);
+//                        break;
+//                }
             }
         };
 
         // Go through each controller and add its components to the UI
         for(Controller controller : controllers) {
             for(Component component : controller.getComponents()) {
+                // Add component to master list of components
+                components.add(component);
                 // Label #1: Current number and name of component
                 label = new JLabel("  " + Integer.toString(counter) + ". " +
                         controller.getName() + " - " +  component.getName());
@@ -158,15 +163,18 @@ public class SmartInterface {
                 panel.add(label);
                 valueLabels.add(label);
                 // ComboBox: Select which components act for which operations
-                comboBox = new JComboBox(dropBoxStrings);
+                comboBox = new ComboBox(dropBoxStrings, components.size() - 1);
                 comboBox.addItemListener(itemListener);
                 panel.add(comboBox);
             }
         }
         //*
 
+        GridLayout grid = new GridLayout(components.size(), 3, 10, 0);
+        panel.setLayout(grid);
+        panel.setPreferredSize(new Dimension(780, components.size() * 30));
+
         //* JScrollPane init and config
-        // Permanent JScrollPane with only vertical scrollbar
         JScrollPane scrollPane = new JScrollPane(panel,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -178,7 +186,6 @@ public class SmartInterface {
         JFrame frame = new JFrame("PSX Smart SmartInterface");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
-        // Add scroll pane containing panel
         frame.getContentPane().add(scrollPane);
         // Pack to ensure preferred sizes are used
         frame.pack();
