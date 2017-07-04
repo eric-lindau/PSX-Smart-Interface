@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,32 +11,33 @@ import java.net.Socket;
  *
  * @author Eric Lindau
  */
-public class Client {
+class Client {
 
+    // Socket
     private Socket socket;
+    // Input stream
     private BufferedReader input;
+    // Output stream
     private PrintWriter output;
 
-    /**
-     * Client constructor.
-     *
-     * @param address The IPv4 address of the PSX server.
-     * @param port The port on which the server is listening over the network.
-     */
+    // Constructor
     Client(String address, int port) {
         try {
             this.socket = new Socket(address, port);
             this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.output = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException ioe) {
-            System.out.println("Invalid input or connection failed!");
+            String error = "Error connecting to PSX! Please ensure that a PSX" +
+                    "server is running and that port 10747 is unrestricted.";
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
+                    error, "PSX SmartInterface Error",
+                    JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
         }
     }
 
-    /**
-     * Properly destroys the socket and connection.
-     */
-    public void destroyConnection() {
+    // Kill connection
+    void destroyConnection() {
         try {
             this.socket.close();
         } catch (Exception e) {
@@ -45,13 +47,10 @@ public class Client {
 
     }
 
-    public void send(String data) {
+    // Send data to PSX server
+    void send(String data) {
         if(!data.isEmpty())
             this.output.println(data);
-    }
-
-    public void receive() throws IOException {
-        input.read();
     }
 
 }

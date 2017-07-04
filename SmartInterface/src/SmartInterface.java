@@ -22,69 +22,89 @@ import java.util.Arrays;
  * calculations.
  *
  * @author Eric Lindau
- * @version 0.0
+ * @version 1.0
  */
-public class SmartInterface {
+class SmartInterface {
 
-    // TODO Cleanup + efficiency
-    // TODO Minimize repeated use of get() calls (efficiency)
-
+    // PSX network client
     private static Client client;
 
-    /**
-     * List containing all the necessary hardware controllers
-     */
+    // Stores usable controllers
     private static ArrayList<Controller> controllers;
-    // TODO Implement components to contain components in the order that they are added to UI
-    private static ArrayList<Component> components;
+    // Stores all components from usable controllers for polling
+    private static ArrayList<Component> components = new ArrayList<>();
+    // Stores all labels for modification
     private static ArrayList<JLabel> valueLabels;
 
-    // TODO Use these variables instead of too many local ones
-    // TODO See if variables can be local
+    // Stores current working component for memory efficiency
     private static Component currComponent;
+    // Stores current working label for memory efficiency
     private static JLabel currLabel;
 
+    //* Stored components for calculations, as specified by the user
     private static Component aileronCpt, aileronFo;
     private static Component elevatorCpt, elevatorFo;
     private static Component rudderCpt, rudderFo;
     private static Component tillerCpt, tillerFo;
+    //*
 
-    private static int aileron, elevator, rudder, tiller = 0;
-
-    /**
-     * Standard main method.
-     */
+    // Standard main
     public static void main(String[] args) throws IOException {
+        //Connect to server
         client = new Client("localhost", 10747);
 
         getControllers();
         initUI();
-        for(int i = 0; i < 500; i++)
-            client.receive();
 
         try {
             while (true)
                 update();
-        } catch(Exception e) {System.exit(0);}
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
+                    e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
+    // Inflate value to working range (-999:999) and mod to prevent over 1000
     private static int getAnalogValue(Component component) {
         return Math.round(component.getPollData() * 999) % 1000;
     }
 
+    // Check if non-analog component is "pushed" (buttons)
     private static boolean isPushed(Component component) {
         return component.getPollData() > 0;
     }
 
-    /**
-     * Updates all controller values and UI labels
-     */
+    // Gracefully calculate combined value of two analog inputs to prevent
+    // "fighting"
+    private static int combineAnalog(Component first, Component second) {
+        //* Start at 0, add both values, then check bounds
+        int ret = 0;
+        if(first != null)
+            ret += getAnalogValue(first);
+        if(second != null)
+            ret += getAnalogValue(second);
+        if(ret < -999)
+            ret = -999;
+        else if(ret > 999)
+            ret = 999;
+        //*
+
+        return ret;
+    }
+
+    // Constantly poll controllers, update labels, update PSX server
+    // TODO Catch exception
     private static void update() throws IOException {
+        //* Poll controllers
         for(Controller controller : controllers)
             controller.poll();
+        //*
+
+        //* Update labels
         for(int i = 0; i < components.size(); i++) {
-            currComponent = components.get(i);
             currLabel = valueLabels.get(i);
+            currComponent = components.get(i);
             if (!currComponent.isAnalog())
                 if (isPushed(currComponent))
                     currLabel.setText("Pushed");
@@ -94,28 +114,26 @@ public class SmartInterface {
                 currLabel.setText(Integer.toString(getAnalogValue(
                         currComponent)));
         }
+        //*
 
-        aileron = 0;
-        if(aileronCpt != null)
-            aileron += getAnalogValue(aileronCpt);
-        if(aileronFo != null)
-            aileron += getAnalogValue(aileronFo);
-        if(aileron < -999)
-            aileron = -999;
-        else if(aileron > 999)
-            aileron = 999;
+        //* Update server
+        int aileron = combineAnalog(aileronCpt, aileronFo);
+        int elevator = combineAnalog(elevatorCpt, elevatorFo);
+        int rudder = combineAnalog(rudderCpt, rudderFo);
+        int tiller = combineAnalog(tillerCpt, tillerFo);
 
-//        System.out.println("Qs120=0;" + Integer.toString(aileron) + ";0;");
-//        client.send("Qs120=0;" + Integer.toString(aileron) + ";0;");
-        //TODO Remove this (shouldn't apply to throttle)
-        client.send("Qs436=0;0;" + aileron + ";0");
+        // PSX network protocol used
+        // Update elevator, ailerons, rudder
+        client.send("Qs120=" + Integer.toString(elevator) + ";" +
+                Integer.toString(aileron) + ";" + Integer.toString(rudder));
+        // Update tiller
+        client.send("Qh426=" + Integer.toString(tiller));
+        //*
     }
 
-    /**
-     * Retrieves all necessary active controllers connected to the system.
-     * Keyboards and mice are ignored because they are useless to PSX.
-     */
+    // Get usable controllers (no keyboards or mice preferably)
     private static void getControllers() {
+        // Copy controllers into ArrayList so they can be removed easily
         controllers = new ArrayList<>(Arrays.asList(ControllerEnvironment
                 .getDefaultEnvironment().getControllers()));
         for(int i = 0; i < controllers.size(); i++)
@@ -125,12 +143,8 @@ public class SmartInterface {
             }
     }
 
-    /**
-     * Initializes the UI
-     */
+    // Initialize user interface in grid layout
     private static void initUI() {
-        components = new ArrayList<>();
-
         //* JPanel init and config
         JPanel panel = new JPanel();
         //*
@@ -150,48 +164,54 @@ public class SmartInterface {
         // Counter used to number component labels
         int counter = 0;
 
+        //* Detect and react to JComboBox changes
         // TODO: Fix setting back to "None"
         ItemListener itemListener = new ItemListener() {
             public void itemStateChanged(ItemEvent itemEvent) {
-                ComboBox combo = (ComboBox)itemEvent.getSource();
-                int index = combo.getIndex();
-                currComponent = components.get(index);
-                switch((String)itemEvent.getItem()) {
-                    case "Aileron (1)":
-                        aileronCpt = currComponent;
-                        break;
-                    case "Aileron (2)":
-                        aileronFo = currComponent;
-                        break;
-                    case "Elevator (1)":
-                        elevatorCpt = currComponent;
-                        break;
-                    case "Elevator (2)":
-                        elevatorFo = currComponent;
-                        break;
-                    case "Rudder (1)":
-                        rudderCpt = currComponent;
-                        break;
-                    case "Rudder(2)":
-                        rudderFo = currComponent;
-                        break;
-                    case "Tiller (1)":
-                        tillerCpt = currComponent;
-                        break;
-                    case "Tiller(2)":
-                        tillerFo = currComponent;
-                        break;
+                // Only change component if new item selected, not unselected
+                if(itemEvent.getStateChange() == ItemEvent.SELECTED) {
+                    ComboBox combo = (ComboBox) itemEvent.getSource();
+                    int index = combo.getIndex();
+                    // Switch to determine what this component should be used for
+                    switch ((String) itemEvent.getItem()) {
+                        case "Aileron (1)":
+                            aileronCpt = components.get(index);
+                            break;
+                        case "Aileron (2)":
+                            aileronFo = components.get(index);
+                            break;
+                        case "Elevator (1)":
+                            elevatorCpt = components.get(index);
+                            break;
+                        case "Elevator (2)":
+                            elevatorFo = components.get(index);
+                            break;
+                        case "Rudder (1)":
+                            rudderCpt = components.get(index);
+                            break;
+                        case "Rudder(2)":
+                            rudderFo = components.get(index);
+                            break;
+                        case "Tiller (1)":
+                            tillerCpt = components.get(index);
+                            break;
+                        case "Tiller(2)":
+                            tillerFo = components.get(index);
+                            break;
+                    }
                 }
             }
         };
+        //*
 
-        // Go through each controller and add its components to the UI
+        //* Go through each controller and add its components to the UI
         for(Controller controller : controllers) {
             for(Component component : controller.getComponents()) {
                 // Add component to master list of components
                 components.add(component);
                 // Label #1: Current number and name of component
-                label = new JLabel("  " + Integer.toString(counter) + ". " +
+                label = new JLabel("  " +
+                        Integer.toString(components.size() - 1) + ". " +
                         controller.getName() + " - " +  component.getName());
                 panel.add(label);
                 counter++;
@@ -207,9 +227,11 @@ public class SmartInterface {
         }
         //*
 
+        //* Grid layout setup
         GridLayout grid = new GridLayout(components.size(), 3, 10, 0);
         panel.setLayout(grid);
         panel.setPreferredSize(new Dimension(780, components.size() * 30));
+        //*
 
         //* JScrollPane init and config
         JScrollPane scrollPane = new JScrollPane(panel,
@@ -220,7 +242,7 @@ public class SmartInterface {
         //*
 
         //* JFrame init and config
-        JFrame frame = new JFrame("PSX Smart SmartInterface");
+        JFrame frame = new JFrame("PSX SmartInterface");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);
@@ -237,13 +259,7 @@ public class SmartInterface {
         //*
     }
 
-    /**
-     * Determines whether or not a controller should be ignored - specifically,
-     * if it is a keyboard or a mouse, thus being useless as a controller.
-     *
-     * @param controller the controller that should potentially be ignored.
-     * @return Returns a boolean dictating whether or not the controller should be ignored.
-     */
+    // Determine if controller should be ignored (otherwise it is usable)
     private static boolean shouldIgnore(Controller controller) {
         return controller.getName().toUpperCase().contains("KEYBOARD") ||
                 controller.getName().toUpperCase().contains("MOUSE") ||
