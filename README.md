@@ -15,6 +15,7 @@ Extract the *SmartInterface* folder from the .zip archive. Inside that folder, r
 
 ### Networking
 This add-on relies on TCP port **10747** to interface with the PSX server, so the server must be active with port 10747 unrestricted on the network.
+
 **Note:** In Version 1.0 this add-on must be running on the same machine as the server because it uses *localhost* as an address - this will be changed in future versions.
 
 ## Built with
