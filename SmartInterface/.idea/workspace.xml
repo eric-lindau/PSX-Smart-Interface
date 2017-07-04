@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="SmartInterface:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="68a430c0-3f33-41e6-b641-934006664378" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -29,11 +34,15 @@
       <file leaf-file-name="SmartInterface.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/SmartInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="49" column="0" lean-forward="true" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+            <state relative-caret-position="289">
+              <caret line="40" column="57" lean-forward="true" selection-start-line="40" selection-start-column="57" selection-end-line="40" selection-end-column="57" />
               <folding>
                 <element signature="docComment;class#SmartInterface#0" expanded="false" />
                 <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+                <element signature="e#2361#2362#0" expanded="true" />
+                <element signature="e#2432#2433#0" expanded="true" />
+                <element signature="e#2551#2552#0" expanded="true" />
+                <element signature="e#2601#2602#0" expanded="true" />
                 <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
                 <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
                 <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -50,7 +59,7 @@
       <file leaf-file-name="AddonExampleNetThread.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../References/AddonExample/AddonExampleNetThread.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-357">
+            <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
                 <element signature="e#0#7985#0" expanded="true" />
@@ -103,10 +112,9 @@
     <option name="jreName" value="#JAVA_INTERNAL" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="2576" />
-    <option name="height" value="1416" />
+    <option name="x" value="-7" />
+    <option name="width" value="1294" />
+    <option name="height" value="1407" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -154,8 +162,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -168,50 +174,16 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SmartInterface" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SmartInterface" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SmartInterface" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SmartInterface" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="out" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="production" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SmartInterface" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -480,8 +452,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
-    <editor active="true" />
+    <frame x="-7" y="0" width="1294" height="1407" extended-state="0" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -492,13 +463,13 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18683001" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18683001" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18984374" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18935837" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -534,6 +505,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -574,6 +549,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -614,6 +593,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -654,6 +637,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -673,6 +660,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -705,6 +696,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -737,6 +732,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -769,6 +768,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -801,6 +804,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -820,6 +827,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -839,46 +850,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#6050:7740" expanded="false" />
-            <element signature="e#9789#9965#0" expanded="true" />
-            <element signature="e#9964#9965#0" expanded="true" />
-            <element signature="method#shouldIgnore#0;class#SmartInterface#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ADDON_EXAMPLE-src/AddonExample.java" />
-    <entry file="file://$PROJECT_DIR$/src/SmartInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="docComment;class#SmartInterface#0" expanded="false" />
-            <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#6050:7740" expanded="false" />
-            <element signature="e#9789#9965#0" expanded="true" />
-            <element signature="e#9964#9965#0" expanded="true" />
-            <element signature="method#shouldIgnore#0;class#SmartInterface#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ADDON_EXAMPLE-src/AddonExample.java" />
-    <entry file="file://$PROJECT_DIR$/src/SmartInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="docComment;class#SmartInterface#0" expanded="false" />
-            <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -899,6 +874,58 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
+            <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#6050:7740" expanded="false" />
+            <element signature="e#9789#9965#0" expanded="true" />
+            <element signature="e#9964#9965#0" expanded="true" />
+            <element signature="method#shouldIgnore#0;class#SmartInterface#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ADDON_EXAMPLE-src/AddonExample.java" />
+    <entry file="file://$PROJECT_DIR$/src/SmartInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="docComment;class#SmartInterface#0" expanded="false" />
+            <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
+            <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#6050:7740" expanded="false" />
+            <element signature="e#9789#9965#0" expanded="true" />
+            <element signature="e#9964#9965#0" expanded="true" />
+            <element signature="method#shouldIgnore#0;class#SmartInterface#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ADDON_EXAMPLE-src/AddonExample.java" />
+    <entry file="file://$PROJECT_DIR$/src/SmartInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="docComment;class#SmartInterface#0" expanded="false" />
+            <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -918,6 +945,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -937,6 +968,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -956,6 +991,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -975,6 +1014,10 @@
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -1004,7 +1047,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="510">
           <caret line="53" column="9" lean-forward="false" selection-start-line="53" selection-start-column="9" selection-end-line="53" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1012,7 +1054,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1041,16 +1082,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding>
-            <element signature="docComment;class#ComboBox#0" expanded="false" />
-            <element signature="method#ComboBox#0;class#ComboBox#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../References/AddonExample/AddonExampleNetThread.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-357">
+        <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#7985#0" expanded="true" />
@@ -1060,11 +1097,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SmartInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="49" column="0" lean-forward="true" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+        <state relative-caret-position="289">
+          <caret line="40" column="57" lean-forward="true" selection-start-line="40" selection-start-column="57" selection-end-line="40" selection-end-column="57" />
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#2361#2362#0" expanded="true" />
+            <element signature="e#2432#2433#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2601#2602#0" expanded="true" />
             <element signature="method#combineAnalog#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -1083,10 +1124,12 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
+          <last-edited>SmartInterface:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
@@ -1153,7 +1196,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>dist</last-edited>
+          <last-edited>jinput</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

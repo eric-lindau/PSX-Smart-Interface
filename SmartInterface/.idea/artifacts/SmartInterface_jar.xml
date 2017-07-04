@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SmartInterface:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SmartInterface_jar</output-path>
+    <root id="archive" name="SmartInterface.jar">
+      <element id="module-output" name="SmartInterface" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../JInput/dist/jinput.jar" path-in-jar="/" />
+      <element id="library" level="project" name="dist" />
+    </root>
+  </artifact>
+</component>
