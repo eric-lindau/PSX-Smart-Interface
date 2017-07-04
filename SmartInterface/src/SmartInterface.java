@@ -125,9 +125,13 @@ class SmartInterface {
 
         // PSX network protocol used
         // Update elevator, ailerons, rudder
+        if(elevatorCpt != null || elevatorFo != null ||
+                aileronCpt != null || aileronFo != null ||
+                rudderCpt != null || rudderFo != null)
         client.send("Qs120=" + Integer.toString(elevator) + ";" +
                 Integer.toString(aileron) + ";" + Integer.toString(rudder));
         // Update tiller
+        if(tillerCpt != null || tillerFo != null)
         client.send("Qh426=" + Integer.toString(tiller));
         //*
         Thread.sleep(4);
