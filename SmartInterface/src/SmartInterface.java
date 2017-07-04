@@ -49,6 +49,7 @@ class SmartInterface {
     //*
 
     // Standard main
+    // TODO Catch exception
     public static void main(String[] args) throws IOException {
         //Connect to server
         client = new Client("localhost", 10747);
@@ -57,7 +58,7 @@ class SmartInterface {
         initUI();
 
         try {
-            while (true)
+            while(true)
                 update();
         } catch(Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
@@ -95,7 +96,7 @@ class SmartInterface {
 
     // Constantly poll controllers, update labels, update PSX server
     // TODO Catch exception
-    private static void update() throws IOException {
+    private static void update() throws IOException, InterruptedException {
         //* Poll controllers
         for(Controller controller : controllers)
             controller.poll();
@@ -129,6 +130,7 @@ class SmartInterface {
         // Update tiller
         client.send("Qh426=" + Integer.toString(tiller));
         //*
+        Thread.sleep(4);
     }
 
     // Get usable controllers (no keyboards or mice preferably)

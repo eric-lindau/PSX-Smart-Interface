@@ -28,7 +28,7 @@ class Client {
             this.output = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException ioe) {
             String error = "Error connecting to PSX! Please ensure that a PSX" +
-                    "server is running and that port 10747 is unrestricted.";
+                    " server is running and that port 10747 is unrestricted.";
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
                     error, "PSX SmartInterface Error",
                     JOptionPane.ERROR_MESSAGE);
