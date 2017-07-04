@@ -49,8 +49,7 @@ class SmartInterface {
     //*
 
     // Standard main
-    // TODO Catch exception
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         //Connect to server
         client = new Client("localhost", 10747);
 
@@ -95,46 +94,50 @@ class SmartInterface {
     }
 
     // Constantly poll controllers, update labels, update PSX server
-    // TODO Catch exception
-    private static void update() throws IOException, InterruptedException {
-        //* Poll controllers
-        for(Controller controller : controllers)
-            controller.poll();
-        //*
+    private static void update() {
+        try {
+            //* Poll controllers
+            for (Controller controller : controllers)
+                controller.poll();
+            //*
 
-        //* Update labels
-        for(int i = 0; i < components.size(); i++) {
-            currLabel = valueLabels.get(i);
-            currComponent = components.get(i);
-            if (!currComponent.isAnalog())
-                if (isPushed(currComponent))
-                    currLabel.setText("Pushed");
+            //* Update labels
+            for (int i = 0; i < components.size(); i++) {
+                currLabel = valueLabels.get(i);
+                currComponent = components.get(i);
+                if (!currComponent.isAnalog())
+                    if (isPushed(currComponent))
+                        currLabel.setText("Pushed");
+                    else
+                        currLabel.setText("");
                 else
-                    currLabel.setText("");
-            else
-                currLabel.setText(Integer.toString(getAnalogValue(
-                        currComponent)));
+                    currLabel.setText(Integer.toString(getAnalogValue(
+                            currComponent)));
+            }
+            //*
+
+            //* Update server
+            int aileron = combineAnalog(aileronCpt, aileronFo);
+            int elevator = combineAnalog(elevatorCpt, elevatorFo);
+            int rudder = combineAnalog(rudderCpt, rudderFo);
+            int tiller = combineAnalog(tillerCpt, tillerFo);
+
+            // PSX network protocol used
+            // Update elevator, ailerons, rudder
+            if (elevatorCpt != null || elevatorFo != null ||
+                    aileronCpt != null || aileronFo != null ||
+                    rudderCpt != null || rudderFo != null)
+                client.send("Qs120=" + Integer.toString(elevator) + ";" +
+                        Integer.toString(aileron) + ";" + Integer.toString(rudder));
+            // Update tiller
+            if (tillerCpt != null || tillerFo != null)
+                client.send("Qh426=" + Integer.toString(tiller));
+            //*
+            Thread.sleep(4);
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
+                    e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        //*
-
-        //* Update server
-        int aileron = combineAnalog(aileronCpt, aileronFo);
-        int elevator = combineAnalog(elevatorCpt, elevatorFo);
-        int rudder = combineAnalog(rudderCpt, rudderFo);
-        int tiller = combineAnalog(tillerCpt, tillerFo);
-
-        // PSX network protocol used
-        // Update elevator, ailerons, rudder
-        if(elevatorCpt != null || elevatorFo != null ||
-                aileronCpt != null || aileronFo != null ||
-                rudderCpt != null || rudderFo != null)
-        client.send("Qs120=" + Integer.toString(elevator) + ";" +
-                Integer.toString(aileron) + ";" + Integer.toString(rudder));
-        // Update tiller
-        if(tillerCpt != null || tillerFo != null)
-        client.send("Qh426=" + Integer.toString(tiller));
-        //*
-        Thread.sleep(4);
     }
 
     // Get usable controllers (no keyboards or mice preferably)
