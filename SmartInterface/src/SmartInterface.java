@@ -42,16 +42,22 @@ class SmartInterface {
     private static JLabel currLabel;
 
     //* Stored components for calculations, as specified by the user
-    private static Component aileronCpt, aileronFo;
-    private static Component elevatorCpt, elevatorFo;
-    private static Component rudderCpt, rudderFo;
-    private static Component tillerCpt, tillerFo;
+    public static Component aileronCpt, aileronFo;
+    public static Component elevatorCpt, elevatorFo;
+    public static Component rudderCpt, rudderFo;
+    public static Component tillerCpt, tillerFo;
+
+    public static int aileron;
+    public static int elevator;
+    public static int rudder;
+    public static int tiller;
     //*
 
     // Standard main
     public static void main(String[] args) {
         //Connect to server
         client = new Client("localhost", 10747);
+        client.start();
 
         getControllers();
         initUI();
@@ -77,7 +83,7 @@ class SmartInterface {
 
     // Gracefully calculate combined value of two analog inputs to prevent
     // "fighting"
-    private static int combineAnalog(Component first, Component second) {
+    public static int combineAnalog(Component first, Component second) {
         //* Start at 0, add both values, then check bounds
         int ret = 0;
         if(first != null)
@@ -117,23 +123,9 @@ class SmartInterface {
             //*
 
             //* Update server
-            int aileron = combineAnalog(aileronCpt, aileronFo);
-            int elevator = combineAnalog(elevatorCpt, elevatorFo);
-            int rudder = combineAnalog(rudderCpt, rudderFo);
-            int tiller = combineAnalog(tillerCpt, tillerFo);
 
-            // PSX network protocol used
-            // Update elevator, ailerons, rudder
-            if (elevatorCpt != null || elevatorFo != null ||
-                    aileronCpt != null || aileronFo != null ||
-                    rudderCpt != null || rudderFo != null)
-                client.send("Qs120=" + Integer.toString(elevator) + ";" +
-                        Integer.toString(aileron) + ";" + Integer.toString(rudder));
-            // Update tiller
-            if (tillerCpt != null || tillerFo != null)
-                client.send("Qh426=" + Integer.toString(tiller));
             //*
-            Thread.sleep(4);
+            Thread.sleep(1);
         } catch(Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
                     e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

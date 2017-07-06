@@ -11,7 +11,7 @@ import java.net.Socket;
  *
  * @author Eric Lindau
  */
-class Client {
+class Client extends Thread {
 
     // Socket
     private Socket socket;
@@ -36,6 +36,30 @@ class Client {
         }
     }
 
+    public void run() {
+        try {
+            while(true) {
+                System.out.print("x");
+                SmartInterface.aileron = SmartInterface.combineAnalog(SmartInterface.aileronCpt, SmartInterface.aileronFo);
+                SmartInterface.elevator = SmartInterface.combineAnalog(SmartInterface.elevatorCpt, SmartInterface.elevatorFo);
+                SmartInterface.rudder = SmartInterface.combineAnalog(SmartInterface.rudderCpt, SmartInterface.rudderFo);
+                SmartInterface.tiller = SmartInterface.combineAnalog(SmartInterface.tillerCpt, SmartInterface.tillerFo);
+                receive();
+                if (SmartInterface.elevatorCpt != null || SmartInterface.elevatorFo != null ||
+                        SmartInterface.aileronCpt != null || SmartInterface.aileronFo != null ||
+                        SmartInterface.rudderCpt != null || SmartInterface.rudderFo != null)
+                    send("Qs120=" + Integer.toString(SmartInterface.elevator) + ";" +
+                            Integer.toString(SmartInterface.aileron) + ";" + Integer.toString(SmartInterface.rudder));
+                // Update tiller
+                if (SmartInterface.tillerCpt != null || SmartInterface.tillerFo != null)
+                    send("Qh426=" + Integer.toString(SmartInterface.tiller));
+                sleep(20);
+            }
+        } catch(Exception e) {
+
+        }
+    }
+
     // Kill connection
     void destroyConnection() {
         try {
@@ -51,6 +75,10 @@ class Client {
     void send(String data) {
         if(!data.isEmpty())
             this.output.println(data);
+    }
+
+    void receive() throws IOException {
+        input.readLine();
     }
 
 }
