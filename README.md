@@ -13,6 +13,8 @@ This add-on allows a user to differentiate hardware components as either "Captai
 ### General
 Extract the *SmartInterface* folder from the .zip archive. Inside that folder, run *SmartInterface.jar* by double-clicking on it.
 
+**Note:** The *SmartInterface.jar* file must be in the same directory as the included *.dll* files (natives) due to library dependencies. Alternatively, if the *.dll* files are moved to a directory that is part of the Java PATH, *SmartInterface.jar* can run independently.
+
 ### Networking
 This add-on relies on TCP port **10747** to interface with the PSX server, so the server must be active with port 10747 unrestricted on the network.
 
