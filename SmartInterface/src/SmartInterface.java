@@ -22,7 +22,7 @@ import java.util.Arrays;
  * calculations.
  *
  * @author Eric Lindau
- * @version 1.0
+ * @version 1.1
  */
 class SmartInterface {
 
@@ -46,16 +46,11 @@ class SmartInterface {
     public static Component elevatorCpt, elevatorFo;
     public static Component rudderCpt, rudderFo;
     public static Component tillerCpt, tillerFo;
-
-    public static int aileron;
-    public static int elevator;
-    public static int rudder;
-    public static int tiller;
     //*
 
     // Standard main
     public static void main(String[] args) {
-        //Connect to server
+        // Connect to server
         client = new Client("localhost", 10747);
         client.start();
 
@@ -66,8 +61,8 @@ class SmartInterface {
             while(true)
                 update();
         } catch(Exception e) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
-                    e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -117,14 +112,12 @@ class SmartInterface {
                     else
                         currLabel.setText("");
                 else
-                    currLabel.setText(Integer.toString(getAnalogValue(
-                            currComponent)));
+                    currLabel.setText(Integer.toString(getAnalogValue(currComponent)));
             }
             //*
 
-            //* Update server
-
-            //*
+            // Delay to prevent too much CPU usage
+            // TODO See if this delay can be greater
             Thread.sleep(1);
         } catch(Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
@@ -135,8 +128,8 @@ class SmartInterface {
     // Get usable controllers (no keyboards or mice preferably)
     private static void getControllers() {
         // Copy controllers into ArrayList so they can be removed easily
-        controllers = new ArrayList<>(Arrays.asList(ControllerEnvironment
-                .getDefaultEnvironment().getControllers()));
+        controllers = new ArrayList<>(Arrays.asList(ControllerEnvironment.getDefaultEnvironment()
+                .getControllers()));
         for(int i = 0; i < controllers.size(); i++)
             if(shouldIgnore(controllers.get(i))) {
                 controllers.remove(i);
@@ -210,16 +203,18 @@ class SmartInterface {
             for(Component component : controller.getComponents()) {
                 // Add component to master list of components
                 components.add(component);
+
                 // Label #1: Current number and name of component
-                label = new JLabel("  " +
-                        Integer.toString(components.size() - 1) + ". " +
+                label = new JLabel("  " + Integer.toString(components.size() - 1) + ". " +
                         controller.getName() + " - " +  component.getName());
                 panel.add(label);
                 counter++;
+
                 // Label #2: Current value of component
                 label = new JLabel("", SwingConstants.CENTER);
                 panel.add(label);
                 valueLabels.add(label);
+
                 // ComboBox: Select which components act for which operations
                 comboBox = new ComboBox(dropBoxStrings, components.size() - 1);
                 comboBox.addItemListener(itemListener);
