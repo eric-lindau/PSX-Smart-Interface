@@ -8,7 +8,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -42,10 +41,17 @@ class SmartInterface {
     private static JLabel currLabel;
 
     //* Stored components for calculations, as specified by the user
-    public static Component aileronCpt, aileronFo;
-    public static Component elevatorCpt, elevatorFo;
-    public static Component rudderCpt, rudderFo;
-    public static Component tillerCpt, tillerFo;
+    // Flight controls
+    static Component aileronCpt, aileronFo;
+    static Component elevatorCpt, elevatorFo;
+    static Component rudderCpt, rudderFo;
+
+    // Tillers
+    static Component tillerCpt, tillerFo;
+
+    // Toe brakes
+    static Component toeBrakeLCpt, toeBrakeRCpt;
+    static Component toeBrakeLFo, toeBrakeRFo;
     //*
 
     // Standard main
@@ -78,7 +84,7 @@ class SmartInterface {
 
     // Gracefully calculate combined value of two analog inputs to prevent
     // "fighting"
-    public static int combineAnalog(Component first, Component second) {
+    static int combineAnalog(Component first, Component second) {
         //* Start at 0, add both values, then check bounds
         int ret = 0;
         if(first != null)
@@ -106,8 +112,8 @@ class SmartInterface {
             for (int i = 0; i < components.size(); i++) {
                 currLabel = valueLabels.get(i);
                 currComponent = components.get(i);
-                if (!currComponent.isAnalog())
-                    if (isPushed(currComponent))
+                if(!currComponent.isAnalog())
+                    if(isPushed(currComponent))
                         currLabel.setText("Pushed");
                     else
                         currLabel.setText("");
@@ -149,14 +155,18 @@ class SmartInterface {
         ComboBox comboBox;
         JLabel label;
         // Permanent array initialized to be used for options in each JComboBox
-        String[] dropBoxStrings = {"None", "Aileron (1)", "Aileron (2)",
-                "Elevator (1)", "Elevator (2)", "Rudder (1)", "Rudder(2)",
-                "Tiller (1)", "Tiller (2)"};
+        String[] dropBoxStrings = new String[]{"None",
+                "Aileron (Captain)", "Aileron (First Officer)",
+                "Elevator (Captain)", "Elevator (First Officer)",
+                "Rudder (Captain)", "Rudder (First Officer)",
+                "Tiller (Captain)", "Tiller (First Officer)",
+                "Toe Brake Left (Captain)", "Toe Brake Right (Captain)",
+                "Toe Brake Left (First Officer)", "Toe Brake Right (First Officer)"
+        };
         // Permanent ArrayList initialized so that labels can be constantly
         // referenced and updated
         valueLabels = new ArrayList<>();
         // Counter used to number component labels
-        int counter = 0;
 
         //* Detect and react to JComboBox changes
         // TODO: Fix setting back to "None"
@@ -168,29 +178,41 @@ class SmartInterface {
                     int index = combo.getIndex();
                     // Switch to determine what this component should be used for
                     switch ((String) itemEvent.getItem()) {
-                        case "Aileron (1)":
+                        case "Aileron (Captain)":
                             aileronCpt = components.get(index);
                             break;
-                        case "Aileron (2)":
+                        case "Aileron (First Officer)":
                             aileronFo = components.get(index);
                             break;
-                        case "Elevator (1)":
+                        case "Elevator (Captain)":
                             elevatorCpt = components.get(index);
                             break;
-                        case "Elevator (2)":
+                        case "Elevator (First Officer)":
                             elevatorFo = components.get(index);
                             break;
-                        case "Rudder (1)":
+                        case "Rudder (Captain)":
                             rudderCpt = components.get(index);
                             break;
-                        case "Rudder(2)":
+                        case "Rudder(First Officer)":
                             rudderFo = components.get(index);
                             break;
-                        case "Tiller (1)":
+                        case "Tiller (Captain)":
                             tillerCpt = components.get(index);
                             break;
-                        case "Tiller(2)":
+                        case "Tiller(First Officer)":
                             tillerFo = components.get(index);
+                            break;
+                        case "Toe Brake Left (Captain)":
+                            toeBrakeLCpt = components.get(index);
+                            break;
+                        case "Toe Brake Right (Captain)":
+                            toeBrakeRCpt = components.get(index);
+                            break;
+                        case "Toe Brake Left (First Officer)":
+                            toeBrakeLFo = components.get(index);
+                            break;
+                        case "Toe Brake Right (First Officer)":
+                            toeBrakeRFo = components.get(index);
                             break;
                     }
                 }
@@ -208,7 +230,6 @@ class SmartInterface {
                 label = new JLabel("  " + Integer.toString(components.size() - 1) + ". " +
                         controller.getName() + " - " +  component.getName());
                 panel.add(label);
-                counter++;
 
                 // Label #2: Current value of component
                 label = new JLabel("", SwingConstants.CENTER);

@@ -20,8 +20,11 @@ class Client extends Thread {
     // Output stream
     private PrintWriter output;
 
-    // Buffers for combined analog flight control values
-    private int aileron, elevator, rudder, tiller;
+    //* Buffers for combined analog values
+    private int aileron, elevator, rudder;
+    private int tiller;
+    private int toeBrakeL, toeBrakeR;
+    //*
 
     // Constructor
     Client(String address, int port) {
@@ -42,34 +45,46 @@ class Client extends Thread {
     public void run() {
         try {
             while(true) {
-                //* Update combined analog flight controls
+                //* Update combined analog values
                 aileron = SmartInterface.combineAnalog(SmartInterface.aileronCpt,
                         SmartInterface.aileronFo);
                 elevator = SmartInterface.combineAnalog(SmartInterface.elevatorCpt,
                         SmartInterface.elevatorFo);
                 rudder = SmartInterface.combineAnalog(SmartInterface.rudderCpt,
                         SmartInterface.rudderFo);
+
                 tiller = SmartInterface.combineAnalog(SmartInterface.tillerCpt,
                         SmartInterface.tillerFo);
+
+                toeBrakeL = SmartInterface.combineAnalog(SmartInterface.toeBrakeLCpt,
+                        SmartInterface.toeBrakeLFo);
+                toeBrakeR = SmartInterface.combineAnalog(SmartInterface.toeBrakeRCpt,
+                        SmartInterface.toeBrakeRFo);
                 //*
 
                 // Receive to prevent PSX buffers filling
                 receive();
 
-                //* Update flight controls
-                if (SmartInterface.elevatorCpt != null || SmartInterface.elevatorFo != null ||
+                //* Update flight controls (PSX)
+                if(SmartInterface.elevatorCpt != null || SmartInterface.elevatorFo != null ||
                         SmartInterface.aileronCpt != null || SmartInterface.aileronFo != null ||
                         SmartInterface.rudderCpt != null || SmartInterface.rudderFo != null)
                     send("Qs120=" + Integer.toString(elevator) + ";" + Integer.toString(aileron)
                             + ";" + Integer.toString(rudder));
                 //*
 
-                //* Update tiller
-                if (SmartInterface.tillerCpt != null || SmartInterface.tillerFo != null)
+                //* Update tillers (PSX)
+                if(SmartInterface.tillerCpt != null || SmartInterface.tillerFo != null)
                     send("Qh426=" + Integer.toString(tiller));
                 //*
 
-                // Delay to prevent network flooding
+                //* Update toe brakes (PSX)
+                if(SmartInterface.toeBrakeLCpt != null || SmartInterface.toeBrakeRCpt != null ||
+                        SmartInterface.toeBrakeLFo != null || SmartInterface.toeBrakeRFo != null)
+                    send("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
+                //*
+
+                // Delay to prevent network/buffer flooding
                 sleep(20);
             }
         } catch(Exception e) {
@@ -94,6 +109,7 @@ class Client extends Thread {
             this.output.println(data);
     }
 
+    // Receive one line of data from PSX
     void receive() throws IOException {
         input.readLine();
     }
