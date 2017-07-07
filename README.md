@@ -1,5 +1,5 @@
 # Aerowinx PSX Smart Interface
-[![Packagist](https://img.shields.io/badge/version-1.0-brightgreen.svg)](SmartInterface)
+[![Packagist](https://img.shields.io/badge/version-1.1-brightgreen.svg)](SmartInterface)
 [![Packagist](https://img.shields.io/badge/status-testing-orange.svg)](https://github.com/eric-lindau/PSX-Smart-Interface)
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](LICENSE.md)
 
@@ -23,3 +23,14 @@ This add-on relies on TCP port **10747** to interface with the PSX server, so th
 ## Built with
 * [JInput](https://github.com/jinput/jinput) - Used to detect and interface with hardware controllers
 * [Aerowinx Network](http://aerowinx.com/assets/networkers/Network%20Documentation.txt) - Used to interface with PSX over network (**documentation only**)
+
+## Versions
+
+### 1.0
+* Added flight control functionality with combined analog inputs (aileron, elevator, rudder, tiller)
+* Added UI for easy user assignment of hardware components to components within PSX
+* Added network interface for add-on to communicate with PSX
+
+### 1.1
+* Improved stability and efficiency of add-on with CPU threading and fewer ticks per second
+* Improved error catching and error notifications for easier problem solving

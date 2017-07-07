@@ -238,7 +238,7 @@ class SmartInterface {
         //*
 
         //* JFrame init and config
-        JFrame frame = new JFrame("PSX SmartInterface");
+        JFrame frame = new JFrame("PSX SmartInterface v1.1");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);
