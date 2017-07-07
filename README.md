@@ -11,7 +11,7 @@ This add-on allows a user to differentiate hardware components as either "Captai
 **Note:** This software is an add-on for [*Aerowinx PSX*](http://www.aerowinx.com/). PSX is required and should be running for this add-on to operate properly.
 
 ### General
-Extract the *SmartInterface* folder from the .zip archive. Inside that folder, run *SmartInterface.jar* by double-clicking on it.
+**Extract the *SmartInterface* folder from the .zip archive. Inside that folder, run *SmartInterface.jar* by double-clicking on it.**
 
 **Note:** The *SmartInterface.jar* file must be in the same directory as the included *.dll* files (natives) due to library dependencies. Alternatively, if the *.dll* files are moved to a directory that is part of the Java PATH, *SmartInterface.jar* can run independently.
 
