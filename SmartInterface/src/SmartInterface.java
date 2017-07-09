@@ -52,6 +52,12 @@ class SmartInterface {
     // Toe brakes
     static Component toeBrakeLCpt, toeBrakeRCpt;
     static Component toeBrakeLFo, toeBrakeRFo;
+
+    // Buttons
+    static Component stabTrimUpCpt, stabTrimDownCpt;
+    static Component stabTrimUpFo, stabTrimDownFo;
+    static Component apDisk;
+    static Component lcpPttCpt, lcpPttFo;
     //*
 
     // Standard main
@@ -64,7 +70,7 @@ class SmartInterface {
         initUI();
 
         try {
-            while(true)
+            while (true)
                 update();
         } catch(Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
@@ -78,8 +84,8 @@ class SmartInterface {
     }
 
     // Check if non-analog component is "pushed" (buttons)
-    private static boolean isPushed(Component component) {
-        return component.getPollData() > 0;
+    static boolean isPushed(Component component) {
+        return component != null && component.getPollData() > 0;
     }
 
     // Gracefully calculate combined value of two analog inputs to prevent
@@ -87,13 +93,13 @@ class SmartInterface {
     static int combineAnalog(Component first, Component second) {
         //* Start at 0, add both values, then check bounds
         int ret = 0;
-        if(first != null)
+        if (first != null)
             ret += getAnalogValue(first);
-        if(second != null)
+        if (second != null)
             ret += getAnalogValue(second);
-        if(ret < -999)
+        if (ret < -999)
             ret = -999;
-        else if(ret > 999)
+        else if (ret > 999)
             ret = 999;
         //*
 
@@ -112,8 +118,8 @@ class SmartInterface {
             for (int i = 0; i < components.size(); i++) {
                 currLabel = valueLabels.get(i);
                 currComponent = components.get(i);
-                if(!currComponent.isAnalog())
-                    if(isPushed(currComponent))
+                if (!currComponent.isAnalog())
+                    if (isPushed(currComponent))
                         currLabel.setText("Pushed");
                     else
                         currLabel.setText("");
@@ -136,8 +142,8 @@ class SmartInterface {
         // Copy controllers into ArrayList so they can be removed easily
         controllers = new ArrayList<>(Arrays.asList(ControllerEnvironment.getDefaultEnvironment()
                 .getControllers()));
-        for(int i = 0; i < controllers.size(); i++)
-            if(shouldIgnore(controllers.get(i))) {
+        for (int i = 0; i < controllers.size(); i++)
+            if (shouldIgnore(controllers.get(i))) {
                 controllers.remove(i);
                 i--;
             }
@@ -161,7 +167,11 @@ class SmartInterface {
                 "Rudder (Captain)", "Rudder (First Officer)",
                 "Tiller (Captain)", "Tiller (First Officer)",
                 "Toe Brake Left (Captain)", "Toe Brake Right (Captain)",
-                "Toe Brake Left (First Officer)", "Toe Brake Right (First Officer)"
+                "Toe Brake Left (First Officer)", "Toe Brake Right (First Officer)",
+                "Stab Trim Up (Captain)", "Stab Trim Down (Captain)",
+                "Stab Trim Up (First Officer)", "Stab Trim Down (First Officer)",
+                "AP Disc",
+                "PTT (Captain)", "PTT (First Officer)"
         };
         // Permanent ArrayList initialized so that labels can be constantly
         // referenced and updated
@@ -171,13 +181,16 @@ class SmartInterface {
         //* Detect and react to JComboBox changes
         // TODO: Fix setting back to "None"
         ItemListener itemListener = new ItemListener() {
+            //TODO Make "none" void current variable
             public void itemStateChanged(ItemEvent itemEvent) {
                 // Only change component if new item selected, not unselected
-                if(itemEvent.getStateChange() == ItemEvent.SELECTED) {
+                if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
                     ComboBox combo = (ComboBox) itemEvent.getSource();
                     int index = combo.getIndex();
                     // Switch to determine what this component should be used for
                     switch ((String) itemEvent.getItem()) {
+                        case "None":
+                            break;
                         case "Aileron (Captain)":
                             aileronCpt = components.get(index);
                             break;
@@ -193,13 +206,13 @@ class SmartInterface {
                         case "Rudder (Captain)":
                             rudderCpt = components.get(index);
                             break;
-                        case "Rudder(First Officer)":
+                        case "Rudder (First Officer)":
                             rudderFo = components.get(index);
                             break;
                         case "Tiller (Captain)":
                             tillerCpt = components.get(index);
                             break;
-                        case "Tiller(First Officer)":
+                        case "Tiller (First Officer)":
                             tillerFo = components.get(index);
                             break;
                         case "Toe Brake Left (Captain)":
@@ -214,6 +227,31 @@ class SmartInterface {
                         case "Toe Brake Right (First Officer)":
                             toeBrakeRFo = components.get(index);
                             break;
+                        case "Stab Trim Up (Captain)":
+                            stabTrimUpCpt = components.get(index);
+                            break;
+                        case "Stab Trim Down (Captain)":
+                            stabTrimDownCpt = components.get(index);
+                            break;
+                        case "Stab Trim Up (First Officer)":
+                            stabTrimUpFo = components.get(index);
+                            break;
+                        case "Stab Trim Down (First Officer)":
+                            stabTrimDownFo = components.get(index);
+                            break;
+                        case "AP Disc":
+                            apDisk = components.get(index);
+                            break;
+                        case "PTT (Captain)":
+                            lcpPttCpt = components.get(index);
+                            break;
+                        case "PTT (First Officer)":
+                            lcpPttFo = components.get(index);
+                            break;
+                        default:
+                            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
+                                    "SWITCH ERROR IN CODE - NOTIFY PROGRAMMER");
+                            break;
                     }
                 }
             }
@@ -221,8 +259,8 @@ class SmartInterface {
         //*
 
         //* Go through each controller and add its components to the UI
-        for(Controller controller : controllers) {
-            for(Component component : controller.getComponents()) {
+        for (Controller controller : controllers) {
+            for (Component component : controller.getComponents()) {
                 // Add component to master list of components
                 components.add(component);
 
@@ -245,6 +283,7 @@ class SmartInterface {
         //*
 
         //* Grid layout setup
+        //TODO Add another column for "Neutral" (dead zone)
         GridLayout grid = new GridLayout(components.size(), 3, 10, 0);
         panel.setLayout(grid);
         panel.setPreferredSize(new Dimension(780, components.size() * 30));

@@ -34,7 +34,7 @@ class Client extends Thread {
             this.output = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException ioe) {
             String error = "Error connecting to PSX! Please ensure that a PSX server " +
-                    "is running and that port 10747 is unrestricted.";
+                    "is running on localhost and that port 10747 is unrestricted.";
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
                     error, "PSX SmartInterface Error",
                     JOptionPane.ERROR_MESSAGE);
@@ -44,7 +44,10 @@ class Client extends Thread {
 
     public void run() {
         try {
-            while(true) {
+            while (true) {
+                // Receive to prevent PSX buffers filling
+                receive();
+
                 //* Update combined analog values
                 aileron = SmartInterface.combineAnalog(SmartInterface.aileronCpt,
                         SmartInterface.aileronFo);
@@ -62,32 +65,63 @@ class Client extends Thread {
                         SmartInterface.toeBrakeRFo);
                 //*
 
-                // Receive to prevent PSX buffers filling
-                receive();
-
-                //* Update flight controls (PSX)
-                if(SmartInterface.elevatorCpt != null || SmartInterface.elevatorFo != null ||
+                //* Update analog values (PSX)
+                // Flight controls: Elevator, aileron, rudder
+                if (SmartInterface.elevatorCpt != null || SmartInterface.elevatorFo != null ||
                         SmartInterface.aileronCpt != null || SmartInterface.aileronFo != null ||
                         SmartInterface.rudderCpt != null || SmartInterface.rudderFo != null)
                     send("Qs120=" + Integer.toString(elevator) + ";" + Integer.toString(aileron)
                             + ";" + Integer.toString(rudder));
-                //*
 
-                //* Update tillers (PSX)
-                if(SmartInterface.tillerCpt != null || SmartInterface.tillerFo != null)
+                // Tillers
+                if (SmartInterface.tillerCpt != null || SmartInterface.tillerFo != null)
                     send("Qh426=" + Integer.toString(tiller));
-                //*
 
-                //* Update toe brakes (PSX)
-                if(SmartInterface.toeBrakeLCpt != null || SmartInterface.toeBrakeRCpt != null ||
+                // Toe brakes
+                if (SmartInterface.toeBrakeLCpt != null || SmartInterface.toeBrakeRCpt != null ||
                         SmartInterface.toeBrakeLFo != null || SmartInterface.toeBrakeRFo != null)
                     send("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
+
+                //* Update buttons (PSX)
+                // Stab trim (captain)
+                if (SmartInterface.isPushed(SmartInterface.stabTrimUpCpt))
+                    send("Qh398=1");
+                else if (SmartInterface.isPushed(SmartInterface.stabTrimDownCpt))
+                    send("Qh398=-1");
+                else
+                    send("Qh398=0");
+
+                // Stab trim (first officer)
+                if (SmartInterface.isPushed(SmartInterface.stabTrimUpFo))
+                    send("Qh399=1");
+                else if (SmartInterface.isPushed(SmartInterface.stabTrimDownFo))
+                    send("Qh399=-1");
+                else
+                    send("Qh399=0");
+
+                // AP Disc
+                if (SmartInterface.isPushed(SmartInterface.apDisk))
+                    send("Qh400=1");
+                else
+                    send("Qh400=0");
+
+                // PTT (captain)
+                if (SmartInterface.isPushed(SmartInterface.lcpPttCpt))
+                    send("Qh82=1");
+                else
+                    send("Qh82=0");
+
+                // PTT (first officer)
+                if (SmartInterface.isPushed(SmartInterface.lcpPttFo))
+                    send("Qh93=1");
+                else
+                    send("Qh93=0");
                 //*
 
                 // Delay to prevent network/buffer flooding
-                sleep(20);
+                sleep(100);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -96,7 +130,7 @@ class Client extends Thread {
     // Kill connection
     void destroyConnection() {
         try {
-            this.socket.close();
+            socket.close();
         } catch (Exception e) {
             System.exit(1);
         }
@@ -105,8 +139,8 @@ class Client extends Thread {
 
     // Send data to PSX server
     void send(String data) {
-        if(!data.isEmpty())
-            this.output.println(data);
+        if (!data.isEmpty())
+            output.println(data);
     }
 
     // Receive one line of data from PSX

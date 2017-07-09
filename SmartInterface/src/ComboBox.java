@@ -19,7 +19,7 @@ class ComboBox extends JComboBox {
 
     //Getter
     int getIndex() {
-        return index;
+        return this.index;
     }
 
 }
