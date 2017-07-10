@@ -23,6 +23,12 @@ class Client extends Thread {
     private Value fltControls = new Value();
     private Value tillers = new Value();
     private Value toeBrakes = new Value();
+    private Value stabTrimCpt = new Value();
+    private Value stabTrimFo = new Value();
+    private Value apDisc = new Value();
+    private Value lcpPttCpt = new Value();
+    private Value lcpPttFo = new Value();
+    private Value rdrPanel = new Value();
 
     // Buffers to be combined as String sent for radar panel button values
     private char[] rdrStrCpt, rdrStrFo;
@@ -86,37 +92,47 @@ class Client extends Thread {
                 //* Update misc buttons
                 // Stab trim (captain)
                 if (SmartInterface.isPushed(SmartInterface.stabTrimUpCpt))
-                    send("Qh398=1");
+                    stabTrimCpt.setStr("Qh398=1");
                 else if (SmartInterface.isPushed(SmartInterface.stabTrimDownCpt))
-                    send("Qh398=-1");
+                    stabTrimCpt.setStr("Qh398=-1");
                 else
-                    send("Qh398=0");
+                    stabTrimCpt.setStr("Qh398=0");
+                if (stabTrimCpt.hasChanged())
+                    send(stabTrimCpt.getStr());
 
                 // Stab trim (first officer)
                 if (SmartInterface.isPushed(SmartInterface.stabTrimUpFo))
-                    send("Qh399=1");
+                    stabTrimFo.setStr("Qh399=1");
                 else if (SmartInterface.isPushed(SmartInterface.stabTrimDownFo))
-                    send("Qh399=-1");
+                    stabTrimFo.setStr("Qh399=-1");
                 else
-                    send("Qh399=0");
+                    stabTrimFo.setStr("Qh399=0");
+                if (stabTrimFo.hasChanged())
+                    send(stabTrimFo.getStr());
 
                 // AP Disc
                 if (SmartInterface.isPushed(SmartInterface.apDisc))
-                    send("Qh400=1");
+                    apDisc.setStr("Qh400=1");
                 else
-                    send("Qh400=0");
+                    apDisc.setStr("Qh400=0");
+                if (apDisc.hasChanged())
+                    send(apDisc.getStr());
 
                 // PTT (captain)
                 if (SmartInterface.isPushed(SmartInterface.lcpPttCpt))
-                    send("Qh82=1");
+                    lcpPttCpt.setStr("Qh82=1");
                 else
-                    send("Qh82=0");
+                    lcpPttCpt.setStr("Qh82=0");
+                if (lcpPttCpt.hasChanged())
+                    send(lcpPttCpt.getStr());
 
                 // PTT (first officer)
                 if (SmartInterface.isPushed(SmartInterface.lcpPttFo))
-                    send("Qh93=1");
+                    lcpPttFo.setStr("Qh93=1");
                 else
-                    send("Qh93=0");
+                    lcpPttFo.setStr("Qh93=0");
+                if (lcpPttFo.hasChanged())
+                    send(lcpPttFo.getStr());
                 //*
 
                 //* Update radar panel buttons
@@ -137,6 +153,7 @@ class Client extends Thread {
                     rdrStrCpt[4] = 'G';
 
                 // Middle (misc) row
+                // TODO Make these toggle
                 if (SmartInterface.isPushed(SmartInterface.auto))
                     rdrStrMisc[0] = 'a';
                 else
@@ -168,7 +185,9 @@ class Client extends Thread {
 
                 // Concat and send
                 String rdrPanelString = new String(rdrStrCpt) + new String(rdrStrMisc) + new String(rdrStrFo);
-                send("Qs104=" + rdrPanelString);
+                rdrPanel.setStr(rdrPanelString);
+                if (rdrPanel.hasChanged())
+                    send("Qs104=" + rdrPanelString);
                 //*
 
                 // Delay to prevent network/buffer flooding

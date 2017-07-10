@@ -135,7 +135,7 @@ class SmartInterface {
             //*
 
             // Delay to reduce CPU usage
-            Thread.sleep(5);
+            Thread.sleep(1);
         } catch(Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
                     e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
