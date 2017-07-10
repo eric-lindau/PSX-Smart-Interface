@@ -20,11 +20,9 @@ class Client extends Thread {
     // Output stream
     private PrintWriter output;
 
-    //* Buffers for combined analog values
-    private int aileron, elevator, rudder;
-    private int tiller;
-    private int toeBrakeL, toeBrakeR;
-    //*
+    private Value fltControls = new Value();
+    private Value tillers = new Value();
+    private Value toeBrakes = new Value();
 
     // Buffers to be combined as String sent for radar panel button values
     private char[] rdrStrCpt, rdrStrFo;
@@ -57,38 +55,32 @@ class Client extends Thread {
 
                 //* Update analog values
                 // Flight controls: Elevator, aileron, rudder
-                if (SmartInterface.elevatorCpt != null || SmartInterface.elevatorFo != null ||
-                        SmartInterface.aileronCpt != null || SmartInterface.aileronFo != null ||
-                        SmartInterface.rudderCpt != null || SmartInterface.rudderFo != null) {
-                    aileron = SmartInterface.combineAnalog(SmartInterface.aileronCpt,
-                            SmartInterface.aileronFo);
-                    elevator = SmartInterface.combineAnalog(SmartInterface.elevatorCpt,
-                            SmartInterface.elevatorFo);
-                    rudder = SmartInterface.combineAnalog(SmartInterface.rudderCpt,
-                            SmartInterface.rudderFo);
-
-                    send("Qs120=" + Integer.toString(elevator) + ";" + Integer.toString(aileron)
-                            + ";" + Integer.toString(rudder));
-                }
+                int aileron = SmartInterface.combineAnalog(SmartInterface.aileronCpt,
+                        SmartInterface.aileronFo);
+                int elevator = SmartInterface.combineAnalog(SmartInterface.elevatorCpt,
+                        SmartInterface.elevatorFo);
+                int rudder = SmartInterface.combineAnalog(SmartInterface.rudderCpt,
+                        SmartInterface.rudderFo);
+                fltControls.setStr("Qs120=" + Integer.toString(elevator) + ";" +
+                        Integer.toString(aileron) + ";" + Integer.toString(rudder));
+                if (fltControls.hasChanged())
+                    send(fltControls.getStr());
 
                 // Tillers
-                if (SmartInterface.tillerCpt != null || SmartInterface.tillerFo != null) {
-                    tiller = SmartInterface.combineAnalog(SmartInterface.tillerCpt,
-                            SmartInterface.tillerFo);
-
-                    send("Qh426=" + Integer.toString(tiller));
-                }
+                int tiller = SmartInterface.combineAnalog(SmartInterface.tillerCpt,
+                        SmartInterface.tillerFo);
+                tillers.setStr("Qh426=" + Integer.toString(tiller));
+                if (tillers.hasChanged())
+                    send(tillers.getStr());
 
                 // Toe brakes
-                if (SmartInterface.toeBrakeLCpt != null || SmartInterface.toeBrakeRCpt != null ||
-                        SmartInterface.toeBrakeLFo != null || SmartInterface.toeBrakeRFo != null) {
-                    toeBrakeL = SmartInterface.combineAnalog(SmartInterface.toeBrakeLCpt,
-                            SmartInterface.toeBrakeLFo);
-                    toeBrakeR = SmartInterface.combineAnalog(SmartInterface.toeBrakeRCpt,
-                            SmartInterface.toeBrakeRFo);
-
-                    send("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
-                }
+                int toeBrakeL = SmartInterface.combineAnalog(SmartInterface.toeBrakeLCpt,
+                        SmartInterface.toeBrakeLFo);
+                int toeBrakeR = SmartInterface.combineAnalog(SmartInterface.toeBrakeRCpt,
+                        SmartInterface.toeBrakeRFo);
+                toeBrakes.setStr("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
+                if (toeBrakes.hasChanged())
+                    send(toeBrakes.getStr());
                 //*
 
                 //* Update misc buttons
@@ -180,7 +172,7 @@ class Client extends Thread {
                 //*
 
                 // Delay to prevent network/buffer flooding
-                sleep(200);
+                sleep(100);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
