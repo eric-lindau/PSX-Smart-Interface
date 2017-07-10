@@ -8,7 +8,7 @@ import javax.swing.*;
  */
 class ComboBox extends JComboBox {
 
-    // Index to be kept track of
+    // Index to be kept track of (row number)
     private int index;
 
     // Constructor
@@ -17,7 +17,7 @@ class ComboBox extends JComboBox {
         this.index = index;
     }
 
-    //Getter
+    // Getter
     int getIndex() {
         return this.index;
     }

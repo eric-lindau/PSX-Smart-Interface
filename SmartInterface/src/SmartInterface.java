@@ -17,8 +17,6 @@ import java.util.Arrays;
  * inputs logically while interfacing with the main PSX server. This allows
  * physical setups without mechanically synchronized pilot and co-pilot
  * controls to operate logically.
- * This class handles all parts of the program, including interfacing, UI, and
- * calculations.
  *
  * @author Eric Lindau
  * @version 1.1
@@ -40,7 +38,7 @@ class SmartInterface {
     // Stores current working label for memory efficiency
     private static JLabel currLabel;
 
-    //* Stored components for calculations, as specified by the user
+    //* Stored components for use, as specified by the user
     // Flight controls
     static Component aileronCpt, aileronFo;
     static Component elevatorCpt, elevatorFo;
@@ -53,11 +51,20 @@ class SmartInterface {
     static Component toeBrakeLCpt, toeBrakeRCpt;
     static Component toeBrakeLFo, toeBrakeRFo;
 
-    // Buttons
+    // Misc buttons
     static Component stabTrimUpCpt, stabTrimDownCpt;
     static Component stabTrimUpFo, stabTrimDownFo;
-    static Component apDisk;
+    static Component apDisc;
     static Component lcpPttCpt, lcpPttFo;
+
+    // Radar panel buttons
+    static Component tfrCpt;
+    static Component wxCpt, wxtCpt;
+    static Component mapCpt, gcCpt;
+    static Component auto, lr, test;
+    static Component tfrFo;
+    static Component wxFo, wxtFo;
+    static Component mapFo, gcFo;
     //*
 
     // Standard main
@@ -88,8 +95,7 @@ class SmartInterface {
         return component != null && component.getPollData() > 0;
     }
 
-    // Gracefully calculate combined value of two analog inputs to prevent
-    // "fighting"
+    // Gracefully calculate combined value of two analog inputs to prevent conflicts
     static int combineAnalog(Component first, Component second) {
         //* Start at 0, add both values, then check bounds
         int ret = 0;
@@ -128,9 +134,8 @@ class SmartInterface {
             }
             //*
 
-            // Delay to prevent too much CPU usage
-            // TODO See if this delay can be greater
-            Thread.sleep(1);
+            // Delay to reduce CPU usage
+            Thread.sleep(5);
         } catch(Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
                     e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -162,103 +167,238 @@ class SmartInterface {
         JLabel label;
         // Permanent array initialized to be used for options in each JComboBox
         String[] dropBoxStrings = new String[]{"None",
-                "Aileron (Captain)", "Aileron (First Officer)",
-                "Elevator (Captain)", "Elevator (First Officer)",
-                "Rudder (Captain)", "Rudder (First Officer)",
-                "Tiller (Captain)", "Tiller (First Officer)",
-                "Toe Brake Left (Captain)", "Toe Brake Right (Captain)",
-                "Toe Brake Left (First Officer)", "Toe Brake Right (First Officer)",
-                "Stab Trim Up (Captain)", "Stab Trim Down (Captain)",
-                "Stab Trim Up (First Officer)", "Stab Trim Down (First Officer)",
+                "Aileron Capt", "Aileron F/O",
+                "Elevator Capt", "Elevator F/O",
+                "Rudder Capt", "Rudder F/O",
+                "Tiller Capt", "Tiller F/O",
+                "Toe Brake Left Capt", "Toe Brake Right Capt",
+                "Toe Brake Left F/O", "Toe Brake Right F/O",
+                "Stab Trim UP Capt", "Stab Trim DN Capt",
+                "Stab Trim UP F/O", "Stab Trim DN F/O",
                 "AP Disc",
-                "PTT (Captain)", "PTT (First Officer)"
+                "PTT Capt", "PTT F/O",
+                "TFR Capt", "WX Capt", "WX+T Capt",
+                "MAP Capt", "GC Capt",
+                "AUTO", "L/R", "TEST",
+                "TFR F/O", "WX F/O", "WX+T F/O",
+                "MAP F/O", "GC F/O"
         };
         // Permanent ArrayList initialized so that labels can be constantly
         // referenced and updated
         valueLabels = new ArrayList<>();
         // Counter used to number component labels
 
-        //* Detect and react to JComboBox changes
-        // TODO: Fix setting back to "None"
+        // Detect and react to JComboBox changes
         ItemListener itemListener = new ItemListener() {
-            //TODO Make "none" void current variable
             public void itemStateChanged(ItemEvent itemEvent) {
                 // Only change component if new item selected, not unselected
-                if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-                    ComboBox combo = (ComboBox) itemEvent.getSource();
-                    int index = combo.getIndex();
-                    // Switch to determine what this component should be used for
-                    switch ((String) itemEvent.getItem()) {
-                        case "None":
-                            break;
-                        case "Aileron (Captain)":
+                ComboBox combo = (ComboBox) itemEvent.getSource();
+                int index = combo.getIndex();
+                // Switch to determine what this component should be used for
+                switch ((String) itemEvent.getItem()) {
+                    case "None":
+                        break;
+                    case "Aileron Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             aileronCpt = components.get(index);
-                            break;
-                        case "Aileron (First Officer)":
+                        else
+                            aileronCpt = null;
+                        break;
+                    case "Aileron F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             aileronFo = components.get(index);
-                            break;
-                        case "Elevator (Captain)":
+                        else
+                            aileronFo = null;
+                        break;
+                    case "Elevator Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             elevatorCpt = components.get(index);
-                            break;
-                        case "Elevator (First Officer)":
+                        else
+                            elevatorCpt = null;
+                        break;
+                    case "Elevator F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             elevatorFo = components.get(index);
-                            break;
-                        case "Rudder (Captain)":
+                        else
+                            elevatorFo = null;
+                        break;
+                    case "Rudder Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             rudderCpt = components.get(index);
-                            break;
-                        case "Rudder (First Officer)":
+                        else
+                            rudderCpt = null;
+                        break;
+                    case "Rudder F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             rudderFo = components.get(index);
-                            break;
-                        case "Tiller (Captain)":
+                        else
+                            rudderFo = null;
+                        break;
+                    case "Tiller Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             tillerCpt = components.get(index);
-                            break;
-                        case "Tiller (First Officer)":
+                        else
+                            tillerCpt = null;
+                        break;
+                    case "Tiller F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             tillerFo = components.get(index);
-                            break;
-                        case "Toe Brake Left (Captain)":
+                        else
+                            tillerFo = null;
+                        break;
+                    case "Toe Brake Left Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             toeBrakeLCpt = components.get(index);
-                            break;
-                        case "Toe Brake Right (Captain)":
+                        else
+                            toeBrakeLCpt = null;
+                        break;
+                    case "Toe Brake Right Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             toeBrakeRCpt = components.get(index);
-                            break;
-                        case "Toe Brake Left (First Officer)":
+                        else
+                            toeBrakeRCpt = null;
+                        break;
+                    case "Toe Brake Left F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             toeBrakeLFo = components.get(index);
-                            break;
-                        case "Toe Brake Right (First Officer)":
+                        else
+                            toeBrakeLFo = null;
+                        break;
+                    case "Toe Brake Right F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             toeBrakeRFo = components.get(index);
-                            break;
-                        case "Stab Trim Up (Captain)":
+                        else
+                            toeBrakeRFo = null;
+                        break;
+                    case "Stab Trim UP Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             stabTrimUpCpt = components.get(index);
-                            break;
-                        case "Stab Trim Down (Captain)":
+                        else
+                            stabTrimUpCpt = null;
+                        break;
+                    case "Stab Trim DN Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             stabTrimDownCpt = components.get(index);
-                            break;
-                        case "Stab Trim Up (First Officer)":
+                        else
+                            stabTrimDownCpt = null;
+                        break;
+                    case "Stab Trim UP F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             stabTrimUpFo = components.get(index);
-                            break;
-                        case "Stab Trim Down (First Officer)":
+                        else
+                            stabTrimUpFo = null;
+                        break;
+                    case "Stab Trim DN F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             stabTrimDownFo = components.get(index);
-                            break;
-                        case "AP Disc":
-                            apDisk = components.get(index);
-                            break;
-                        case "PTT (Captain)":
+                        else
+                            stabTrimDownFo = null;
+                        break;
+                    case "AP Disc":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            apDisc = components.get(index);
+                        else
+                            apDisc = null;
+                        break;
+                    case "PTT Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             lcpPttCpt = components.get(index);
-                            break;
-                        case "PTT (First Officer)":
+                        else
+                            lcpPttCpt = null;
+                        break;
+                    case "PTT F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             lcpPttFo = components.get(index);
-                            break;
-                        default:
-                            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
-                                    "SWITCH ERROR IN CODE - NOTIFY PROGRAMMER");
-                            break;
-                    }
+                        else
+                            lcpPttFo = null;
+                        break;
+                    case "TFR Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            tfrCpt = components.get(index);
+                        else
+                            tfrCpt = null;
+                        break;
+                    case "WX Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            wxCpt = components.get(index);
+                        else
+                            wxCpt = null;
+                        break;
+                    case "WX+T Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            wxtCpt = components.get(index);
+                        else
+                            wxtCpt = null;
+                        break;
+                    case "MAP Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            mapCpt = components.get(index);
+                        else
+                            mapCpt = null;
+                        break;
+                    case "GC Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            gcCpt = components.get(index);
+                        else
+                            gcCpt = null;
+                        break;
+                    case "AUTO":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            auto = components.get(index);
+                        else
+                            auto = null;
+                        break;
+                    case "L/R":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            lr = components.get(index);
+                        else
+                            lr = null;
+                        break;
+                    case "TEST":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            test = components.get(index);
+                        else
+                            test = null;
+                        break;
+                    case "TFR F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            tfrFo = components.get(index);
+                        else
+                            tfrFo = null;
+                        break;
+                    case "WX F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            wxFo = components.get(index);
+                        else
+                            wxFo = null;
+                        break;
+                    case "WX+T F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            wxtFo = components.get(index);
+                        else
+                            wxtFo = null;
+                        break;
+                    case "MAP F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            mapFo = components.get(index);
+                        else
+                            mapFo = null;
+                        break;
+                    case "GC F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            gcFo = components.get(index);
+                        else
+                            gcFo = null;
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
+                                "SWITCH ERROR IN CODE - NOTIFY PROGRAMMER");
+                        break;
                 }
             }
         };
-        //*
 
-        //* Go through each controller and add its components to the UI
+        // Go through each controller and add its components to the UI
         for (Controller controller : controllers) {
             for (Component component : controller.getComponents()) {
                 // Add component to master list of components
@@ -276,11 +416,11 @@ class SmartInterface {
 
                 // ComboBox: Select which components act for which operations
                 comboBox = new ComboBox(dropBoxStrings, components.size() - 1);
+                comboBox.setMaximumRowCount(20);
                 comboBox.addItemListener(itemListener);
                 panel.add(comboBox);
             }
         }
-        //*
 
         //* Grid layout setup
         //TODO Add another column for "Neutral" (dead zone)
@@ -318,8 +458,7 @@ class SmartInterface {
     // Determine if controller should be ignored (otherwise it is usable)
     private static boolean shouldIgnore(Controller controller) {
         return controller.getName().toUpperCase().contains("KEYBOARD") ||
-                controller.getName().toUpperCase().contains("MOUSE") ||
-                controller.getName().toUpperCase().contains("RAZER");
+                controller.getName().toUpperCase().contains("MOUSE");
     }
 
 }

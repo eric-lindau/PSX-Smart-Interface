@@ -6,8 +6,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
- * Handles socket creation and destruction as well exchanging data with the
- * PSX server.
+ * Handles socket creation and destruction as well calculating and exchanging
+ * data with the PSX server.
  *
  * @author Eric Lindau
  */
@@ -25,6 +25,13 @@ class Client extends Thread {
     private int tiller;
     private int toeBrakeL, toeBrakeR;
     //*
+
+    // Buffers to be combined as String sent for radar panel button values
+    private char[] rdrStrCpt, rdrStrFo;
+    private char[] rdrStrMisc = new char[3];
+    // Boolean array to keep track of if a tick has happened between misc button changes
+    // ... allows for toggled buttons
+    private boolean[] rdrHasTickedMisc = {false, false, false};
 
     // Constructor
     Client(String address, int port) {
@@ -48,41 +55,43 @@ class Client extends Thread {
                 // Receive to prevent PSX buffers filling
                 receive();
 
-                //* Update combined analog values
-                aileron = SmartInterface.combineAnalog(SmartInterface.aileronCpt,
-                        SmartInterface.aileronFo);
-                elevator = SmartInterface.combineAnalog(SmartInterface.elevatorCpt,
-                        SmartInterface.elevatorFo);
-                rudder = SmartInterface.combineAnalog(SmartInterface.rudderCpt,
-                        SmartInterface.rudderFo);
-
-                tiller = SmartInterface.combineAnalog(SmartInterface.tillerCpt,
-                        SmartInterface.tillerFo);
-
-                toeBrakeL = SmartInterface.combineAnalog(SmartInterface.toeBrakeLCpt,
-                        SmartInterface.toeBrakeLFo);
-                toeBrakeR = SmartInterface.combineAnalog(SmartInterface.toeBrakeRCpt,
-                        SmartInterface.toeBrakeRFo);
-                //*
-
-                //* Update analog values (PSX)
+                //* Update analog values
                 // Flight controls: Elevator, aileron, rudder
                 if (SmartInterface.elevatorCpt != null || SmartInterface.elevatorFo != null ||
                         SmartInterface.aileronCpt != null || SmartInterface.aileronFo != null ||
-                        SmartInterface.rudderCpt != null || SmartInterface.rudderFo != null)
+                        SmartInterface.rudderCpt != null || SmartInterface.rudderFo != null) {
+                    aileron = SmartInterface.combineAnalog(SmartInterface.aileronCpt,
+                            SmartInterface.aileronFo);
+                    elevator = SmartInterface.combineAnalog(SmartInterface.elevatorCpt,
+                            SmartInterface.elevatorFo);
+                    rudder = SmartInterface.combineAnalog(SmartInterface.rudderCpt,
+                            SmartInterface.rudderFo);
+
                     send("Qs120=" + Integer.toString(elevator) + ";" + Integer.toString(aileron)
                             + ";" + Integer.toString(rudder));
+                }
 
                 // Tillers
-                if (SmartInterface.tillerCpt != null || SmartInterface.tillerFo != null)
+                if (SmartInterface.tillerCpt != null || SmartInterface.tillerFo != null) {
+                    tiller = SmartInterface.combineAnalog(SmartInterface.tillerCpt,
+                            SmartInterface.tillerFo);
+
                     send("Qh426=" + Integer.toString(tiller));
+                }
 
                 // Toe brakes
                 if (SmartInterface.toeBrakeLCpt != null || SmartInterface.toeBrakeRCpt != null ||
-                        SmartInterface.toeBrakeLFo != null || SmartInterface.toeBrakeRFo != null)
-                    send("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
+                        SmartInterface.toeBrakeLFo != null || SmartInterface.toeBrakeRFo != null) {
+                    toeBrakeL = SmartInterface.combineAnalog(SmartInterface.toeBrakeLCpt,
+                            SmartInterface.toeBrakeLFo);
+                    toeBrakeR = SmartInterface.combineAnalog(SmartInterface.toeBrakeRCpt,
+                            SmartInterface.toeBrakeRFo);
 
-                //* Update buttons (PSX)
+                    send("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
+                }
+                //*
+
+                //* Update misc buttons
                 // Stab trim (captain)
                 if (SmartInterface.isPushed(SmartInterface.stabTrimUpCpt))
                     send("Qh398=1");
@@ -100,7 +109,7 @@ class Client extends Thread {
                     send("Qh399=0");
 
                 // AP Disc
-                if (SmartInterface.isPushed(SmartInterface.apDisk))
+                if (SmartInterface.isPushed(SmartInterface.apDisc))
                     send("Qh400=1");
                 else
                     send("Qh400=0");
@@ -118,8 +127,60 @@ class Client extends Thread {
                     send("Qh93=0");
                 //*
 
+                //* Update radar panel buttons
+                // Captain (left) row
+                if (SmartInterface.isPushed(SmartInterface.tfrCpt))
+                    rdrStrCpt = new char[]{'f', 'W', 'T', 'M', 'G'};
+                else if (SmartInterface.isPushed(SmartInterface.wxCpt))
+                    rdrStrCpt = new char[]{'F', 'w', 'T', 'M', 'G'};
+                else if (SmartInterface.isPushed(SmartInterface.wxtCpt))
+                    rdrStrCpt = new char[]{'F', 'W', 't', 'M', 'G'};
+                else if (SmartInterface.isPushed(SmartInterface.mapCpt))
+                    rdrStrCpt = new char[]{'F', 'W', 'T', 'm', 'G'};
+                else if (rdrStrCpt == null)
+                    rdrStrCpt = new char[]{'F', 'W', 'T', 'M', 'G'};
+                if (SmartInterface.isPushed(SmartInterface.gcCpt))
+                    rdrStrCpt[4] = 'g';
+                else
+                    rdrStrCpt[4] = 'G';
+
+                // Middle (misc) row
+                if (SmartInterface.isPushed(SmartInterface.auto))
+                    rdrStrMisc[0] = 'a';
+                else
+                    rdrStrMisc[0] = 'A';
+                if (SmartInterface.isPushed(SmartInterface.lr))
+                    rdrStrMisc[1] = 'r';
+                else
+                    rdrStrMisc[1] = 'R';
+                if (SmartInterface.isPushed(SmartInterface.test))
+                    rdrStrMisc[2] = 'e';
+                else
+                    rdrStrMisc[2] = 'E';
+
+                // First officer (right) row
+                if (SmartInterface.isPushed(SmartInterface.tfrFo))
+                    rdrStrFo = new char[]{'f', 'W', 'T', 'M', 'G'};
+                else if (SmartInterface.isPushed(SmartInterface.wxFo))
+                    rdrStrFo = new char[]{'F', 'w', 'T', 'M', 'G'};
+                else if (SmartInterface.isPushed(SmartInterface.wxtFo))
+                    rdrStrFo = new char[]{'F', 'W', 't', 'M', 'G'};
+                else if (SmartInterface.isPushed(SmartInterface.mapFo))
+                    rdrStrFo = new char[]{'F', 'W', 'T', 'm', 'G'};
+                else if (rdrStrFo == null)
+                    rdrStrFo = new char[]{'F', 'W', 'T', 'M', 'G'};
+                if (SmartInterface.isPushed(SmartInterface.gcFo))
+                    rdrStrFo[4] = 'g';
+                else
+                    rdrStrFo[4] = 'G';
+
+                // Concat and send
+                String rdrPanelString = new String(rdrStrCpt) + new String(rdrStrMisc) + new String(rdrStrFo);
+                send("Qs104=" + rdrPanelString);
+                //*
+
                 // Delay to prevent network/buffer flooding
-                sleep(100);
+                sleep(200);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
