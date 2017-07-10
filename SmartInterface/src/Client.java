@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Handles socket creation and destruction as well calculating and exchanging
@@ -33,9 +34,6 @@ class Client extends Thread {
     // Buffers to be combined as String sent for radar panel button values
     private char[] rdrStrCpt, rdrStrFo;
     private char[] rdrStrMisc = new char[3];
-    // Boolean array to keep track of if a tick has happened between misc button changes
-    // ... allows for toggled buttons
-    private boolean[] rdrHasTickedMisc = {false, false, false};
 
     // Constructor
     Client(String address, int port) {
@@ -56,16 +54,15 @@ class Client extends Thread {
     public void run() {
         try {
             while (true) {
-                // Receive to prevent PSX buffers filling
                 receive();
 
                 //* Update analog values
                 // Flight controls: Elevator, aileron, rudder
-                int aileron = SmartInterface.combineAnalog(SmartInterface.aileronCpt,
+                int aileron = Utils.combineAnalog(SmartInterface.aileronCpt,
                         SmartInterface.aileronFo);
-                int elevator = SmartInterface.combineAnalog(SmartInterface.elevatorCpt,
+                int elevator = Utils.combineAnalog(SmartInterface.elevatorCpt,
                         SmartInterface.elevatorFo);
-                int rudder = SmartInterface.combineAnalog(SmartInterface.rudderCpt,
+                int rudder = Utils.combineAnalog(SmartInterface.rudderCpt,
                         SmartInterface.rudderFo);
                 fltControls.setStr("Qs120=" + Integer.toString(elevator) + ";" +
                         Integer.toString(aileron) + ";" + Integer.toString(rudder));
@@ -73,16 +70,16 @@ class Client extends Thread {
                     send(fltControls.getStr());
 
                 // Tillers
-                int tiller = SmartInterface.combineAnalog(SmartInterface.tillerCpt,
+                int tiller = Utils.combineAnalog(SmartInterface.tillerCpt,
                         SmartInterface.tillerFo);
                 tillers.setStr("Qh426=" + Integer.toString(tiller));
                 if (tillers.hasChanged())
                     send(tillers.getStr());
 
                 // Toe brakes
-                int toeBrakeL = SmartInterface.combineAnalog(SmartInterface.toeBrakeLCpt,
+                int toeBrakeL = Utils.combineAnalog(SmartInterface.toeBrakeLCpt,
                         SmartInterface.toeBrakeLFo);
-                int toeBrakeR = SmartInterface.combineAnalog(SmartInterface.toeBrakeRCpt,
+                int toeBrakeR = Utils.combineAnalog(SmartInterface.toeBrakeRCpt,
                         SmartInterface.toeBrakeRFo);
                 toeBrakes.setStr("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
                 if (toeBrakes.hasChanged())
@@ -91,9 +88,9 @@ class Client extends Thread {
 
                 //* Update misc buttons
                 // Stab trim (captain)
-                if (SmartInterface.isPushed(SmartInterface.stabTrimUpCpt))
+                if (Utils.isPushed(SmartInterface.stabTrimUpCpt))
                     stabTrimCpt.setStr("Qh398=1");
-                else if (SmartInterface.isPushed(SmartInterface.stabTrimDownCpt))
+                else if (Utils.isPushed(SmartInterface.stabTrimDownCpt))
                     stabTrimCpt.setStr("Qh398=-1");
                 else
                     stabTrimCpt.setStr("Qh398=0");
@@ -101,9 +98,9 @@ class Client extends Thread {
                     send(stabTrimCpt.getStr());
 
                 // Stab trim (first officer)
-                if (SmartInterface.isPushed(SmartInterface.stabTrimUpFo))
+                if (Utils.isPushed(SmartInterface.stabTrimUpFo))
                     stabTrimFo.setStr("Qh399=1");
-                else if (SmartInterface.isPushed(SmartInterface.stabTrimDownFo))
+                else if (Utils.isPushed(SmartInterface.stabTrimDownFo))
                     stabTrimFo.setStr("Qh399=-1");
                 else
                     stabTrimFo.setStr("Qh399=0");
@@ -111,7 +108,7 @@ class Client extends Thread {
                     send(stabTrimFo.getStr());
 
                 // AP Disc
-                if (SmartInterface.isPushed(SmartInterface.apDisc))
+                if (Utils.isPushed(SmartInterface.apDisc))
                     apDisc.setStr("Qh400=1");
                 else
                     apDisc.setStr("Qh400=0");
@@ -119,7 +116,7 @@ class Client extends Thread {
                     send(apDisc.getStr());
 
                 // PTT (captain)
-                if (SmartInterface.isPushed(SmartInterface.lcpPttCpt))
+                if (Utils.isPushed(SmartInterface.lcpPttCpt))
                     lcpPttCpt.setStr("Qh82=1");
                 else
                     lcpPttCpt.setStr("Qh82=0");
@@ -127,7 +124,7 @@ class Client extends Thread {
                     send(lcpPttCpt.getStr());
 
                 // PTT (first officer)
-                if (SmartInterface.isPushed(SmartInterface.lcpPttFo))
+                if (Utils.isPushed(SmartInterface.lcpPttFo))
                     lcpPttFo.setStr("Qh93=1");
                 else
                     lcpPttFo.setStr("Qh93=0");
@@ -137,48 +134,48 @@ class Client extends Thread {
 
                 //* Update radar panel buttons
                 // Captain (left) row
-                if (SmartInterface.isPushed(SmartInterface.tfrCpt))
+                if (Utils.isPushed(SmartInterface.tfrCpt))
                     rdrStrCpt = new char[]{'f', 'W', 'T', 'M', 'G'};
-                else if (SmartInterface.isPushed(SmartInterface.wxCpt))
+                else if (Utils.isPushed(SmartInterface.wxCpt))
                     rdrStrCpt = new char[]{'F', 'w', 'T', 'M', 'G'};
-                else if (SmartInterface.isPushed(SmartInterface.wxtCpt))
+                else if (Utils.isPushed(SmartInterface.wxtCpt))
                     rdrStrCpt = new char[]{'F', 'W', 't', 'M', 'G'};
-                else if (SmartInterface.isPushed(SmartInterface.mapCpt))
+                else if (Utils.isPushed(SmartInterface.mapCpt))
                     rdrStrCpt = new char[]{'F', 'W', 'T', 'm', 'G'};
                 else if (rdrStrCpt == null)
                     rdrStrCpt = new char[]{'F', 'W', 'T', 'M', 'G'};
-                if (SmartInterface.isPushed(SmartInterface.gcCpt))
+                if (Utils.isPushed(SmartInterface.gcCpt))
                     rdrStrCpt[4] = 'g';
                 else
                     rdrStrCpt[4] = 'G';
 
                 // Middle (misc) row
                 // TODO Make these toggle
-                if (SmartInterface.isPushed(SmartInterface.auto))
+                if (Utils.isPushed(SmartInterface.auto))
                     rdrStrMisc[0] = 'a';
                 else
                     rdrStrMisc[0] = 'A';
-                if (SmartInterface.isPushed(SmartInterface.lr))
+                if (Utils.isPushed(SmartInterface.lr))
                     rdrStrMisc[1] = 'r';
                 else
                     rdrStrMisc[1] = 'R';
-                if (SmartInterface.isPushed(SmartInterface.test))
+                if (Utils.isPushed(SmartInterface.test))
                     rdrStrMisc[2] = 'e';
                 else
                     rdrStrMisc[2] = 'E';
 
                 // First officer (right) row
-                if (SmartInterface.isPushed(SmartInterface.tfrFo))
+                if (Utils.isPushed(SmartInterface.tfrFo))
                     rdrStrFo = new char[]{'f', 'W', 'T', 'M', 'G'};
-                else if (SmartInterface.isPushed(SmartInterface.wxFo))
+                else if (Utils.isPushed(SmartInterface.wxFo))
                     rdrStrFo = new char[]{'F', 'w', 'T', 'M', 'G'};
-                else if (SmartInterface.isPushed(SmartInterface.wxtFo))
+                else if (Utils.isPushed(SmartInterface.wxtFo))
                     rdrStrFo = new char[]{'F', 'W', 't', 'M', 'G'};
-                else if (SmartInterface.isPushed(SmartInterface.mapFo))
+                else if (Utils.isPushed(SmartInterface.mapFo))
                     rdrStrFo = new char[]{'F', 'W', 'T', 'm', 'G'};
                 else if (rdrStrFo == null)
                     rdrStrFo = new char[]{'F', 'W', 'T', 'M', 'G'};
-                if (SmartInterface.isPushed(SmartInterface.gcFo))
+                if (Utils.isPushed(SmartInterface.gcFo))
                     rdrStrFo[4] = 'g';
                 else
                     rdrStrFo[4] = 'G';
@@ -203,6 +200,8 @@ class Client extends Thread {
     void destroyConnection() {
         try {
             socket.close();
+            output.close();
+            input.close();
         } catch (Exception e) {
             System.exit(1);
         }

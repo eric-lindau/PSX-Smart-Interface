@@ -1,3 +1,6 @@
+/**
+ * @author Eric Lindau
+ */
 class Value {
 
     private String str;
