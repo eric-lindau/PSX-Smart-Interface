@@ -35,45 +35,60 @@ class SmartInterface {
     private static ArrayList<Controller> controllers;
     // Stores all components from usable controllers for polling
     private static ArrayList<Component> components = new ArrayList<>();
+    // Stores all components that will be saved when program exited
     private static ArrayList<String> savedComponents = new ArrayList<>();
     // Stores all labels for modification
-    private static ArrayList<JLabel> valueLabels;
+    private static ArrayList<JLabel> valueLabels = new ArrayList<>();
 
     // Stores current working component for memory efficiency
     private static Component currComponent;
     // Stores current working label for memory efficiency
     private static JLabel currLabel;
 
-    //* Stored components for use, as specified by the user
-    // Flight controls
-    static Component aileronCpt, aileronFo;
-    static Component elevatorCpt, elevatorFo;
-    static Component rudderCpt, rudderFo;
+    //* START Stored components specified by user
+    // Flight controls (Qs120)
+    private static Component aileronCpt, aileronFo;
+    private static Component elevatorCpt, elevatorFo;
+    private static Component rudderCpt, rudderFo;
 
-    // Tillers
-    static Component tillerCpt, tillerFo;
+    // Tillers (Qh426)
+    private static Component tillerCpt, tillerFo;
 
-    // Toe brakes
-    static Component toeBrakeLCpt, toeBrakeRCpt;
-    static Component toeBrakeLFo, toeBrakeRFo;
+    // Toe brakes (Qs357)
+    private static Component toeBrakeLCpt, toeBrakeRCpt;
+    private static Component toeBrakeLFo, toeBrakeRFo;
 
-    // Misc buttons
-    static Component stabTrimUpCpt, stabTrimDownCpt;
-    static Component stabTrimUpFo, stabTrimDownFo;
-    static Component apDisc;
-    static Component lcpPttCpt, lcpPttFo;
+    // Misc buttons (Qh398, Qh399, Qh400, Qh82, Qh93)
+    private static Component stabTrimUpCpt, stabTrimDownCpt;
+    private static Component stabTrimUpFo, stabTrimDownFo;
+    private static Component apDisc;
+    private static Component lcpPttCpt, lcpPttFo;
 
     // Radar panel buttons
-    static Component tfrCpt;
-    static Component wxCpt, wxtCpt;
-    static Component mapCpt, gcCpt;
-    static Component auto, lr, test;
-    static Component tfrFo;
-    static Component wxFo, wxtFo;
-    static Component mapFo, gcFo;
-    //*
+    private static Component tfrCpt;
+    private static Component wxCpt, wxtCpt;
+    private static Component mapCpt, gcCpt;
+    private static Component auto, lr, test;
+    private static Component tfrFo;
+    private static Component wxFo, wxtFo;
+    private static Component mapFo, gcFo;
+    //* END Stored components specified by user
 
-    // Standard main
+    // Values used to detect if PSX variables have been changed and need to be updated
+    private static Value fltControlsVal = new Value();
+    private static Value tillersVal = new Value();
+    private static Value toeBrakesVal = new Value();
+    private static Value stabTrimCptVal = new Value();
+    private static Value stabTrimFoVal = new Value();
+    private static Value apDiscVal = new Value();
+    private static Value lcpPttCptVal = new Value();
+    private static Value lcpPttFoVal = new Value();
+    private static Value rdrPanelVal = new Value();
+
+    // Buffers to be combined as String sent for radar panel button values (Qs104)
+    private static char[] rdrStrCpt, rdrStrFo;
+    private static char[] rdrStrMisc = new char[3];
+
     public static void main(String[] args) {
         // Connect to server
         client = new Client("localhost", 10747);
@@ -101,15 +116,166 @@ class SmartInterface {
         System.exit(0);
     }
 
-    // Constantly poll controllers, update labels, update PSX server
+    /**
+     * Persistently polls controllers, updates labels, and updates PSX server
+     */
     private static void update() {
         try {
-            //* Poll controllers
+            //* START Update analog values
+            // Flight controls: Elevator, aileron, rudder
+            int aileron = Utils.combineAnalog(SmartInterface.aileronCpt,
+                    SmartInterface.aileronFo);
+            int elevator = Utils.combineAnalog(SmartInterface.elevatorCpt,
+                    SmartInterface.elevatorFo);
+            int rudder = Utils.combineAnalog(SmartInterface.rudderCpt,
+                    SmartInterface.rudderFo);
+            fltControlsVal.setStr("Qs120=" + Integer.toString(elevator) + ";" +
+                    Integer.toString(aileron) + ";" + Integer.toString(rudder));
+            if (fltControlsVal.hasChanged())
+                client.send(fltControlsVal.getStr());
+
+            // Tillers
+            int tiller = Utils.combineAnalog(SmartInterface.tillerCpt,
+                    SmartInterface.tillerFo);
+            tillersVal.setStr("Qh426=" + Integer.toString(tiller));
+            if (tillersVal.hasChanged())
+                client.send(tillersVal.getStr());
+
+            // Toe brakes
+            int toeBrakeL = Utils.combineAnalog(SmartInterface.toeBrakeLCpt,
+                    SmartInterface.toeBrakeLFo);
+            int toeBrakeR = Utils.combineAnalog(SmartInterface.toeBrakeRCpt,
+                    SmartInterface.toeBrakeRFo);
+            toeBrakesVal.setStr("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
+            if (toeBrakesVal.hasChanged())
+                client.send(toeBrakesVal.getStr());
+            //* END Update analog values
+
+            //* START Update misc buttons
+            // Stab trim (captain)
+            if (Utils.isPushed(SmartInterface.stabTrimUpCpt))
+                stabTrimCptVal.setStr("Qh398=1");
+            else if (Utils.isPushed(SmartInterface.stabTrimDownCpt))
+                stabTrimCptVal.setStr("Qh398=-1");
+            else
+                stabTrimCptVal.setStr("Qh398=0");
+            if (stabTrimCptVal.hasChanged())
+                client.send(stabTrimCptVal.getStr());
+
+            // Stab trim (first officer)
+            if (Utils.isPushed(SmartInterface.stabTrimUpFo))
+                stabTrimFoVal.setStr("Qh399=1");
+            else if (Utils.isPushed(SmartInterface.stabTrimDownFo))
+                stabTrimFoVal.setStr("Qh399=-1");
+            else
+                stabTrimFoVal.setStr("Qh399=0");
+            if (stabTrimFoVal.hasChanged())
+                client.send(stabTrimFoVal.getStr());
+
+            // AP Disc
+            if (Utils.isPushed(SmartInterface.apDisc))
+                apDiscVal.setStr("Qh400=1");
+            else
+                apDiscVal.setStr("Qh400=0");
+            if (apDiscVal.hasChanged())
+                client.send(apDiscVal.getStr());
+
+            // PTT (captain)
+            if (Utils.isPushed(lcpPttCpt))
+                lcpPttCptVal.setStr("Qh82=1");
+            else
+                lcpPttCptVal.setStr("Qh82=0");
+            if (lcpPttCptVal.hasChanged())
+                client.send(lcpPttCptVal.getStr());
+
+            // PTT (first officer)
+            if (Utils.isPushed(SmartInterface.lcpPttFo))
+                lcpPttFoVal.setStr("Qh93=1");
+            else
+                lcpPttFoVal.setStr("Qh93=0");
+            if (lcpPttFoVal.hasChanged())
+                client.send(lcpPttFoVal.getStr());
+            //* END Update misc buttons
+
+            //* START Update radar panel buttons
+            //* START Captain (left) row
+            // TFR (captain)
+            if (Utils.isPushed(SmartInterface.tfrCpt))
+                rdrStrCpt = new char[]{'f', 'W', 'T', 'M', 'G'};
+            // WX (captain)
+            else if (Utils.isPushed(SmartInterface.wxCpt))
+                rdrStrCpt = new char[]{'F', 'w', 'T', 'M', 'G'};
+            // WX+T (captain)
+            else if (Utils.isPushed(SmartInterface.wxtCpt))
+                rdrStrCpt = new char[]{'F', 'W', 't', 'M', 'G'};
+            // MAP (captain)
+            else if (Utils.isPushed(SmartInterface.mapCpt))
+                rdrStrCpt = new char[]{'F', 'W', 'T', 'm', 'G'};
+            // None (captain)
+            else if (rdrStrCpt == null)
+                rdrStrCpt = new char[]{'F', 'W', 'T', 'M', 'G'};
+            // GC (captain)
+            if (Utils.isPushed(SmartInterface.gcCpt))
+                rdrStrCpt[4] = 'g';
+            else
+                rdrStrCpt[4] = 'G';
+            //* END Captain (left) row
+
+            //* START Middle (misc) row
+            // TODO Make these toggle
+            // AUTO
+            if (Utils.isPushed(SmartInterface.auto))
+                rdrStrMisc[0] = 'a';
+            else
+                rdrStrMisc[0] = 'A';
+            // L/R
+            if (Utils.isPushed(SmartInterface.lr))
+                rdrStrMisc[1] = 'r';
+            else
+                rdrStrMisc[1] = 'R';
+            // TEST
+            if (Utils.isPushed(SmartInterface.test))
+                rdrStrMisc[2] = 'e';
+            else
+                rdrStrMisc[2] = 'E';
+            //* END Middle (misc) row
+
+            //* START First officer (right) row
+            // TFR (first officer)
+            if (Utils.isPushed(SmartInterface.tfrFo))
+                rdrStrFo = new char[]{'f', 'W', 'T', 'M', 'G'};
+            // WX (first officer)
+            else if (Utils.isPushed(SmartInterface.wxFo))
+                rdrStrFo = new char[]{'F', 'w', 'T', 'M', 'G'};
+            // WX+T (first officer)
+            else if (Utils.isPushed(SmartInterface.wxtFo))
+                rdrStrFo = new char[]{'F', 'W', 't', 'M', 'G'};
+            // MAP (first officer)
+            else if (Utils.isPushed(SmartInterface.mapFo))
+                rdrStrFo = new char[]{'F', 'W', 'T', 'm', 'G'};
+            // None (first officer)
+            else if (rdrStrFo == null)
+                rdrStrFo = new char[]{'F', 'W', 'T', 'M', 'G'};
+            // GC (first officer)
+            if (Utils.isPushed(SmartInterface.gcFo))
+                rdrStrFo[4] = 'g';
+            else
+                rdrStrFo[4] = 'G';
+            //* END First officer (right) row
+
+            // Concat and send
+            String rdrPanelString = new String(rdrStrCpt) + new String(rdrStrMisc) + new String(rdrStrFo);
+            rdrPanelVal.setStr(rdrPanelString);
+            if (rdrPanelVal.hasChanged())
+                client.send("Qs104=" + rdrPanelString);
+            //* END Update radar panel buttons
+
+            //* START Poll controllers
             for (Controller controller : controllers)
                 controller.poll();
-            //*
+            //* END Poll controllers
 
-            //* Update labels
+            //* START Update labels
             for (int i = 0; i < components.size(); i++) {
                 currLabel = valueLabels.get(i);
                 currComponent = components.get(i);
@@ -121,9 +287,9 @@ class SmartInterface {
                 else
                     currLabel.setText(Integer.toString(Utils.getAnalogValue(currComponent)));
             }
-            //*
+            //* END Update labels
 
-            // Delay to reduce CPU usage
+            // Delay to reduce CPU usage (20 Hz)
             Thread.sleep(50);
         } catch(Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
@@ -134,8 +300,8 @@ class SmartInterface {
     // Get usable controllers (no keyboards or mice preferably)
     private static void getControllers() {
         // Copy controllers into ArrayList so they can be removed easily
-        controllers = new ArrayList<>(Arrays.asList(ControllerEnvironment.getDefaultEnvironment()
-                .getControllers()));
+        controllers = new ArrayList<>(Arrays.asList(ControllerEnvironment
+                .getDefaultEnvironment().getControllers()));
         for (int i = 0; i < controllers.size(); i++)
             if (shouldIgnore(controllers.get(i))) {
                 controllers.remove(i);
@@ -143,10 +309,11 @@ class SmartInterface {
             }
     }
 
+    // TODO Implement completely
     private static Component modifySavedComponents(int index, boolean remove) {
         Component component = components.get(index);
         if (remove) {
-            savedComponents.remove(component);
+            //savedComponents.remove(component);
             return null;
         } else {
             savedComponents.add(component.getIdentifier() + "`" + index + '`');
@@ -183,11 +350,8 @@ class SmartInterface {
                 "TFR F/O", "WX F/O", "WX+T F/O",
                 "MAP F/O", "GC F/O"
         };
-        // Permanent ArrayList initialized so that labels can be constantly
-        // referenced and updated
-        valueLabels = new ArrayList<>();
 
-        // Detect and react to JComboBox changes
+        // Detect and react to UI (JComboBox) changes
         ItemListener itemListener = new ItemListener() {
             public void itemStateChanged(ItemEvent itemEvent) {
                 // Only change component if new item selected, not unselected
@@ -421,23 +585,23 @@ class SmartInterface {
             }
         }
 
-        //* Grid layout setup
+        //* START Grid layout setup
         //TODO Add another column for "Neutral" (dead zone)
         GridLayout grid = new GridLayout(components.size(), 3, 10, 0);
         panel.setLayout(grid);
         panel.setPreferredSize(new Dimension(780, components.size() * 30));
-        //*
+        //* END Grid layout setup
 
-        //* JScrollPane init and config
+        //* START Scroll pane setup
         JScrollPane scrollPane = new JScrollPane(panel,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         // 569 used to offset width of bar itself
         scrollPane.setPreferredSize(new Dimension(800, 569));
-        //*
+        //* END Scroll pane setup
 
-        //* JFrame init and config
-        JFrame frame = new JFrame("PSX SmartInterface v1.1: Pre-1.2 TEST 5");
+        //* START Frame setup
+        JFrame frame = new JFrame("PSX SmartInterface v1.1: Pre-1.2 TEST 7");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);
@@ -450,10 +614,14 @@ class SmartInterface {
             }
         });
         frame.setVisible(true);
-        //*
+        //* END Frame setup
     }
 
-    // Determine if controller should be ignored (otherwise it is usable)
+    /**
+     * Determines if a controller should be ignored.
+     * @param controller
+     * @return
+     */
     private static boolean shouldIgnore(Controller controller) {
         return controller.getName().toUpperCase().contains("KEYBOARD") ||
                 controller.getName().toUpperCase().contains("MOUSE");
