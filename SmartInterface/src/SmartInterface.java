@@ -28,21 +28,19 @@ class SmartInterface {
 
     private static boolean running = true;
 
-    // PSX network client
     private static Client client;
 
-    // Stores usable controllers
+    // Master controller list
     private static ArrayList<Controller> controllers;
-    // Stores all components from usable controllers for polling
+    // Master component list
     private static ArrayList<Component> components = new ArrayList<>();
-    // Stores all components that will be saved when program exited
+    // Master component list for components that are to be saved in saved_config.txt
     private static ArrayList<String> savedComponents = new ArrayList<>();
-    // Stores all labels for modification
+    // Master label list
     private static ArrayList<JLabel> valueLabels = new ArrayList<>();
 
-    // Stores current working component for memory efficiency
+    // Memory efficiency
     private static Component currComponent;
-    // Stores current working label for memory efficiency
     private static JLabel currLabel;
 
     //* START Stored components specified by user
@@ -64,7 +62,7 @@ class SmartInterface {
     private static Component apDisc;
     private static Component lcpPttCpt, lcpPttFo;
 
-    // Radar panel buttons
+    // Radar panel buttons (Qs104)
     private static Component tfrCpt;
     private static Component wxCpt, wxtCpt;
     private static Component mapCpt, gcCpt;
@@ -90,7 +88,6 @@ class SmartInterface {
     private static char[] rdrStrMisc = new char[3];
 
     public static void main(String[] args) {
-        // Connect to server
         client = new Client("localhost", 10747);
         client.start();
 
@@ -117,165 +114,14 @@ class SmartInterface {
     }
 
     /**
-     * Persistently polls controllers, updates labels, and updates PSX server
+     * Polls controllers, updates labels, and sends data to update the PSX server.
      */
     private static void update() {
         try {
-            //* START Update analog values
-            // Flight controls: Elevator, aileron, rudder
-            int aileron = Utils.combineAnalog(SmartInterface.aileronCpt,
-                    SmartInterface.aileronFo);
-            int elevator = Utils.combineAnalog(SmartInterface.elevatorCpt,
-                    SmartInterface.elevatorFo);
-            int rudder = Utils.combineAnalog(SmartInterface.rudderCpt,
-                    SmartInterface.rudderFo);
-            fltControlsVal.setStr("Qs120=" + Integer.toString(elevator) + ";" +
-                    Integer.toString(aileron) + ";" + Integer.toString(rudder));
-            if (fltControlsVal.hasChanged())
-                client.send(fltControlsVal.getStr());
-
-            // Tillers
-            int tiller = Utils.combineAnalog(SmartInterface.tillerCpt,
-                    SmartInterface.tillerFo);
-            tillersVal.setStr("Qh426=" + Integer.toString(tiller));
-            if (tillersVal.hasChanged())
-                client.send(tillersVal.getStr());
-
-            // Toe brakes
-            int toeBrakeL = Utils.combineAnalog(SmartInterface.toeBrakeLCpt,
-                    SmartInterface.toeBrakeLFo);
-            int toeBrakeR = Utils.combineAnalog(SmartInterface.toeBrakeRCpt,
-                    SmartInterface.toeBrakeRFo);
-            toeBrakesVal.setStr("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
-            if (toeBrakesVal.hasChanged())
-                client.send(toeBrakesVal.getStr());
-            //* END Update analog values
-
-            //* START Update misc buttons
-            // Stab trim (captain)
-            if (Utils.isPushed(SmartInterface.stabTrimUpCpt))
-                stabTrimCptVal.setStr("Qh398=1");
-            else if (Utils.isPushed(SmartInterface.stabTrimDownCpt))
-                stabTrimCptVal.setStr("Qh398=-1");
-            else
-                stabTrimCptVal.setStr("Qh398=0");
-            if (stabTrimCptVal.hasChanged())
-                client.send(stabTrimCptVal.getStr());
-
-            // Stab trim (first officer)
-            if (Utils.isPushed(SmartInterface.stabTrimUpFo))
-                stabTrimFoVal.setStr("Qh399=1");
-            else if (Utils.isPushed(SmartInterface.stabTrimDownFo))
-                stabTrimFoVal.setStr("Qh399=-1");
-            else
-                stabTrimFoVal.setStr("Qh399=0");
-            if (stabTrimFoVal.hasChanged())
-                client.send(stabTrimFoVal.getStr());
-
-            // AP Disc
-            if (Utils.isPushed(SmartInterface.apDisc))
-                apDiscVal.setStr("Qh400=1");
-            else
-                apDiscVal.setStr("Qh400=0");
-            if (apDiscVal.hasChanged())
-                client.send(apDiscVal.getStr());
-
-            // PTT (captain)
-            if (Utils.isPushed(lcpPttCpt))
-                lcpPttCptVal.setStr("Qh82=1");
-            else
-                lcpPttCptVal.setStr("Qh82=0");
-            if (lcpPttCptVal.hasChanged())
-                client.send(lcpPttCptVal.getStr());
-
-            // PTT (first officer)
-            if (Utils.isPushed(SmartInterface.lcpPttFo))
-                lcpPttFoVal.setStr("Qh93=1");
-            else
-                lcpPttFoVal.setStr("Qh93=0");
-            if (lcpPttFoVal.hasChanged())
-                client.send(lcpPttFoVal.getStr());
-            //* END Update misc buttons
-
-            //* START Update radar panel buttons
-            //* START Captain (left) row
-            // TFR (captain)
-            if (Utils.isPushed(SmartInterface.tfrCpt))
-                rdrStrCpt = new char[]{'f', 'W', 'T', 'M', 'G'};
-            // WX (captain)
-            else if (Utils.isPushed(SmartInterface.wxCpt))
-                rdrStrCpt = new char[]{'F', 'w', 'T', 'M', 'G'};
-            // WX+T (captain)
-            else if (Utils.isPushed(SmartInterface.wxtCpt))
-                rdrStrCpt = new char[]{'F', 'W', 't', 'M', 'G'};
-            // MAP (captain)
-            else if (Utils.isPushed(SmartInterface.mapCpt))
-                rdrStrCpt = new char[]{'F', 'W', 'T', 'm', 'G'};
-            // None (captain)
-            else if (rdrStrCpt == null)
-                rdrStrCpt = new char[]{'F', 'W', 'T', 'M', 'G'};
-            // GC (captain)
-            if (Utils.isPushed(SmartInterface.gcCpt))
-                rdrStrCpt[4] = 'g';
-            else
-                rdrStrCpt[4] = 'G';
-            //* END Captain (left) row
-
-            //* START Middle (misc) row
-            // TODO Make these toggle
-            // AUTO
-            if (Utils.isPushed(SmartInterface.auto))
-                rdrStrMisc[0] = 'a';
-            else
-                rdrStrMisc[0] = 'A';
-            // L/R
-            if (Utils.isPushed(SmartInterface.lr))
-                rdrStrMisc[1] = 'r';
-            else
-                rdrStrMisc[1] = 'R';
-            // TEST
-            if (Utils.isPushed(SmartInterface.test))
-                rdrStrMisc[2] = 'e';
-            else
-                rdrStrMisc[2] = 'E';
-            //* END Middle (misc) row
-
-            //* START First officer (right) row
-            // TFR (first officer)
-            if (Utils.isPushed(SmartInterface.tfrFo))
-                rdrStrFo = new char[]{'f', 'W', 'T', 'M', 'G'};
-            // WX (first officer)
-            else if (Utils.isPushed(SmartInterface.wxFo))
-                rdrStrFo = new char[]{'F', 'w', 'T', 'M', 'G'};
-            // WX+T (first officer)
-            else if (Utils.isPushed(SmartInterface.wxtFo))
-                rdrStrFo = new char[]{'F', 'W', 't', 'M', 'G'};
-            // MAP (first officer)
-            else if (Utils.isPushed(SmartInterface.mapFo))
-                rdrStrFo = new char[]{'F', 'W', 'T', 'm', 'G'};
-            // None (first officer)
-            else if (rdrStrFo == null)
-                rdrStrFo = new char[]{'F', 'W', 'T', 'M', 'G'};
-            // GC (first officer)
-            if (Utils.isPushed(SmartInterface.gcFo))
-                rdrStrFo[4] = 'g';
-            else
-                rdrStrFo[4] = 'G';
-            //* END First officer (right) row
-
-            // Concat and send
-            String rdrPanelString = new String(rdrStrCpt) + new String(rdrStrMisc) + new String(rdrStrFo);
-            rdrPanelVal.setStr(rdrPanelString);
-            if (rdrPanelVal.hasChanged())
-                client.send("Qs104=" + rdrPanelString);
-            //* END Update radar panel buttons
-
-            //* START Poll controllers
             for (Controller controller : controllers)
                 controller.poll();
-            //* END Poll controllers
 
-            //* START Update labels
+            // Update labels on UI
             for (int i = 0; i < components.size(); i++) {
                 currLabel = valueLabels.get(i);
                 currComponent = components.get(i);
@@ -287,17 +133,140 @@ class SmartInterface {
                 else
                     currLabel.setText(Integer.toString(Utils.getAnalogValue(currComponent)));
             }
-            //* END Update labels
 
-            // Delay to reduce CPU usage (20 Hz)
-            Thread.sleep(50);
+            //* START Update analog values
+            int aileron = Utils.combineAnalog(SmartInterface.aileronCpt,
+                    SmartInterface.aileronFo);
+            int elevator = Utils.combineAnalog(SmartInterface.elevatorCpt,
+                    SmartInterface.elevatorFo);
+            int rudder = Utils.combineAnalog(SmartInterface.rudderCpt,
+                    SmartInterface.rudderFo);
+            fltControlsVal.setStr("Qs120=" + Integer.toString(elevator) + ";" +
+                    Integer.toString(aileron) + ";" + Integer.toString(rudder));
+            if (fltControlsVal.hasChanged())
+                client.send(fltControlsVal.getStr());
+
+            int tiller = Utils.combineAnalog(SmartInterface.tillerCpt,
+                    SmartInterface.tillerFo);
+            tillersVal.setStr("Qh426=" + Integer.toString(tiller));
+            if (tillersVal.hasChanged())
+                client.send(tillersVal.getStr());
+
+            int toeBrakeL = Utils.combineAnalog(SmartInterface.toeBrakeLCpt,
+                    SmartInterface.toeBrakeLFo);
+            int toeBrakeR = Utils.combineAnalog(SmartInterface.toeBrakeRCpt,
+                    SmartInterface.toeBrakeRFo);
+            toeBrakesVal.setStr("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
+            if (toeBrakesVal.hasChanged())
+                client.send(toeBrakesVal.getStr());
+            //* END Update analog values
+
+            //* START Update misc buttons
+            if (Utils.isPushed(SmartInterface.stabTrimUpCpt))
+                stabTrimCptVal.setStr("Qh398=1");
+            else if (Utils.isPushed(SmartInterface.stabTrimDownCpt))
+                stabTrimCptVal.setStr("Qh398=-1");
+            else
+                stabTrimCptVal.setStr("Qh398=0");
+            if (stabTrimCptVal.hasChanged())
+                client.send(stabTrimCptVal.getStr());
+
+            if (Utils.isPushed(SmartInterface.stabTrimUpFo))
+                stabTrimFoVal.setStr("Qh399=1");
+            else if (Utils.isPushed(SmartInterface.stabTrimDownFo))
+                stabTrimFoVal.setStr("Qh399=-1");
+            else
+                stabTrimFoVal.setStr("Qh399=0");
+            if (stabTrimFoVal.hasChanged())
+                client.send(stabTrimFoVal.getStr());
+
+            if (Utils.isPushed(SmartInterface.apDisc))
+                apDiscVal.setStr("Qh400=1");
+            else
+                apDiscVal.setStr("Qh400=0");
+            if (apDiscVal.hasChanged())
+                client.send(apDiscVal.getStr());
+
+            if (Utils.isPushed(lcpPttCpt))
+                lcpPttCptVal.setStr("Qh82=1");
+            else
+                lcpPttCptVal.setStr("Qh82=0");
+            if (lcpPttCptVal.hasChanged())
+                client.send(lcpPttCptVal.getStr());
+
+            if (Utils.isPushed(SmartInterface.lcpPttFo))
+                lcpPttFoVal.setStr("Qh93=1");
+            else
+                lcpPttFoVal.setStr("Qh93=0");
+            if (lcpPttFoVal.hasChanged())
+                client.send(lcpPttFoVal.getStr());
+            //* END Update misc buttons
+
+            //* START Update radar panel buttons
+            // Captain (left) row
+            if (Utils.isPushed(SmartInterface.tfrCpt))
+                rdrStrCpt = new char[]{'f', 'W', 'T', 'M', 'G'};
+            else if (Utils.isPushed(SmartInterface.wxCpt))
+                rdrStrCpt = new char[]{'F', 'w', 'T', 'M', 'G'};
+            else if (Utils.isPushed(SmartInterface.wxtCpt))
+                rdrStrCpt = new char[]{'F', 'W', 't', 'M', 'G'};
+            else if (Utils.isPushed(SmartInterface.mapCpt))
+                rdrStrCpt = new char[]{'F', 'W', 'T', 'm', 'G'};
+            else if (rdrStrCpt == null)
+                rdrStrCpt = new char[]{'F', 'W', 'T', 'M', 'G'};
+            if (Utils.isPushed(SmartInterface.gcCpt))
+                rdrStrCpt[4] = 'g';
+            else
+                rdrStrCpt[4] = 'G';
+
+            // Middle (misc) row
+            // TODO Make these toggle
+            if (Utils.isPushed(SmartInterface.auto))
+                rdrStrMisc[0] = 'a';
+            else
+                rdrStrMisc[0] = 'A';
+            if (Utils.isPushed(SmartInterface.lr))
+                rdrStrMisc[1] = 'r';
+            else
+                rdrStrMisc[1] = 'R';
+            if (Utils.isPushed(SmartInterface.test))
+                rdrStrMisc[2] = 'e';
+            else
+                rdrStrMisc[2] = 'E';
+
+            // First officer (right) row
+            if (Utils.isPushed(SmartInterface.tfrFo))
+                rdrStrFo = new char[]{'f', 'W', 'T', 'M', 'G'};
+            else if (Utils.isPushed(SmartInterface.wxFo))
+                rdrStrFo = new char[]{'F', 'w', 'T', 'M', 'G'};
+            else if (Utils.isPushed(SmartInterface.wxtFo))
+                rdrStrFo = new char[]{'F', 'W', 't', 'M', 'G'};
+            else if (Utils.isPushed(SmartInterface.mapFo))
+                rdrStrFo = new char[]{'F', 'W', 'T', 'm', 'G'};
+            else if (rdrStrFo == null)
+                rdrStrFo = new char[]{'F', 'W', 'T', 'M', 'G'};
+            if (Utils.isPushed(SmartInterface.gcFo))
+                rdrStrFo[4] = 'g';
+            else
+                rdrStrFo[4] = 'G';
+
+            // Concat char[] and send
+            String rdrPanelString = new String(rdrStrCpt) + new String(rdrStrMisc) + new String(rdrStrFo);
+            rdrPanelVal.setStr(rdrPanelString);
+            if (rdrPanelVal.hasChanged())
+                client.send("Qs104=" + rdrPanelString);
+            //* END Update radar panel buttons
+
+            Thread.sleep(50); // 20 Hz
         } catch(Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
                     e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // Get usable controllers (no keyboards or mice preferably)
+    /**
+     * Gets preferred controllers, excluding mice and keyboards.
+     */
     private static void getControllers() {
         // Copy controllers into ArrayList so they can be removed easily
         controllers = new ArrayList<>(Arrays.asList(ControllerEnvironment
@@ -321,43 +290,16 @@ class SmartInterface {
         }
     }
 
-    // Initialize user interface in grid layout
+    /**
+     * Initializes the user interface.
+     */
     private static void initUI() {
-        //* JPanel init and config
-        JPanel panel = new JPanel();
-        //*
-
-        //* Looped addition of each component to UI
-        // JLabel/JComboBox declarations used to temporarily/efficiently hold
-        // swing components as they are added to the panel
-        ComboBox comboBox;
-        JLabel label;
-        // Permanent array initialized to be used for options in each JComboBox
-        String[] dropBoxStrings = new String[]{"None",
-                "Aileron Capt", "Aileron F/O",
-                "Elevator Capt", "Elevator F/O",
-                "Rudder Capt", "Rudder F/O",
-                "Tiller Capt", "Tiller F/O",
-                "Toe Brake Left Capt", "Toe Brake Right Capt",
-                "Toe Brake Left F/O", "Toe Brake Right F/O",
-                "Stab Trim UP Capt", "Stab Trim DN Capt",
-                "Stab Trim UP F/O", "Stab Trim DN F/O",
-                "AP Disc",
-                "PTT Capt", "PTT F/O",
-                "TFR Capt", "WX Capt", "WX+T Capt",
-                "MAP Capt", "GC Capt",
-                "AUTO", "L/R", "TEST",
-                "TFR F/O", "WX F/O", "WX+T F/O",
-                "MAP F/O", "GC F/O"
-        };
 
         // Detect and react to UI (JComboBox) changes
         ItemListener itemListener = new ItemListener() {
             public void itemStateChanged(ItemEvent itemEvent) {
-                // Only change component if new item selected, not unselected
                 ComboBox combo = (ComboBox) itemEvent.getSource();
                 int index = combo.getIndex();
-                // Switch to determine what this component should be used for
                 switch ((String) itemEvent.getItem()) {
                     case "None":
                         break;
@@ -561,10 +503,30 @@ class SmartInterface {
             }
         };
 
+        JPanel panel = new JPanel();
+        ComboBox comboBox;
+        JLabel label;
+        String[] dropBoxStrings = new String[]{"None",
+                "Aileron Capt", "Aileron F/O",
+                "Elevator Capt", "Elevator F/O",
+                "Rudder Capt", "Rudder F/O",
+                "Tiller Capt", "Tiller F/O",
+                "Toe Brake Left Capt", "Toe Brake Right Capt",
+                "Toe Brake Left F/O", "Toe Brake Right F/O",
+                "Stab Trim UP Capt", "Stab Trim DN Capt",
+                "Stab Trim UP F/O", "Stab Trim DN F/O",
+                "AP Disc",
+                "PTT Capt", "PTT F/O",
+                "TFR Capt", "WX Capt", "WX+T Capt",
+                "MAP Capt", "GC Capt",
+                "AUTO", "L/R", "TEST",
+                "TFR F/O", "WX F/O", "WX+T F/O",
+                "MAP F/O", "GC F/O"
+        };
+
         // Go through each controller and add its components to the UI
         for (Controller controller : controllers) {
             for (Component component : controller.getComponents()) {
-                // Add component to master list of components
                 components.add(component);
 
                 // Label #1: Current number and name of component
@@ -585,27 +547,21 @@ class SmartInterface {
             }
         }
 
-        //* START Grid layout setup
-        //TODO Add another column for "Neutral" (dead zone)
+        // TODO Add another column for "Neutral" (dead zone)
         GridLayout grid = new GridLayout(components.size(), 3, 10, 0);
         panel.setLayout(grid);
         panel.setPreferredSize(new Dimension(780, components.size() * 30));
-        //* END Grid layout setup
 
-        //* START Scroll pane setup
         JScrollPane scrollPane = new JScrollPane(panel,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         // 569 used to offset width of bar itself
         scrollPane.setPreferredSize(new Dimension(800, 569));
-        //* END Scroll pane setup
 
-        //* START Frame setup
         JFrame frame = new JFrame("PSX SmartInterface v1.1: Pre-1.2 TEST 7");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);
-        // Pack to ensure preferred sizes are used
         frame.pack();
         // Exit program if the "X" is clicked
         frame.addWindowListener(new WindowAdapter() {
@@ -614,13 +570,12 @@ class SmartInterface {
             }
         });
         frame.setVisible(true);
-        //* END Frame setup
     }
 
     /**
      * Determines if a controller should be ignored.
-     * @param controller
-     * @return
+     * @param controller The controller to be observed.
+     * @return A boolean that is true if the controller should be ignored and false if the controller should not be ignored.
      */
     private static boolean shouldIgnore(Controller controller) {
         return controller.getName().toUpperCase().contains("KEYBOARD") ||

@@ -4,24 +4,23 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
 /**
- * Handles socket creation and destruction as well calculating and exchanging
- * data with the PSX server.
+ * Handles socket creation, destruction, and data exchange between the PSX server and the client.
  *
  * @author Eric Lindau
  */
 class Client extends Thread {
 
-    // Socket
     private Socket socket;
-    // Input stream
     private BufferedReader input;
-    // Output stream
     private PrintWriter output;
 
-    // Constructor
+    /**
+     * Client constructor.
+     * @param address The IPv4 address of the server.
+     * @param port The port of the server.
+     */
     Client(String address, int port) {
         try {
             this.socket = new Socket(address, port);
@@ -40,8 +39,7 @@ class Client extends Thread {
     public void run() {
         try {
             while (true) {
-                // Empty incoming buffer
-                receive();
+                input.readLine();
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
@@ -49,7 +47,9 @@ class Client extends Thread {
         }
     }
 
-    // Kill connection
+    /**
+     * Kills the connection by closing all buffers and the socket.
+     */
     void destroyConnection() {
         try {
             socket.close();
@@ -61,15 +61,13 @@ class Client extends Thread {
 
     }
 
-    // Send data to PSX server
+    /**
+     * Sends data to the PSX server.
+     * @param data The data to be sent.
+     */
     void send(String data) {
         if (!data.isEmpty())
             output.println(data);
-    }
-
-    // Receive one line of data from PSX
-    void receive() throws IOException {
-        input.readLine();
     }
 
 }

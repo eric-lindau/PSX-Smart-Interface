@@ -1,23 +1,29 @@
 import javax.swing.*;
 
 /**
- * Custom JComboBox that keeps track of which index it is a part of in order to
+ * Custom JComboBox that keeps track of which index in the UI it is a part of in order to
  * properly assign components.
  *
  * @author Eric Lindau
  */
 class ComboBox extends JComboBox {
 
-    // Index to be kept track of (row number)
     private int index;
 
-    // Constructor
+    /**
+     * ComboBox constructor.
+     * @param items The text items that are listed in the dropdown box.
+     * @param index The place of the ComboBox in the UI
+     */
     ComboBox(String[] items, int index) {
         super(items);
         this.index = index;
     }
 
-    // Getter
+    /**
+     * Gets the index.
+     * @return The index.
+     */
     int getIndex() {
         return this.index;
     }
