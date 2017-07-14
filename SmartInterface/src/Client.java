@@ -18,8 +18,9 @@ class Client extends Thread {
 
     /**
      * Client constructor.
-     * @param address The IPv4 address of the server.
-     * @param port The port of the server.
+     *
+     * @param address the IPv4 address of the server
+     * @param port the port of the server
      */
     Client(String address, int port) {
         try {
@@ -63,7 +64,8 @@ class Client extends Thread {
 
     /**
      * Sends data to the PSX server.
-     * @param data The data to be sent.
+     *
+     * @param data the data to be sent
      */
     void send(String data) {
         if (!data.isEmpty())

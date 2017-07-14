@@ -39,10 +39,6 @@ class SmartInterface {
     // Master label list
     private static ArrayList<JLabel> valueLabels = new ArrayList<>();
 
-    // Memory efficiency
-    private static Component currComponent;
-    private static JLabel currLabel;
-
     //* START Stored components specified by user
     // Flight controls (Qs120)
     private static Component aileronCpt, aileronFo;
@@ -53,16 +49,17 @@ class SmartInterface {
     private static Component tillerCpt, tillerFo;
 
     // Toe brakes (Qs357)
+    // TODO Add deadzone of 100 to values
     private static Component toeBrakeLCpt, toeBrakeRCpt;
     private static Component toeBrakeLFo, toeBrakeRFo;
 
     // Misc buttons (Qh398, Qh399, Qh400, Qh82, Qh93)
-    private static Component stabTrimUpCpt, stabTrimDownCpt;
-    private static Component stabTrimUpFo, stabTrimDownFo;
+    private static Component stabTrimUpCpt, stabTrimDnCpt;
+    private static Component stabTrimUpFo, stabTrimDnFo;
     private static Component apDisc;
     private static Component lcpPttCpt, lcpPttFo;
 
-    // Radar panel buttons (Qs104)
+    // Radar panel buttons/rotaries (Qs104, Qs105)
     private static Component tfrCpt;
     private static Component wxCpt, wxtCpt;
     private static Component mapCpt, gcCpt;
@@ -70,6 +67,21 @@ class SmartInterface {
     private static Component tfrFo;
     private static Component wxFo, wxtFo;
     private static Component mapFo, gcFo;
+    private static Component tiltCpt, gainCpt;
+    private static Component tiltFo, gainFo;
+
+    // Other rotaries (Qh273, Qh297, Qh87, Qh89, Qh98, Qh100, Qh101, Qh139, Qh140, Qh141)
+    private static Component jettRemain;
+    private static Component ldgAltTurn;
+    private static Component lcpOutbdCpt;
+    private static Component lcpNdCpt;
+    private static Component lcpOutbdFo;
+    private static Component lcpNdFo;
+    private static Component lcpMapCpt;
+    private static Component lcpMapFo;
+    private static Component eicasBrtUpr;
+    private static Component eicasBrtLwrInner;
+    private static Component eicasBrtLwrOuter;
     //* END Stored components specified by user
 
     // Values used to detect if PSX variables have been changed and need to be updated
@@ -82,6 +94,18 @@ class SmartInterface {
     private static Value lcpPttCptVal = new Value();
     private static Value lcpPttFoVal = new Value();
     private static Value rdrPanelVal = new Value();
+    private static Value rdrPanelRotVal = new Value();
+    private static Value jettRemainVal = new Value();
+    private static Value ldgAltTurnVal = new Value();
+    private static Value lcpOutbdCptVal = new Value();
+    private static Value lcpNdCptVal = new Value();
+    private static Value lcpOutbdFoVal = new Value();
+    private static Value lcpNdFoVal = new Value();
+    private static Value lcpMapCptVal = new Value();
+    private static Value lcpMapFoVal = new Value();
+    private static Value eicasBrtUprVal = new Value();
+    private static Value eicasBrtLwrInnerVal = new Value();
+    private static Value eicasBrtLwrOuterVal = new Value();
 
     // Buffers to be combined as String sent for radar panel button values (Qs104)
     private static char[] rdrStrCpt, rdrStrFo;
@@ -104,15 +128,6 @@ class SmartInterface {
         }
     }
 
-    private static void stop() throws UnsupportedEncodingException, FileNotFoundException {
-        client.destroyConnection();
-
-        PrintWriter output = new PrintWriter("saved_config.txt", "UTF-8");
-
-        output.close();
-        System.exit(0);
-    }
-
     /**
      * Polls controllers, updates labels, and sends data to update the PSX server.
      */
@@ -123,8 +138,8 @@ class SmartInterface {
 
             // Update labels on UI
             for (int i = 0; i < components.size(); i++) {
-                currLabel = valueLabels.get(i);
-                currComponent = components.get(i);
+                JLabel currLabel = valueLabels.get(i);
+                Component currComponent = components.get(i);
                 if (!currComponent.isAnalog())
                     if (Utils.isPushed(currComponent))
                         currLabel.setText("Pushed");
@@ -135,158 +150,243 @@ class SmartInterface {
             }
 
             //* START Update analog values
-            int aileron = Utils.combineAnalog(SmartInterface.aileronCpt,
-                    SmartInterface.aileronFo);
-            int elevator = Utils.combineAnalog(SmartInterface.elevatorCpt,
-                    SmartInterface.elevatorFo);
-            int rudder = Utils.combineAnalog(SmartInterface.rudderCpt,
-                    SmartInterface.rudderFo);
-            fltControlsVal.setStr("Qs120=" + Integer.toString(elevator) + ";" +
-                    Integer.toString(aileron) + ";" + Integer.toString(rudder));
-            if (fltControlsVal.hasChanged())
-                client.send(fltControlsVal.getStr());
+            if (aileronCpt != null || aileronFo != null ||
+                    elevatorCpt != null || elevatorFo != null ||
+                    rudderCpt != null || rudderFo != null) {
+                int aileron = Utils.combineAnalog(aileronCpt, aileronFo);
+                int elevator = Utils.combineAnalog(elevatorCpt, elevatorFo);
+                int rudder = Utils.combineAnalog(rudderCpt, rudderFo);
+                fltControlsVal.setStr("Qs120=" + Integer.toString(elevator) + ";" +
+                        Integer.toString(aileron) + ";" + Integer.toString(rudder));
+                if (fltControlsVal.hasChanged())
+                    client.send(fltControlsVal.getStr());
+            }
 
-            int tiller = Utils.combineAnalog(SmartInterface.tillerCpt,
-                    SmartInterface.tillerFo);
-            tillersVal.setStr("Qh426=" + Integer.toString(tiller));
-            if (tillersVal.hasChanged())
-                client.send(tillersVal.getStr());
+            if (tillerCpt != null || tillerFo != null) {
+                int tiller = Utils.combineAnalog(tillerCpt, tillerFo);
+                tillersVal.setStr("Qh426=" + Integer.toString(tiller));
+                if (tillersVal.hasChanged())
+                    client.send(tillersVal.getStr());
+            }
 
-            int toeBrakeL = Utils.combineAnalog(SmartInterface.toeBrakeLCpt,
-                    SmartInterface.toeBrakeLFo);
-            int toeBrakeR = Utils.combineAnalog(SmartInterface.toeBrakeRCpt,
-                    SmartInterface.toeBrakeRFo);
-            toeBrakesVal.setStr("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
-            if (toeBrakesVal.hasChanged())
-                client.send(toeBrakesVal.getStr());
+            // TODO Add deadzone of 100
+            if (toeBrakeLCpt != null || toeBrakeRCpt != null ||
+                    toeBrakeLFo != null || toeBrakeRFo != null) {
+                int toeBrakeL = Utils.combineAnalog(toeBrakeLCpt, toeBrakeLFo) + 1;
+                int toeBrakeR = Utils.combineAnalog(toeBrakeRCpt, toeBrakeRFo) + 1;
+                toeBrakesVal.setStr("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
+                if (toeBrakesVal.hasChanged())
+                    client.send(toeBrakesVal.getStr());
+            }
             //* END Update analog values
 
             //* START Update misc buttons
-            if (Utils.isPushed(SmartInterface.stabTrimUpCpt))
-                stabTrimCptVal.setStr("Qh398=1");
-            else if (Utils.isPushed(SmartInterface.stabTrimDownCpt))
-                stabTrimCptVal.setStr("Qh398=-1");
-            else
-                stabTrimCptVal.setStr("Qh398=0");
-            if (stabTrimCptVal.hasChanged())
-                client.send(stabTrimCptVal.getStr());
+            if (stabTrimUpCpt != null || stabTrimDnCpt != null) {
+                if (Utils.isPushed(stabTrimUpCpt))
+                    stabTrimCptVal.setStr("Qh398=1");
+                else if (Utils.isPushed(stabTrimDnCpt))
+                    stabTrimCptVal.setStr("Qh398=-1");
+                else
+                    stabTrimCptVal.setStr("Qh398=0");
+                if (stabTrimCptVal.hasChanged())
+                    client.send(stabTrimCptVal.getStr());
+            }
 
-            if (Utils.isPushed(SmartInterface.stabTrimUpFo))
-                stabTrimFoVal.setStr("Qh399=1");
-            else if (Utils.isPushed(SmartInterface.stabTrimDownFo))
-                stabTrimFoVal.setStr("Qh399=-1");
-            else
-                stabTrimFoVal.setStr("Qh399=0");
-            if (stabTrimFoVal.hasChanged())
-                client.send(stabTrimFoVal.getStr());
+            if (stabTrimUpFo != null || stabTrimDnFo != null) {
+                if (Utils.isPushed(stabTrimUpFo))
+                    stabTrimFoVal.setStr("Qh399=1");
+                else if (Utils.isPushed(stabTrimDnFo))
+                    stabTrimFoVal.setStr("Qh399=-1");
+                else
+                    stabTrimFoVal.setStr("Qh399=0");
+                if (stabTrimFoVal.hasChanged())
+                    client.send(stabTrimFoVal.getStr());
+            }
 
-            if (Utils.isPushed(SmartInterface.apDisc))
-                apDiscVal.setStr("Qh400=1");
-            else
-                apDiscVal.setStr("Qh400=0");
-            if (apDiscVal.hasChanged())
-                client.send(apDiscVal.getStr());
+            if (apDisc != null) {
+                if (Utils.isPushed(apDisc))
+                    apDiscVal.setStr("Qh400=1");
+                else
+                    apDiscVal.setStr("Qh400=0");
+                if (apDiscVal.hasChanged())
+                    client.send(apDiscVal.getStr());
+            }
 
-            if (Utils.isPushed(lcpPttCpt))
-                lcpPttCptVal.setStr("Qh82=1");
-            else
-                lcpPttCptVal.setStr("Qh82=0");
-            if (lcpPttCptVal.hasChanged())
-                client.send(lcpPttCptVal.getStr());
+            if (lcpPttCpt != null) {
+                if (Utils.isPushed(lcpPttCpt))
+                    lcpPttCptVal.setStr("Qh82=1");
+                else
+                    lcpPttCptVal.setStr("Qh82=0");
+                if (lcpPttCptVal.hasChanged())
+                    client.send(lcpPttCptVal.getStr());
+            }
 
-            if (Utils.isPushed(SmartInterface.lcpPttFo))
-                lcpPttFoVal.setStr("Qh93=1");
-            else
-                lcpPttFoVal.setStr("Qh93=0");
-            if (lcpPttFoVal.hasChanged())
-                client.send(lcpPttFoVal.getStr());
+            if (lcpPttFo != null) {
+                if (Utils.isPushed(lcpPttFo))
+                    lcpPttFoVal.setStr("Qh93=1");
+                else
+                    lcpPttFoVal.setStr("Qh93=0");
+                if (lcpPttFoVal.hasChanged())
+                    client.send(lcpPttFoVal.getStr());
+            }
             //* END Update misc buttons
 
-            //* START Update radar panel buttons
+            //* START Update radar panel buttons/rotaries
             // Captain (left) row
-            if (Utils.isPushed(SmartInterface.tfrCpt))
-                rdrStrCpt = new char[]{'f', 'W', 'T', 'M', 'G'};
-            else if (Utils.isPushed(SmartInterface.wxCpt))
-                rdrStrCpt = new char[]{'F', 'w', 'T', 'M', 'G'};
-            else if (Utils.isPushed(SmartInterface.wxtCpt))
-                rdrStrCpt = new char[]{'F', 'W', 't', 'M', 'G'};
-            else if (Utils.isPushed(SmartInterface.mapCpt))
-                rdrStrCpt = new char[]{'F', 'W', 'T', 'm', 'G'};
-            else if (rdrStrCpt == null)
-                rdrStrCpt = new char[]{'F', 'W', 'T', 'M', 'G'};
-            if (Utils.isPushed(SmartInterface.gcCpt))
-                rdrStrCpt[4] = 'g';
-            else
-                rdrStrCpt[4] = 'G';
+            if (tfrCpt != null || wxCpt != null || wxtCpt != null || mapCpt != null || gcCpt != null ||
+                    auto != null || lr != null || test != null ||
+                    tfrFo != null || wxFo != null || wxtFo != null || mapFo != null || gcFo != null) {
+                if (Utils.isPushed(tfrCpt))
+                    rdrStrCpt = new char[]{'f', 'W', 'T', 'M', 'G'};
+                else if (Utils.isPushed(wxCpt))
+                    rdrStrCpt = new char[]{'F', 'w', 'T', 'M', 'G'};
+                else if (Utils.isPushed(wxtCpt))
+                    rdrStrCpt = new char[]{'F', 'W', 't', 'M', 'G'};
+                else if (Utils.isPushed(mapCpt))
+                    rdrStrCpt = new char[]{'F', 'W', 'T', 'm', 'G'};
+                else if (rdrStrCpt == null)
+                    rdrStrCpt = new char[]{'F', 'W', 'T', 'M', 'G'};
+                if (Utils.isPushed(gcCpt))
+                    rdrStrCpt[4] = 'g';
+                else
+                    rdrStrCpt[4] = 'G';
 
-            // Middle (misc) row
-            // TODO Make these toggle
-            if (Utils.isPushed(SmartInterface.auto))
-                rdrStrMisc[0] = 'a';
-            else
-                rdrStrMisc[0] = 'A';
-            if (Utils.isPushed(SmartInterface.lr))
-                rdrStrMisc[1] = 'r';
-            else
-                rdrStrMisc[1] = 'R';
-            if (Utils.isPushed(SmartInterface.test))
-                rdrStrMisc[2] = 'e';
-            else
-                rdrStrMisc[2] = 'E';
+                // Middle (misc) row
+                // TODO Make these toggle
+                if (Utils.isPushed(auto))
+                    rdrStrMisc[0] = 'a';
+                else
+                    rdrStrMisc[0] = 'A';
+                if (Utils.isPushed(lr))
+                    rdrStrMisc[1] = 'r';
+                else
+                    rdrStrMisc[1] = 'R';
+                if (Utils.isPushed(test))
+                    rdrStrMisc[2] = 'e';
+                else
+                    rdrStrMisc[2] = 'E';
 
-            // First officer (right) row
-            if (Utils.isPushed(SmartInterface.tfrFo))
-                rdrStrFo = new char[]{'f', 'W', 'T', 'M', 'G'};
-            else if (Utils.isPushed(SmartInterface.wxFo))
-                rdrStrFo = new char[]{'F', 'w', 'T', 'M', 'G'};
-            else if (Utils.isPushed(SmartInterface.wxtFo))
-                rdrStrFo = new char[]{'F', 'W', 't', 'M', 'G'};
-            else if (Utils.isPushed(SmartInterface.mapFo))
-                rdrStrFo = new char[]{'F', 'W', 'T', 'm', 'G'};
-            else if (rdrStrFo == null)
-                rdrStrFo = new char[]{'F', 'W', 'T', 'M', 'G'};
-            if (Utils.isPushed(SmartInterface.gcFo))
-                rdrStrFo[4] = 'g';
-            else
-                rdrStrFo[4] = 'G';
+                // First officer (right) row
+                if (Utils.isPushed(tfrFo))
+                    rdrStrFo = new char[]{'f', 'W', 'T', 'M', 'G'};
+                else if (Utils.isPushed(wxFo))
+                    rdrStrFo = new char[]{'F', 'w', 'T', 'M', 'G'};
+                else if (Utils.isPushed(wxtFo))
+                    rdrStrFo = new char[]{'F', 'W', 't', 'M', 'G'};
+                else if (Utils.isPushed(mapFo))
+                    rdrStrFo = new char[]{'F', 'W', 'T', 'm', 'G'};
+                else if (rdrStrFo == null)
+                    rdrStrFo = new char[]{'F', 'W', 'T', 'M', 'G'};
+                if (Utils.isPushed(gcFo))
+                    rdrStrFo[4] = 'g';
+                else
+                    rdrStrFo[4] = 'G';
 
-            // Concat char[] and send
-            String rdrPanelString = new String(rdrStrCpt) + new String(rdrStrMisc) + new String(rdrStrFo);
-            rdrPanelVal.setStr(rdrPanelString);
-            if (rdrPanelVal.hasChanged())
-                client.send("Qs104=" + rdrPanelString);
-            //* END Update radar panel buttons
+                // Concat char[] and send Qs104
+                String rdrPanelString = new String(rdrStrCpt) + new String(rdrStrMisc) + new String(rdrStrFo);
+                rdrPanelVal.setStr("Qs104=" + rdrPanelString);
+                if (rdrPanelVal.hasChanged())
+                    client.send(rdrPanelVal.getStr());
+            }
+
+            // Rotaries
+            if (tiltCpt != null || gainCpt != null || tiltFo != null || gainFo != null) {
+                int tiltCptInt = Utils.getAnalogValue(tiltCpt, 4713, true);
+                int gainCptInt = Utils.getGainValue(gainCpt);
+                int tiltFoInt = Utils.getAnalogValue(tiltFo, 4713, true);
+                int gainFoInt = Utils.getGainValue(gainFo);
+                rdrPanelRotVal.setStr("Qs105=" + Integer.toString(tiltCptInt) + ";" + Integer.toString(gainCptInt) +
+                        ";" + Integer.toString(tiltFoInt) + ";" + Integer.toString(gainFoInt));
+                if (rdrPanelRotVal.hasChanged())
+                    client.send(rdrPanelRotVal.getStr());
+            }
+            //* END Update radar panel buttons/rotaries
+
+            //* START Misc rotaries
+            // TODO Verify all of these are correct
+            if (jettRemain != null) {
+                int jettRemainInt = Utils.getAnalogValue(jettRemain, 62830, false);
+                jettRemainVal.setStr("Qh273=" + Integer.toString(jettRemainInt));
+                if (jettRemainVal.hasChanged())
+                    client.send(jettRemainVal.getStr());
+            }
+
+            if (ldgAltTurn != null) {
+                int ldgAltTurnInt = Utils.getAnalogValue(ldgAltTurn, 62830, false);
+                ldgAltTurnVal.setStr("Qh297=" + Integer.toString(ldgAltTurnInt));
+                if (ldgAltTurnVal.hasChanged())
+                    client.send(ldgAltTurnVal.getStr());
+            }
+
+            if (lcpOutbdCpt != null) {
+                int lcpOutbdCptInt = Utils.getAnalogValue(lcpOutbdCpt, 4713, false);
+                lcpOutbdCptVal.setStr("Qh87=" + Integer.toString(lcpOutbdCptInt));
+                if (lcpOutbdCptVal.hasChanged())
+                    client.send(lcpOutbdCptVal.getStr());
+            }
+
+            if (lcpNdCpt != null) {
+                int lcpNdCptInt = Utils.getAnalogValue(lcpNdCpt, 4713, false);
+                lcpNdCptVal.setStr("Qh89=" + Integer.toString(lcpNdCptInt));
+                if (lcpNdCptVal.hasChanged())
+                    client.send(lcpNdCptVal.getStr());
+            }
+
+            if (lcpOutbdFo != null) {
+                int lcpOutbdFoInt = Utils.getAnalogValue(lcpOutbdFo, 4713, false);
+                lcpOutbdFoVal.setStr("Qh87=" + Integer.toString(lcpOutbdFoInt));
+                if (lcpOutbdFoVal.hasChanged())
+                    client.send(lcpOutbdFoVal.getStr());
+            }
+
+            if (lcpNdFo != null) {
+                int lcpNdFoInt = Utils.getAnalogValue(lcpNdFo, 4713, false);
+                lcpNdFoVal.setStr("Qh100=" + Integer.toString(lcpNdFoInt));
+                if (lcpNdFoVal.hasChanged())
+                    client.send(lcpNdFoVal.getStr());
+            }
+
+            if (lcpMapCpt != null) {
+                int lcpMapCptInt = Utils.getAnalogValue(lcpMapCpt, 4713, false);
+                lcpMapCptVal.setStr("Qh90=" + Integer.toString(lcpMapCptInt));
+                if (lcpMapCptVal.hasChanged())
+                    client.send(lcpMapCptVal.getStr());
+            }
+
+            if (lcpMapFo != null) {
+                int lcpMapFoInt = Utils.getAnalogValue(lcpMapFo, 4713, false);
+                lcpMapFoVal.setStr("Qh101=" + Integer.toString(lcpMapFoInt));
+                if (lcpMapFoVal.hasChanged())
+                    client.send(lcpMapFoVal.getStr());
+            }
+
+            if (eicasBrtUpr != null) {
+                int eicasBrtUprInt = Utils.getAnalogValue(eicasBrtUpr, 4713, false);
+                eicasBrtUprVal.setStr("Qh139=" + eicasBrtUprVal.getStr());
+                if (eicasBrtUprVal.hasChanged())
+                    client.send(eicasBrtUprVal.getStr());
+            }
+
+            if (eicasBrtLwrInner != null) {
+                int eicasBrtLwrInnerInt = Utils.getAnalogValue(eicasBrtLwrInner, 4713, false);
+                eicasBrtLwrInnerVal.setStr("Qh140=" + eicasBrtLwrInnerVal.getStr());
+                if (eicasBrtLwrInnerVal.hasChanged())
+                    client.send(eicasBrtLwrInnerVal.getStr());
+            }
+
+            if (eicasBrtLwrOuter != null) {
+                int eicasBrtLwrOuterInt = Utils.getAnalogValue(eicasBrtLwrOuter, 4713, false);
+                eicasBrtLwrOuterVal.setStr("Qh141=" + eicasBrtLwrOuterVal.getStr());
+                if (eicasBrtLwrOuterVal.hasChanged())
+                    client.send(eicasBrtLwrOuterVal.getStr());
+            }
+            // TODO Verify all of these are correct
+            //* END Misc rotaries
 
             Thread.sleep(50); // 20 Hz
         } catch(Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
                     e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    /**
-     * Gets preferred controllers, excluding mice and keyboards.
-     */
-    private static void getControllers() {
-        // Copy controllers into ArrayList so they can be removed easily
-        controllers = new ArrayList<>(Arrays.asList(ControllerEnvironment
-                .getDefaultEnvironment().getControllers()));
-        for (int i = 0; i < controllers.size(); i++)
-            if (shouldIgnore(controllers.get(i))) {
-                controllers.remove(i);
-                i--;
-            }
-    }
-
-    // TODO Implement completely
-    private static Component modifySavedComponents(int index, boolean remove) {
-        Component component = components.get(index);
-        if (remove) {
-            //savedComponents.remove(component);
-            return null;
-        } else {
-            savedComponents.add(component.getIdentifier() + "`" + index + '`');
-            return component;
         }
     }
 
@@ -303,101 +403,101 @@ class SmartInterface {
                 switch ((String) itemEvent.getItem()) {
                     case "None":
                         break;
-                    case "Aileron Capt":
+                    case "Aileron - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             aileronCpt = modifySavedComponents(index, false);
                         else
                             aileronCpt = modifySavedComponents(index, true);
                         break;
-                    case "Aileron F/O":
+                    case "Aileron - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             aileronFo = modifySavedComponents(index, false);
                         else
                             aileronFo = modifySavedComponents(index, true);
                         break;
-                    case "Elevator Capt":
+                    case "Elevator - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             elevatorCpt = modifySavedComponents(index, false);
                         else
                             elevatorCpt = modifySavedComponents(index, true);
                         break;
-                    case "Elevator F/O":
+                    case "Elevator - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             elevatorFo = modifySavedComponents(index, false);
                         else
                             elevatorFo = modifySavedComponents(index, true);
                         break;
-                    case "Rudder Capt":
+                    case "Rudder - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             rudderCpt = modifySavedComponents(index, false);
                         else
                             rudderCpt = modifySavedComponents(index, true);
                         break;
-                    case "Rudder F/O":
+                    case "Rudder - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             rudderFo = modifySavedComponents(index, false);
                         else
                             rudderFo = modifySavedComponents(index, true);
                         break;
-                    case "Tiller Capt":
+                    case "Tiller - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             tillerCpt = modifySavedComponents(index, false);
                         else
                             tillerCpt = modifySavedComponents(index, true);
                         break;
-                    case "Tiller F/O":
+                    case "Tiller - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             tillerFo = modifySavedComponents(index, false);
                         else
                             tillerFo = modifySavedComponents(index, true);
                         break;
-                    case "Toe Brake Left Capt":
+                    case "Toe Brake Left - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             toeBrakeLCpt = modifySavedComponents(index, false);
                         else
                             toeBrakeLCpt = modifySavedComponents(index, true);
                         break;
-                    case "Toe Brake Right Capt":
+                    case "Toe Brake Right - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             toeBrakeRCpt = modifySavedComponents(index, false);
                         else
                             toeBrakeRCpt = modifySavedComponents(index, true);
                         break;
-                    case "Toe Brake Left F/O":
+                    case "Toe Brake Left - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             toeBrakeLFo = modifySavedComponents(index, false);
                         else
                             toeBrakeLFo = modifySavedComponents(index, true);
                         break;
-                    case "Toe Brake Right F/O":
+                    case "Toe Brake Right - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             toeBrakeRFo = modifySavedComponents(index, false);
                         else
                             toeBrakeRFo = modifySavedComponents(index, true);
                         break;
-                    case "Stab Trim UP Capt":
+                    case "Stab Trim UP - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             stabTrimUpCpt = modifySavedComponents(index, false);
                         else
                             stabTrimUpCpt = modifySavedComponents(index, true);
                         break;
-                    case "Stab Trim DN Capt":
+                    case "Stab Trim DN - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            stabTrimDownCpt = modifySavedComponents(index, false);
+                            stabTrimDnCpt = modifySavedComponents(index, false);
                         else
-                            stabTrimDownCpt = modifySavedComponents(index, true);
+                            stabTrimDnCpt = modifySavedComponents(index, true);
                         break;
-                    case "Stab Trim UP F/O":
+                    case "Stab Trim UP - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             stabTrimUpFo = modifySavedComponents(index, false);
                         else
                             stabTrimUpFo = modifySavedComponents(index, true);
                         break;
-                    case "Stab Trim DN F/O":
+                    case "Stab Trim DN - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            stabTrimDownFo = modifySavedComponents(index, false);
+                            stabTrimDnFo = modifySavedComponents(index, false);
                         else
-                            stabTrimDownFo = modifySavedComponents(index, true);
+                            stabTrimDnFo = modifySavedComponents(index, true);
                         break;
                     case "AP Disc":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
@@ -405,43 +505,43 @@ class SmartInterface {
                         else
                             apDisc = modifySavedComponents(index, true);
                         break;
-                    case "PTT Capt":
+                    case "PTT - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             lcpPttCpt = modifySavedComponents(index, false);
                         else
                             lcpPttCpt = modifySavedComponents(index, true);
                         break;
-                    case "PTT F/O":
+                    case "PTT - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             lcpPttFo = modifySavedComponents(index, false);
                         else
                             lcpPttFo = modifySavedComponents(index, true);
                         break;
-                    case "TFR Capt":
+                    case "TFR - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             tfrCpt = modifySavedComponents(index, false);
                         else
                             tfrCpt = modifySavedComponents(index, true);
                         break;
-                    case "WX Capt":
+                    case "WX - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             wxCpt = modifySavedComponents(index, false);
                         else
                             wxCpt = modifySavedComponents(index, true);
                         break;
-                    case "WX+T Capt":
+                    case "WX+T - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             wxtCpt = modifySavedComponents(index, false);
                         else
                             wxtCpt = modifySavedComponents(index, true);
                         break;
-                    case "MAP Capt":
+                    case "MAP - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             mapCpt = modifySavedComponents(index, false);
                         else
                             mapCpt = modifySavedComponents(index, true);
                         break;
-                    case "GC Capt":
+                    case "GC - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             gcCpt = modifySavedComponents(index, false);
                         else
@@ -465,35 +565,125 @@ class SmartInterface {
                         else
                             test = modifySavedComponents(index, true);
                         break;
-                    case "TFR F/O":
+                    case "TFR - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             tfrFo = modifySavedComponents(index, false);
                         else
                             tfrFo = modifySavedComponents(index, true);
                         break;
-                    case "WX F/O":
+                    case "WX - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             wxFo = modifySavedComponents(index, false);
                         else
                             wxFo = modifySavedComponents(index, true);
                         break;
-                    case "WX+T F/O":
+                    case "WX+T - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             wxtFo = modifySavedComponents(index, false);
                         else
                             wxtFo = modifySavedComponents(index, true);
                         break;
-                    case "MAP F/O":
+                    case "MAP - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             mapFo = modifySavedComponents(index, false);
                         else
                             mapFo = modifySavedComponents(index, true);
                         break;
-                    case "GC F/O":
+                    case "GC - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             gcFo = modifySavedComponents(index, false);
                         else
                             gcFo = modifySavedComponents(index, true);
+                        break;
+                    case "Tilt - Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            tiltCpt = modifySavedComponents(index, false);
+                        else
+                            tiltCpt = modifySavedComponents(index, true);
+                        break;
+                    case "Gain - Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            gainCpt = modifySavedComponents(index, false);
+                        else
+                            gainCpt = modifySavedComponents(index, true);
+                        break;
+                    case "Tilt - F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            tiltFo = modifySavedComponents(index, false);
+                        else
+                            tiltFo = modifySavedComponents(index, true);
+                        break;
+                    case "Gain - F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            gainFo = modifySavedComponents(index, false);
+                        else
+                            gainFo = modifySavedComponents(index, true);
+                        break;
+                    case "Jettison Fuel-to-Remain":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            jettRemain = modifySavedComponents(index, false);
+                        else
+                            jettRemain = modifySavedComponents(index, true);
+                        break;
+                    case "Landing Altitude":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            ldgAltTurn = modifySavedComponents(index, false);
+                        else
+                            ldgAltTurn = modifySavedComponents(index, true);
+                        break;
+                    case "LCP Outbd - Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            lcpOutbdCpt = modifySavedComponents(index, false);
+                        else
+                            lcpOutbdFo = modifySavedComponents(index, true);
+                        break;
+                    case "LCP Inbd - Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            lcpNdCpt = modifySavedComponents(index, false);
+                        else
+                            lcpNdCpt = modifySavedComponents(index, true);
+                        break;
+                    case "LCP Outbd - F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            lcpOutbdFo = modifySavedComponents(index, false);
+                        else
+                            lcpOutbdFo = modifySavedComponents(index, true);
+                        break;
+                    case "LCP Inbd - F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            lcpNdFo = modifySavedComponents(index, false);
+                        else
+                            lcpNdFo = modifySavedComponents(index, true);
+                        break;
+                    case "LCP MAP - Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            lcpMapCpt = modifySavedComponents(index, false);
+                        else
+                            lcpMapCpt = modifySavedComponents(index, true);
+                        break;
+                    case "LCP MAP - F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            lcpMapFo = modifySavedComponents(index, false);
+                        else
+                            lcpMapFo = modifySavedComponents(index, true);
+                        break;
+                    case "EICAS BRT - Upr":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            eicasBrtUpr = modifySavedComponents(index, false);
+                        else
+                            eicasBrtUpr = modifySavedComponents(index, true);
+                        break;
+                    case "EICAS BRT - Lwr Inner":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            eicasBrtLwrInner = modifySavedComponents(index, false);
+                        else
+                            eicasBrtLwrInner = modifySavedComponents(index, true);
+                        break;
+                    case "EICAS BRT - Lwr Outer":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            eicasBrtLwrOuter = modifySavedComponents(index, false);
+                        else
+                            eicasBrtLwrOuter = modifySavedComponents(index, true);
                         break;
                     default:
                         JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
@@ -507,21 +697,31 @@ class SmartInterface {
         ComboBox comboBox;
         JLabel label;
         String[] dropBoxStrings = new String[]{"None",
-                "Aileron Capt", "Aileron F/O",
-                "Elevator Capt", "Elevator F/O",
-                "Rudder Capt", "Rudder F/O",
-                "Tiller Capt", "Tiller F/O",
-                "Toe Brake Left Capt", "Toe Brake Right Capt",
-                "Toe Brake Left F/O", "Toe Brake Right F/O",
-                "Stab Trim UP Capt", "Stab Trim DN Capt",
-                "Stab Trim UP F/O", "Stab Trim DN F/O",
+                "Aileron - Capt", "Aileron - F/O",
+                "Elevator - Capt", "Elevator - F/O",
+                "Rudder - Capt", "Rudder - F/O",
+                "Tiller - Capt", "Tiller - F/O",
+                "Toe Brake Left - Capt", "Toe Brake Right - Capt",
+                "Toe Brake Left - F/O", "Toe Brake Right - F/O",
+                "Stab Trim UP - Capt", "Stab Trim DN - Capt",
+                "Stab Trim UP - F/O", "Stab Trim DN - F/O",
                 "AP Disc",
-                "PTT Capt", "PTT F/O",
-                "TFR Capt", "WX Capt", "WX+T Capt",
-                "MAP Capt", "GC Capt",
+                "PTT - Capt", "PTT - F/O",
+                "TFR - Capt", "WX - Capt", "WX+T - Capt",
+                "MAP - Capt", "GC - Capt",
                 "AUTO", "L/R", "TEST",
-                "TFR F/O", "WX F/O", "WX+T F/O",
-                "MAP F/O", "GC F/O"
+                "TFR - F/O", "WX - F/O", "WX+T - F/O",
+                "MAP - F/O", "GC - F/O",
+                "Tilt - Capt", "Gain - Capt",
+                "Tilt - F/O", "Gain - F/O",
+                "Jettison Fuel-to-Remain",
+                "Landing Altitude",
+                "LCP Outbd - Capt", "LCP Inbd - Capt",
+                "LCP Outbd - F/O", "LCP Inbd - F/O",
+                "LCP MAP - Capt", "LCP MAP - F/O",
+                "EICAS BRT - Upr",
+                "EICAS BRT - Lwr Inner",
+                "EICAS BRT - Lwr Outer"
         };
 
         // Go through each controller and add its components to the UI
@@ -541,8 +741,10 @@ class SmartInterface {
 
                 // ComboBox: Select which components act for which operations
                 comboBox = new ComboBox(dropBoxStrings, components.size() - 1);
-                comboBox.setMaximumRowCount(20);
+                comboBox.setMaximumRowCount(30);
                 comboBox.addItemListener(itemListener);
+                // TODO Implement this with loading from saved file
+                //comboBox.getItemListeners()
                 panel.add(comboBox);
             }
         }
@@ -573,13 +775,54 @@ class SmartInterface {
     }
 
     /**
+     * Gets preferred controllers, excluding mice and keyboards.
+     */
+    private static void getControllers() {
+        // Copy controllers into ArrayList so they can be removed easily
+        controllers = new ArrayList<>(Arrays.asList(ControllerEnvironment
+                .getDefaultEnvironment().getControllers()));
+        for (int i = 0; i < controllers.size(); i++)
+            if (shouldIgnore(controllers.get(i))) {
+                controllers.remove(i);
+                i--;
+            }
+    }
+
+    /**
      * Determines if a controller should be ignored.
-     * @param controller The controller to be observed.
-     * @return A boolean that is true if the controller should be ignored and false if the controller should not be ignored.
+     *
+     * @param controller the controller to be observed
+     * @return true if the controller should be ignored or false if the controller should not be ignored.
      */
     private static boolean shouldIgnore(Controller controller) {
         return controller.getName().toUpperCase().contains("KEYBOARD") ||
                 controller.getName().toUpperCase().contains("MOUSE");
+    }
+
+    // TODO Implement completely
+    private static Component modifySavedComponents(int index, boolean remove) {
+        Component component = components.get(index);
+        if (remove) {
+            //savedComponents.remove(component);
+            return null;
+        } else {
+            savedComponents.add(component.getIdentifier() + "`" + index + '`');
+            return component;
+        }
+    }
+
+    /**
+     * Stops client and stream operations.
+     * @throws UnsupportedEncodingException
+     * @throws FileNotFoundException
+     */
+    private static void stop() throws UnsupportedEncodingException, FileNotFoundException {
+        client.destroyConnection();
+
+        PrintWriter output = new PrintWriter("saved_config.txt", "UTF-8");
+
+        output.close();
+        System.exit(0);
     }
 
 }
