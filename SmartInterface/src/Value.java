@@ -19,19 +19,18 @@ class Value {
 
     /**
      * Sets the current value.
-     * @param str The value to be set.
+     *
+     * @param str the value to be set
      */
     void setStr(String str) {
-        if (!this.str.equals(str))
-            this.hasChanged = true;
-        else
-            this.hasChanged = false;
+        this.hasChanged = !this.str.equals(str);
         this.str = str;
     }
 
     /**
      * Gets the current value.
-     * @return The current value.
+     *
+     * @return the current value
      */
     String getStr() {
         return this.str;
@@ -39,7 +38,8 @@ class Value {
 
     /**
      * Determines if the value has been changed.
-     * @return A boolean that is true if the value has changed and false if it has not.
+     *
+     * @return true if the value has changed or false if it has not
      */
     boolean hasChanged() {
         return this.hasChanged;

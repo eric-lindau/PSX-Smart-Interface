@@ -49,27 +49,27 @@ class Client extends Thread {
     }
 
     /**
-     * Kills the connection by closing all buffers and the socket.
-     */
-    void destroyConnection() {
-        try {
-            socket.close();
-            output.close();
-            input.close();
-        } catch (Exception e) {
-            System.exit(1);
-        }
-
-    }
-
-    /**
      * Sends data to the PSX server.
      *
      * @param data the data to be sent
      */
     void send(String data) {
         if (!data.isEmpty())
-            output.println(data);
+            this.output.println(data);
+    }
+
+    /**
+     * Kills the connection by closing all buffers and the socket.
+     */
+    void destroyConnection() {
+        try {
+            this.socket.close();
+            this.output.close();
+            this.input.close();
+        } catch (Exception e) {
+            System.exit(1);
+        }
+
     }
 
 }

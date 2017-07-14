@@ -8,9 +8,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -34,9 +32,11 @@ class SmartInterface {
     private static ArrayList<Controller> controllers;
     // Master component list
     private static ArrayList<Component> components = new ArrayList<>();
-    // Master component list for components that are to be saved in saved_config.txt
+    // Master component list for components that are to be saved in saved.txt
     private static ArrayList<String> savedComponents = new ArrayList<>();
-    // Master label list
+    // Master label list for reference while saving component configuration
+    private static ArrayList<String> labels = new ArrayList<>();
+    // Master value label list
     private static ArrayList<JLabel> valueLabels = new ArrayList<>();
 
     //* START Stored components specified by user
@@ -117,13 +117,14 @@ class SmartInterface {
 
         getControllers();
         initUI();
+        loadSavedComponents();
 
         try {
             while (running)
                 update();
             stop();
         } catch(Exception e) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage() + e.getStackTrace(),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -362,21 +363,21 @@ class SmartInterface {
 
             if (eicasBrtUpr != null) {
                 int eicasBrtUprInt = Utils.getAnalogValue(eicasBrtUpr, 4713, false);
-                eicasBrtUprVal.setStr("Qh139=" + eicasBrtUprVal.getStr());
+                eicasBrtUprVal.setStr("Qh139=" + Integer.toString(eicasBrtUprInt));
                 if (eicasBrtUprVal.hasChanged())
                     client.send(eicasBrtUprVal.getStr());
             }
 
             if (eicasBrtLwrInner != null) {
                 int eicasBrtLwrInnerInt = Utils.getAnalogValue(eicasBrtLwrInner, 4713, false);
-                eicasBrtLwrInnerVal.setStr("Qh140=" + eicasBrtLwrInnerVal.getStr());
+                eicasBrtLwrInnerVal.setStr("Qh140=" + Integer.toString(eicasBrtLwrInnerInt));
                 if (eicasBrtLwrInnerVal.hasChanged())
                     client.send(eicasBrtLwrInnerVal.getStr());
             }
 
             if (eicasBrtLwrOuter != null) {
                 int eicasBrtLwrOuterInt = Utils.getAnalogValue(eicasBrtLwrOuter, 4713, false);
-                eicasBrtLwrOuterVal.setStr("Qh141=" + eicasBrtLwrOuterVal.getStr());
+                eicasBrtLwrOuterVal.setStr("Qh141=" + Integer.toString(eicasBrtLwrOuterInt));
                 if (eicasBrtLwrOuterVal.hasChanged())
                     client.send(eicasBrtLwrOuterVal.getStr());
             }
@@ -398,292 +399,294 @@ class SmartInterface {
         // Detect and react to UI (JComboBox) changes
         ItemListener itemListener = new ItemListener() {
             public void itemStateChanged(ItemEvent itemEvent) {
+                String item = (String) itemEvent.getItem();
                 ComboBox combo = (ComboBox) itemEvent.getSource();
+                combo.setSelectedItem(item);
                 int index = combo.getIndex();
-                switch ((String) itemEvent.getItem()) {
+                switch (item) {
                     case "None":
                         break;
                     case "Aileron - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            aileronCpt = modifySavedComponents(index, false);
+                            aileronCpt = modifySavedComponents(index, false, item);
                         else
-                            aileronCpt = modifySavedComponents(index, true);
+                            aileronCpt = modifySavedComponents(index, true, item);
                         break;
                     case "Aileron - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            aileronFo = modifySavedComponents(index, false);
+                            aileronFo = modifySavedComponents(index, false, item);
                         else
-                            aileronFo = modifySavedComponents(index, true);
+                            aileronFo = modifySavedComponents(index, true, item);
                         break;
                     case "Elevator - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            elevatorCpt = modifySavedComponents(index, false);
+                            elevatorCpt = modifySavedComponents(index, false, item);
                         else
-                            elevatorCpt = modifySavedComponents(index, true);
+                            elevatorCpt = modifySavedComponents(index, true, item);
                         break;
                     case "Elevator - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            elevatorFo = modifySavedComponents(index, false);
+                            elevatorFo = modifySavedComponents(index, false, item);
                         else
-                            elevatorFo = modifySavedComponents(index, true);
+                            elevatorFo = modifySavedComponents(index, true, item);
                         break;
                     case "Rudder - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            rudderCpt = modifySavedComponents(index, false);
+                            rudderCpt = modifySavedComponents(index, false, item);
                         else
-                            rudderCpt = modifySavedComponents(index, true);
+                            rudderCpt = modifySavedComponents(index, true, item);
                         break;
                     case "Rudder - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            rudderFo = modifySavedComponents(index, false);
+                            rudderFo = modifySavedComponents(index, false, item);
                         else
-                            rudderFo = modifySavedComponents(index, true);
+                            rudderFo = modifySavedComponents(index, true, item);
                         break;
                     case "Tiller - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            tillerCpt = modifySavedComponents(index, false);
+                            tillerCpt = modifySavedComponents(index, false, item);
                         else
-                            tillerCpt = modifySavedComponents(index, true);
+                            tillerCpt = modifySavedComponents(index, true, item);
                         break;
                     case "Tiller - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            tillerFo = modifySavedComponents(index, false);
+                            tillerFo = modifySavedComponents(index, false, item);
                         else
-                            tillerFo = modifySavedComponents(index, true);
+                            tillerFo = modifySavedComponents(index, true, item);
                         break;
                     case "Toe Brake Left - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            toeBrakeLCpt = modifySavedComponents(index, false);
+                            toeBrakeLCpt = modifySavedComponents(index, false, item);
                         else
-                            toeBrakeLCpt = modifySavedComponents(index, true);
+                            toeBrakeLCpt = modifySavedComponents(index, true, item);
                         break;
                     case "Toe Brake Right - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            toeBrakeRCpt = modifySavedComponents(index, false);
+                            toeBrakeRCpt = modifySavedComponents(index, false, item);
                         else
-                            toeBrakeRCpt = modifySavedComponents(index, true);
+                            toeBrakeRCpt = modifySavedComponents(index, true, item);
                         break;
                     case "Toe Brake Left - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            toeBrakeLFo = modifySavedComponents(index, false);
+                            toeBrakeLFo = modifySavedComponents(index, false, item);
                         else
-                            toeBrakeLFo = modifySavedComponents(index, true);
+                            toeBrakeLFo = modifySavedComponents(index, true, item);
                         break;
                     case "Toe Brake Right - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            toeBrakeRFo = modifySavedComponents(index, false);
+                            toeBrakeRFo = modifySavedComponents(index, false, item);
                         else
-                            toeBrakeRFo = modifySavedComponents(index, true);
+                            toeBrakeRFo = modifySavedComponents(index, true, item);
                         break;
                     case "Stab Trim UP - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            stabTrimUpCpt = modifySavedComponents(index, false);
+                            stabTrimUpCpt = modifySavedComponents(index, false, item);
                         else
-                            stabTrimUpCpt = modifySavedComponents(index, true);
+                            stabTrimUpCpt = modifySavedComponents(index, true, item);
                         break;
                     case "Stab Trim DN - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            stabTrimDnCpt = modifySavedComponents(index, false);
+                            stabTrimDnCpt = modifySavedComponents(index, false, item);
                         else
-                            stabTrimDnCpt = modifySavedComponents(index, true);
+                            stabTrimDnCpt = modifySavedComponents(index, true, item);
                         break;
                     case "Stab Trim UP - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            stabTrimUpFo = modifySavedComponents(index, false);
+                            stabTrimUpFo = modifySavedComponents(index, false, item);
                         else
-                            stabTrimUpFo = modifySavedComponents(index, true);
+                            stabTrimUpFo = modifySavedComponents(index, true, item);
                         break;
                     case "Stab Trim DN - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            stabTrimDnFo = modifySavedComponents(index, false);
+                            stabTrimDnFo = modifySavedComponents(index, false, item);
                         else
-                            stabTrimDnFo = modifySavedComponents(index, true);
+                            stabTrimDnFo = modifySavedComponents(index, true, item);
                         break;
                     case "AP Disc":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            apDisc = modifySavedComponents(index, false);
+                            apDisc = modifySavedComponents(index, false, item);
                         else
-                            apDisc = modifySavedComponents(index, true);
+                            apDisc = modifySavedComponents(index, true, item);
                         break;
                     case "PTT - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            lcpPttCpt = modifySavedComponents(index, false);
+                            lcpPttCpt = modifySavedComponents(index, false, item);
                         else
-                            lcpPttCpt = modifySavedComponents(index, true);
+                            lcpPttCpt = modifySavedComponents(index, true, item);
                         break;
                     case "PTT - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            lcpPttFo = modifySavedComponents(index, false);
+                            lcpPttFo = modifySavedComponents(index, false, item);
                         else
-                            lcpPttFo = modifySavedComponents(index, true);
+                            lcpPttFo = modifySavedComponents(index, true, item);
                         break;
                     case "TFR - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            tfrCpt = modifySavedComponents(index, false);
+                            tfrCpt = modifySavedComponents(index, false, item);
                         else
-                            tfrCpt = modifySavedComponents(index, true);
+                            tfrCpt = modifySavedComponents(index, true, item);
                         break;
                     case "WX - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            wxCpt = modifySavedComponents(index, false);
+                            wxCpt = modifySavedComponents(index, false, item);
                         else
-                            wxCpt = modifySavedComponents(index, true);
+                            wxCpt = modifySavedComponents(index, true, item);
                         break;
                     case "WX+T - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            wxtCpt = modifySavedComponents(index, false);
+                            wxtCpt = modifySavedComponents(index, false, item);
                         else
-                            wxtCpt = modifySavedComponents(index, true);
+                            wxtCpt = modifySavedComponents(index, true, item);
                         break;
                     case "MAP - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            mapCpt = modifySavedComponents(index, false);
+                            mapCpt = modifySavedComponents(index, false, item);
                         else
-                            mapCpt = modifySavedComponents(index, true);
+                            mapCpt = modifySavedComponents(index, true, item);
                         break;
                     case "GC - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            gcCpt = modifySavedComponents(index, false);
+                            gcCpt = modifySavedComponents(index, false, item);
                         else
-                            gcCpt = modifySavedComponents(index, true);
+                            gcCpt = modifySavedComponents(index, true, item);
                         break;
                     case "AUTO":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            auto = modifySavedComponents(index, false);
+                            auto = modifySavedComponents(index, false, item);
                         else
-                            auto = modifySavedComponents(index, true);
+                            auto = modifySavedComponents(index, true, item);
                         break;
                     case "L/R":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            lr = modifySavedComponents(index, false);
+                            lr = modifySavedComponents(index, false, item);
                         else
-                            lr = modifySavedComponents(index, true);
+                            lr = modifySavedComponents(index, true, item);
                         break;
                     case "TEST":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            test = modifySavedComponents(index, false);
+                            test = modifySavedComponents(index, false, item);
                         else
-                            test = modifySavedComponents(index, true);
+                            test = modifySavedComponents(index, true, item);
                         break;
                     case "TFR - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            tfrFo = modifySavedComponents(index, false);
+                            tfrFo = modifySavedComponents(index, false, item);
                         else
-                            tfrFo = modifySavedComponents(index, true);
+                            tfrFo = modifySavedComponents(index, true, item);
                         break;
                     case "WX - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            wxFo = modifySavedComponents(index, false);
+                            wxFo = modifySavedComponents(index, false, item);
                         else
-                            wxFo = modifySavedComponents(index, true);
+                            wxFo = modifySavedComponents(index, true, item);
                         break;
                     case "WX+T - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            wxtFo = modifySavedComponents(index, false);
+                            wxtFo = modifySavedComponents(index, false, item);
                         else
-                            wxtFo = modifySavedComponents(index, true);
+                            wxtFo = modifySavedComponents(index, true, item);
                         break;
                     case "MAP - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            mapFo = modifySavedComponents(index, false);
+                            mapFo = modifySavedComponents(index, false, item);
                         else
-                            mapFo = modifySavedComponents(index, true);
+                            mapFo = modifySavedComponents(index, true, item);
                         break;
                     case "GC - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            gcFo = modifySavedComponents(index, false);
+                            gcFo = modifySavedComponents(index, false, item);
                         else
-                            gcFo = modifySavedComponents(index, true);
+                            gcFo = modifySavedComponents(index, true, item);
                         break;
                     case "Tilt - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            tiltCpt = modifySavedComponents(index, false);
+                            tiltCpt = modifySavedComponents(index, false, item);
                         else
-                            tiltCpt = modifySavedComponents(index, true);
+                            tiltCpt = modifySavedComponents(index, true, item);
                         break;
                     case "Gain - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            gainCpt = modifySavedComponents(index, false);
+                            gainCpt = modifySavedComponents(index, false, item);
                         else
-                            gainCpt = modifySavedComponents(index, true);
+                            gainCpt = modifySavedComponents(index, true, item);
                         break;
                     case "Tilt - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            tiltFo = modifySavedComponents(index, false);
+                            tiltFo = modifySavedComponents(index, false, item);
                         else
-                            tiltFo = modifySavedComponents(index, true);
+                            tiltFo = modifySavedComponents(index, true, item);
                         break;
                     case "Gain - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            gainFo = modifySavedComponents(index, false);
+                            gainFo = modifySavedComponents(index, false, item);
                         else
-                            gainFo = modifySavedComponents(index, true);
+                            gainFo = modifySavedComponents(index, true, item);
                         break;
                     case "Jettison Fuel-to-Remain":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            jettRemain = modifySavedComponents(index, false);
+                            jettRemain = modifySavedComponents(index, false, item);
                         else
-                            jettRemain = modifySavedComponents(index, true);
+                            jettRemain = modifySavedComponents(index, true, item);
                         break;
                     case "Landing Altitude":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            ldgAltTurn = modifySavedComponents(index, false);
+                            ldgAltTurn = modifySavedComponents(index, false, item);
                         else
-                            ldgAltTurn = modifySavedComponents(index, true);
+                            ldgAltTurn = modifySavedComponents(index, true, item);
                         break;
                     case "LCP Outbd - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            lcpOutbdCpt = modifySavedComponents(index, false);
+                            lcpOutbdCpt = modifySavedComponents(index, false, item);
                         else
-                            lcpOutbdFo = modifySavedComponents(index, true);
+                            lcpOutbdFo = modifySavedComponents(index, true, item);
                         break;
                     case "LCP Inbd - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            lcpNdCpt = modifySavedComponents(index, false);
+                            lcpNdCpt = modifySavedComponents(index, false, item);
                         else
-                            lcpNdCpt = modifySavedComponents(index, true);
+                            lcpNdCpt = modifySavedComponents(index, true, item);
                         break;
                     case "LCP Outbd - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            lcpOutbdFo = modifySavedComponents(index, false);
+                            lcpOutbdFo = modifySavedComponents(index, false, item);
                         else
-                            lcpOutbdFo = modifySavedComponents(index, true);
+                            lcpOutbdFo = modifySavedComponents(index, true, item);
                         break;
                     case "LCP Inbd - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            lcpNdFo = modifySavedComponents(index, false);
+                            lcpNdFo = modifySavedComponents(index, false, item);
                         else
-                            lcpNdFo = modifySavedComponents(index, true);
+                            lcpNdFo = modifySavedComponents(index, true, item);
                         break;
                     case "LCP MAP - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            lcpMapCpt = modifySavedComponents(index, false);
+                            lcpMapCpt = modifySavedComponents(index, false, item);
                         else
-                            lcpMapCpt = modifySavedComponents(index, true);
+                            lcpMapCpt = modifySavedComponents(index, true, item);
                         break;
                     case "LCP MAP - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            lcpMapFo = modifySavedComponents(index, false);
+                            lcpMapFo = modifySavedComponents(index, false, item);
                         else
-                            lcpMapFo = modifySavedComponents(index, true);
+                            lcpMapFo = modifySavedComponents(index, true, item);
                         break;
                     case "EICAS BRT - Upr":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            eicasBrtUpr = modifySavedComponents(index, false);
+                            eicasBrtUpr = modifySavedComponents(index, false, item);
                         else
-                            eicasBrtUpr = modifySavedComponents(index, true);
+                            eicasBrtUpr = modifySavedComponents(index, true, item);
                         break;
                     case "EICAS BRT - Lwr Inner":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            eicasBrtLwrInner = modifySavedComponents(index, false);
+                            eicasBrtLwrInner = modifySavedComponents(index, false, item);
                         else
-                            eicasBrtLwrInner = modifySavedComponents(index, true);
+                            eicasBrtLwrInner = modifySavedComponents(index, true, item);
                         break;
                     case "EICAS BRT - Lwr Outer":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            eicasBrtLwrOuter = modifySavedComponents(index, false);
+                            eicasBrtLwrOuter = modifySavedComponents(index, false, item);
                         else
-                            eicasBrtLwrOuter = modifySavedComponents(index, true);
+                            eicasBrtLwrOuter = modifySavedComponents(index, true, item);
                         break;
                     default:
                         JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
@@ -724,6 +727,9 @@ class SmartInterface {
                 "EICAS BRT - Lwr Outer"
         };
 
+        // Get all the components saved from last time to load into current program
+        String[] savedStrs = loadSavedComponents();
+        String[] splitStrs;
         // Go through each controller and add its components to the UI
         for (Controller controller : controllers) {
             for (Component component : controller.getComponents()) {
@@ -733,6 +739,7 @@ class SmartInterface {
                 label = new JLabel("  " + Integer.toString(components.size() - 1) + ". " +
                         controller.getName() + " - " +  component.getName());
                 panel.add(label);
+                labels.add(controller.getName() + "`" + component.getName());
 
                 // Label #2: Current value of component
                 label = new JLabel("", SwingConstants.CENTER);
@@ -743,9 +750,17 @@ class SmartInterface {
                 comboBox = new ComboBox(dropBoxStrings, components.size() - 1);
                 comboBox.setMaximumRowCount(30);
                 comboBox.addItemListener(itemListener);
-                // TODO Implement this with loading from saved file
-                //comboBox.getItemListeners()
                 panel.add(comboBox);
+
+                // Configure saved components
+                if (savedStrs != null) {
+                    for (String line : savedStrs) {
+                        splitStrs = line.split("`");
+                        if (controller.getName().equals(splitStrs[0]) && component.getName().equals(splitStrs[1]))
+                            itemListener.itemStateChanged(new ItemEvent(comboBox, ItemEvent.ITEM_STATE_CHANGED,
+                                    splitStrs[2], ItemEvent.SELECTED));
+                    }
+                }
             }
         }
 
@@ -774,6 +789,42 @@ class SmartInterface {
         frame.setVisible(true);
     }
 
+    // TODO Documentation
+    private static String[] loadSavedComponents() {
+        try {
+            BufferedReader input = new BufferedReader(new FileReader("saved.txt"));
+            ArrayList<String> strings = new ArrayList<>();
+            String line;
+            while ((line = input.readLine()) != null)
+                strings.add(line);
+
+            if (!strings.isEmpty())
+                return strings.toArray(new String[strings.size()]);
+            else
+                return null;
+        } catch (FileNotFoundException fnfe) {
+            // Unnecessary to do anything because file will be created on first close
+            return null;
+        } catch (IOException ioe) {
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), ioe.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+    }
+
+    // TODO Documentation
+    private static Component modifySavedComponents(int index, boolean remove, String item) {
+        Component component = components.get(index);
+        String reference = labels.get(index);
+        if (remove) {
+            savedComponents.remove(reference + "`" + item);
+            return null;
+        } else {
+            savedComponents.add(reference + "`" + item);
+            return component;
+        }
+    }
+
     /**
      * Gets preferred controllers, excluding mice and keyboards.
      */
@@ -799,29 +850,21 @@ class SmartInterface {
                 controller.getName().toUpperCase().contains("MOUSE");
     }
 
-    // TODO Implement completely
-    private static Component modifySavedComponents(int index, boolean remove) {
-        Component component = components.get(index);
-        if (remove) {
-            //savedComponents.remove(component);
-            return null;
-        } else {
-            savedComponents.add(component.getIdentifier() + "`" + index + '`');
-            return component;
-        }
-    }
-
     /**
      * Stops client and stream operations.
-     * @throws UnsupportedEncodingException
-     * @throws FileNotFoundException
+     *
+     * @throws UnsupportedEncodingException if encoding unsupported
+     * @throws FileNotFoundException if file not found
      */
-    private static void stop() throws UnsupportedEncodingException, FileNotFoundException {
-        client.destroyConnection();
-
-        PrintWriter output = new PrintWriter("saved_config.txt", "UTF-8");
-
+    // TODO FIX BUG
+    private static void stop() throws IOException {
+        File file = new File("saved.txt");
+        FileWriter output = new FileWriter(file, false);
+        for (String line : savedComponents)
+            output.write(line + "\n");
         output.close();
+
+        client.destroyConnection();
         System.exit(0);
     }
 

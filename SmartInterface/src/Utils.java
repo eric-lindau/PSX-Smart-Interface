@@ -8,7 +8,7 @@ import net.java.games.input.Component;
 class Utils {
 
     /**
-     * Corrects a component's analog value to the default range in PSX of -999 to 999.
+     * Corrects a component's analog value to the default analog range in PSX.
      *
      * @param component the component to be corrected
      * @return the component's corrected analog value
@@ -39,7 +39,38 @@ class Utils {
     }
 
     /**
-     * Determines the setting of a gain dial at which a component is set
+     * Calculates the combined value of two analog components to prevent conflicts.
+     *
+     * @param first the first analog component to be combined
+     * @param second the first analog component to be combined
+     * @return the result of combining the analog components' values
+     */
+    static int combineAnalog(Component first, Component second) {
+        int ret = 0;
+        if (first != null)
+            ret += Utils.getAnalogValue(first);
+        if (second != null)
+            ret += Utils.getAnalogValue(second);
+        if (ret < -999)
+            ret = -999;
+        else if (ret > 999)
+            ret = 999;
+
+        return ret;
+    }
+
+    /**
+     * Determines if a non-analog component is pushed.
+     *
+     * @param component the component to be analyzed
+     * @return true if the component is pushed or false if it is not
+     */
+    static boolean isPushed(Component component) {
+        return component != null && component.getPollData() > 0;
+    }
+
+    /**
+     * Determines the setting of a gain dial at which a component is set.
      *
      * @param component the component to be analyzed
      * @return the setting number
@@ -68,37 +99,6 @@ class Utils {
             return 3;
         else
             return 0;
-    }
-
-    /**
-     * Calculates the combined value of two analog components to prevent conflicts.
-     *
-     * @param first the first analog component to be combined
-     * @param second the first analog component to be combined
-     * @return the result of combining the analog components' values
-     */
-    static int combineAnalog(Component first, Component second) {
-        int ret = 0;
-        if (first != null)
-            ret += Utils.getAnalogValue(first);
-        if (second != null)
-            ret += Utils.getAnalogValue(second);
-        if (ret < -999)
-            ret = -999;
-        else if (ret > 999)
-            ret = 999;
-
-        return ret;
-    }
-
-    /**
-     * Determines if a non-analog component is pushed.
-     *
-     * @param component the component to be analyzed
-     * @return true if the component is pushed and false if it is not
-     */
-    static boolean isPushed(Component component) {
-        return component != null && component.getPollData() > 0;
     }
 
 }

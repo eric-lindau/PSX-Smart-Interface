@@ -12,8 +12,9 @@ class ComboBox extends JComboBox {
 
     /**
      * ComboBox constructor.
-     * @param items The text items that are listed in the dropdown box.
-     * @param index The place of the ComboBox in the UI
+     *
+     * @param items the text items that are listed in the dropdown box
+     * @param index the place of the ComboBox in the UI
      */
     ComboBox(String[] items, int index) {
         super(items);
@@ -22,7 +23,8 @@ class ComboBox extends JComboBox {
 
     /**
      * Gets the index.
-     * @return The index.
+     *
+     * @return the index
      */
     int getIndex() {
         return this.index;
