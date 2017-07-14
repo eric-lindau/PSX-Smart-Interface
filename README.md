@@ -37,3 +37,4 @@ This add-on relies on TCP port **10747** to interface with the PSX server, so th
 
 ### 1.2 (not yet released)
 * Improved network efficiency and fixed a critical network bug that was causing PSX server to freeze/crash
+* Added functionality for toe brakes, various captain/first officer controls, weather radar panel buttons and rotaries, and many miscellaneous rotaries
