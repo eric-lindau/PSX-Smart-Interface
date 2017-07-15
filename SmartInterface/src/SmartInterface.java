@@ -9,6 +9,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
+import java.lang.reflect.Array;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -32,10 +34,9 @@ class SmartInterface {
     private static ArrayList<Controller> controllers;
     // Master component list
     private static ArrayList<Component> components = new ArrayList<>();
-    // Master component list for components that are to be saved in saved.txt
+    // Master component list for components that are to be saved in saved.cfg
     private static ArrayList<String> savedComponents = new ArrayList<>();
-    // Master label list for reference while saving component configuration
-    private static ArrayList<String> labels = new ArrayList<>();
+    private static ArrayList<JLabel> labels = new ArrayList<>();
     // Master value label list
     private static ArrayList<JLabel> valueLabels = new ArrayList<>();
 
@@ -77,8 +78,6 @@ class SmartInterface {
     private static Component lcpNdCpt;
     private static Component lcpOutbdFo;
     private static Component lcpNdFo;
-    private static Component lcpMapCpt;
-    private static Component lcpMapFo;
     private static Component eicasBrtUpr;
     private static Component eicasBrtLwrInner;
     private static Component eicasBrtLwrOuter;
@@ -101,8 +100,6 @@ class SmartInterface {
     private static Value lcpNdCptVal = new Value();
     private static Value lcpOutbdFoVal = new Value();
     private static Value lcpNdFoVal = new Value();
-    private static Value lcpMapCptVal = new Value();
-    private static Value lcpMapFoVal = new Value();
     private static Value eicasBrtUprVal = new Value();
     private static Value eicasBrtLwrInnerVal = new Value();
     private static Value eicasBrtLwrOuterVal = new Value();
@@ -117,7 +114,6 @@ class SmartInterface {
 
         getControllers();
         initUI();
-        loadSavedComponents();
 
         try {
             while (running)
@@ -347,20 +343,6 @@ class SmartInterface {
                     client.send(lcpNdFoVal.getStr());
             }
 
-            if (lcpMapCpt != null) {
-                int lcpMapCptInt = Utils.getAnalogValue(lcpMapCpt, 4713, false);
-                lcpMapCptVal.setStr("Qh90=" + Integer.toString(lcpMapCptInt));
-                if (lcpMapCptVal.hasChanged())
-                    client.send(lcpMapCptVal.getStr());
-            }
-
-            if (lcpMapFo != null) {
-                int lcpMapFoInt = Utils.getAnalogValue(lcpMapFo, 4713, false);
-                lcpMapFoVal.setStr("Qh101=" + Integer.toString(lcpMapFoInt));
-                if (lcpMapFoVal.hasChanged())
-                    client.send(lcpMapFoVal.getStr());
-            }
-
             if (eicasBrtUpr != null) {
                 int eicasBrtUprInt = Utils.getAnalogValue(eicasBrtUpr, 4713, false);
                 eicasBrtUprVal.setStr("Qh139=" + Integer.toString(eicasBrtUprInt));
@@ -401,15 +383,14 @@ class SmartInterface {
             public void itemStateChanged(ItemEvent itemEvent) {
                 String item = (String) itemEvent.getItem();
                 ComboBox combo = (ComboBox) itemEvent.getSource();
-                combo.setSelectedItem(item);
                 int index = combo.getIndex();
                 switch (item) {
                     case "None":
                         break;
                     case "Aileron - Capt":
-                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
                             aileronCpt = modifySavedComponents(index, false, item);
-                        else
+                        } else
                             aileronCpt = modifySavedComponents(index, true, item);
                         break;
                     case "Aileron - F/O":
@@ -658,18 +639,6 @@ class SmartInterface {
                         else
                             lcpNdFo = modifySavedComponents(index, true, item);
                         break;
-                    case "LCP MAP - Capt":
-                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            lcpMapCpt = modifySavedComponents(index, false, item);
-                        else
-                            lcpMapCpt = modifySavedComponents(index, true, item);
-                        break;
-                    case "LCP MAP - F/O":
-                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            lcpMapFo = modifySavedComponents(index, false, item);
-                        else
-                            lcpMapFo = modifySavedComponents(index, true, item);
-                        break;
                     case "EICAS BRT - Upr":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             eicasBrtUpr = modifySavedComponents(index, false, item);
@@ -697,8 +666,6 @@ class SmartInterface {
         };
 
         JPanel panel = new JPanel();
-        ComboBox comboBox;
-        JLabel label;
         String[] dropBoxStrings = new String[]{"None",
                 "Aileron - Capt", "Aileron - F/O",
                 "Elevator - Capt", "Elevator - F/O",
@@ -721,7 +688,6 @@ class SmartInterface {
                 "Landing Altitude",
                 "LCP Outbd - Capt", "LCP Inbd - Capt",
                 "LCP Outbd - F/O", "LCP Inbd - F/O",
-                "LCP MAP - Capt", "LCP MAP - F/O",
                 "EICAS BRT - Upr",
                 "EICAS BRT - Lwr Inner",
                 "EICAS BRT - Lwr Outer"
@@ -731,6 +697,9 @@ class SmartInterface {
         String[] savedStrs = loadSavedComponents();
         String[] splitStrs;
         // Go through each controller and add its components to the UI
+        ComboBox comboBox;
+        JLabel label;
+        JLabel valueLabel;
         for (Controller controller : controllers) {
             for (Component component : controller.getComponents()) {
                 components.add(component);
@@ -739,12 +708,12 @@ class SmartInterface {
                 label = new JLabel("  " + Integer.toString(components.size() - 1) + ". " +
                         controller.getName() + " - " +  component.getName());
                 panel.add(label);
-                labels.add(controller.getName() + "`" + component.getName());
+                labels.add(label);
 
                 // Label #2: Current value of component
-                label = new JLabel("", SwingConstants.CENTER);
-                panel.add(label);
-                valueLabels.add(label);
+                valueLabel = new JLabel("", SwingConstants.CENTER);
+                panel.add(valueLabel);
+                valueLabels.add(valueLabel);
 
                 // ComboBox: Select which components act for which operations
                 comboBox = new ComboBox(dropBoxStrings, components.size() - 1);
@@ -756,9 +725,8 @@ class SmartInterface {
                 if (savedStrs != null) {
                     for (String line : savedStrs) {
                         splitStrs = line.split("`");
-                        if (controller.getName().equals(splitStrs[0]) && component.getName().equals(splitStrs[1]))
-                            itemListener.itemStateChanged(new ItemEvent(comboBox, ItemEvent.ITEM_STATE_CHANGED,
-                                    splitStrs[2], ItemEvent.SELECTED));
+                        if (splitStrs[0].equals(label.getText()))
+                            comboBox.setSelectedItem(splitStrs[1]);
                     }
                 }
             }
@@ -792,11 +760,12 @@ class SmartInterface {
     // TODO Documentation
     private static String[] loadSavedComponents() {
         try {
-            BufferedReader input = new BufferedReader(new FileReader("saved.txt"));
+            BufferedReader input = new BufferedReader(new FileReader("saved.cfg"));
             ArrayList<String> strings = new ArrayList<>();
             String line;
             while ((line = input.readLine()) != null)
                 strings.add(line);
+            input.close();
 
             if (!strings.isEmpty())
                 return strings.toArray(new String[strings.size()]);
@@ -815,7 +784,7 @@ class SmartInterface {
     // TODO Documentation
     private static Component modifySavedComponents(int index, boolean remove, String item) {
         Component component = components.get(index);
-        String reference = labels.get(index);
+        String reference = labels.get(index).getText();
         if (remove) {
             savedComponents.remove(reference + "`" + item);
             return null;
@@ -858,10 +827,11 @@ class SmartInterface {
      */
     // TODO FIX BUG
     private static void stop() throws IOException {
-        File file = new File("saved.txt");
+        File file = new File("saved.cfg");
         FileWriter output = new FileWriter(file, false);
-        for (String line : savedComponents)
+        for (String line : savedComponents) {
             output.write(line + "\n");
+        }
         output.close();
 
         client.destroyConnection();

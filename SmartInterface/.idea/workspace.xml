@@ -24,22 +24,22 @@
       <file leaf-file-name="SmartInterface.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/SmartInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="722">
-              <caret line="858" column="19" lean-forward="false" selection-start-line="858" selection-start-column="19" selection-end-line="858" selection-end-column="19" />
+            <state relative-caret-position="709">
+              <caret line="110" column="43" lean-forward="false" selection-start-line="110" selection-start-column="43" selection-end-line="110" selection-end-column="43" />
               <folding>
                 <element signature="docComment;class#SmartInterface#0" expanded="false" />
                 <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
                 <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
                 <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-                <element signature="e#7564#7592#0" expanded="false" />
-                <element signature="e#9549#9576#0" expanded="false" />
-                <element signature="e#10683#10703#0" expanded="false" />
-                <element signature="e#13006#13049#0" expanded="false" />
-                <element signature="e#16743#16782#0" expanded="false" />
+                <element signature="e#7333#7361#0" expanded="false" />
+                <element signature="e#9318#9345#0" expanded="false" />
+                <element signature="e#10452#10472#0" expanded="false" />
+                <element signature="e#12775#12818#0" expanded="false" />
+                <element signature="e#15888#15927#0" expanded="false" />
                 <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
                 <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-                <element signature="class#17233:34056" expanded="false" />
-                <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+                <element signature="class#16378:32471" expanded="false" />
+                <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
                 <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
                 <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
                 <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -49,16 +49,6 @@
                 <element signature="docComment;method#stop#0;class#SmartInterface#0" expanded="false" />
                 <element signature="method#stop#0;class#SmartInterface#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="saved.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/saved.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -74,7 +64,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>currC</find>
       <find>components</find>
       <find>main</find>
       <find>client</find>
@@ -104,6 +93,7 @@
       <find>saved_config.txt</find>
       <find>saved.cfg</find>
       <find>println</find>
+      <find>saved.txt</find>
     </findStrings>
     <replaceStrings>
       <replace>Utils.isPushed</replace>
@@ -120,8 +110,8 @@
       <replace>eicasBrtLwrInner</replace>
       <replace>eicasBrtLwrOuter</replace>
       <replace>modifySavedComponents(index, true, item);</replace>
-      <replace>saved.cfg</replace>
       <replace>saved.txt</replace>
+      <replace>saved.cfg</replace>
     </replaceStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -141,9 +131,9 @@
         <option value="$PROJECT_DIR$/src/Client.java" />
         <option value="$PROJECT_DIR$/src/Utils.java" />
         <option value="$PROJECT_DIR$/src/Value.java" />
-        <option value="$PROJECT_DIR$/saved.cfg" />
         <option value="$PROJECT_DIR$/saved.txt" />
         <option value="$PROJECT_DIR$/src/SmartInterface.java" />
+        <option value="$PROJECT_DIR$/saved.cfg" />
       </list>
     </option>
   </component>
@@ -196,9 +186,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -237,6 +224,9 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -526,7 +516,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31712472" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17336152" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -555,7 +545,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="21" />
+      <option name="time" value="22" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -597,15 +587,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -651,15 +641,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -681,15 +671,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -728,15 +718,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -775,15 +765,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -822,15 +812,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -869,15 +859,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -899,15 +889,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -929,46 +919,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
-            <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
-            <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
-            <element signature="docComment;method#shouldIgnore#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#shouldIgnore#0;class#SmartInterface#0" expanded="false" />
-            <element signature="docComment;method#stop#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#stop#0;class#SmartInterface#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ADDON_EXAMPLE-src/AddonExample.java" />
-    <entry file="file://$PROJECT_DIR$/src/SmartInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="docComment;class#SmartInterface#0" expanded="false" />
-            <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
-            <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
-            <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -991,15 +950,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -1022,15 +981,46 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
+            <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
+            <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#getControllers#0;class#SmartInterface#0" expanded="false" />
+            <element signature="docComment;method#shouldIgnore#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#shouldIgnore#0;class#SmartInterface#0" expanded="false" />
+            <element signature="docComment;method#stop#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#stop#0;class#SmartInterface#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ADDON_EXAMPLE-src/AddonExample.java" />
+    <entry file="file://$PROJECT_DIR$/src/SmartInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="docComment;class#SmartInterface#0" expanded="false" />
+            <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
+            <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
+            <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
+            <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -1052,15 +1042,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -1082,15 +1072,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -1112,15 +1102,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -1142,15 +1132,15 @@
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
@@ -1263,15 +1253,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/saved.cfg">
+    <entry file="file://$PROJECT_DIR$/saved.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-34564">
-          <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/saved.txt">
+    <entry file="file://$PROJECT_DIR$/saved.cfg">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -1281,22 +1271,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SmartInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="722">
-          <caret line="858" column="19" lean-forward="false" selection-start-line="858" selection-start-column="19" selection-end-line="858" selection-end-column="19" />
+        <state relative-caret-position="709">
+          <caret line="110" column="43" lean-forward="false" selection-start-line="110" selection-start-column="43" selection-end-line="110" selection-end-column="43" />
           <folding>
             <element signature="docComment;class#SmartInterface#0" expanded="false" />
             <element signature="method#main#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#update#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#update#0;class#SmartInterface#0" expanded="false" />
-            <element signature="e#7564#7592#0" expanded="false" />
-            <element signature="e#9549#9576#0" expanded="false" />
-            <element signature="e#10683#10703#0" expanded="false" />
-            <element signature="e#13006#13049#0" expanded="false" />
-            <element signature="e#16743#16782#0" expanded="false" />
+            <element signature="e#7333#7361#0" expanded="false" />
+            <element signature="e#9318#9345#0" expanded="false" />
+            <element signature="e#10452#10472#0" expanded="false" />
+            <element signature="e#12775#12818#0" expanded="false" />
+            <element signature="e#15888#15927#0" expanded="false" />
             <element signature="docComment;method#initUI#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#initUI#0;class#SmartInterface#0" expanded="false" />
-            <element signature="class#17233:34056" expanded="false" />
-            <element signature="method#itemStateChanged#0;class#17233:34056" expanded="false" />
+            <element signature="class#16378:32471" expanded="false" />
+            <element signature="method#itemStateChanged#0;class#16378:32471" expanded="false" />
             <element signature="method#loadSavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="method#modifySavedComponents#0;class#SmartInterface#0" expanded="false" />
             <element signature="docComment;method#getControllers#0;class#SmartInterface#0" expanded="false" />
