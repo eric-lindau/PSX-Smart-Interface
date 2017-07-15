@@ -69,7 +69,13 @@ class Utils {
         return component != null && component.getPollData() > 0;
     }
 
-    // TODO Documentation
+    /**
+     * Applies a deadzone to a value.
+     *
+     * @param original the original value
+     * @param threshold the threshold in which the deadzone should occur
+     * @return the value with an applied deadzone
+     */
     static int deadzone(int original, int threshold) {
         if (Math.abs(original) <= threshold)
             return 0;

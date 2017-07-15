@@ -27,8 +27,10 @@ import java.util.Arrays;
 class SmartInterface {
 
     private static boolean running = true;
-
+    private static boolean minimizeOnStart;
     private static Client client;
+
+    private static ArrayList<String> ignoredControllers = new ArrayList<>();
 
     // Master controller list
     private static ArrayList<Controller> controllers;
@@ -106,13 +108,12 @@ class SmartInterface {
     // Buffers to be combined as String sent for radar panel button values (Qs104)
     private static char[] rdrStrCpt, rdrStrFo;
     private static char[] rdrStrMisc = {'A', 'R', 'E'};
+    // Keeps track of ticks since last misc radar panel button presses for toggling
     private static long[] ticks = {0, 0, 0};
 
     public static void main(String[] args) {
-        client = new Client("localhost", 10747);
-        client.start();
-
-        getControllers();
+        initConfig();
+        initControllers();
         initUI();
 
         try {
@@ -769,7 +770,7 @@ class SmartInterface {
         // 569 used to offset width of bar itself
         scrollPane.setPreferredSize(new Dimension(800, 569));
 
-        JFrame frame = new JFrame("PSX SmartInterface v1.1: Pre-1.2 Test");
+        JFrame frame = new JFrame("PSX SmartInterface v1.1: Pre-1.2 Test 1");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);
@@ -781,9 +782,16 @@ class SmartInterface {
             }
         });
         frame.setVisible(true);
+
+        if (minimizeOnStart)
+            frame.setState(Frame.ICONIFIED);
     }
 
-    // TODO Documentation
+    /**
+     * Loads the previously saved components from the saved config file for persistent use.
+     *
+     * @return an array of the lines of saved components
+     */
     private static String[] loadSavedComponents() {
         try {
             BufferedReader input = new BufferedReader(new FileReader("saved.cfg"));
@@ -807,7 +815,14 @@ class SmartInterface {
         }
     }
 
-    // TODO Documentation
+    /**
+     * Modifies the list of saved components to be added to saved config file for persistent use.
+     *
+     * @param index the index of the item in the UI
+     * @param remove true if the component should not be saved and false if it should
+     * @param item the name of the control in PSX
+     * @return the component that is to be saved
+     */
     private static Component modifySavedComponents(int index, boolean remove, String item) {
         Component component = components.get(index);
         String reference = labels.get(index).getText();
@@ -823,7 +838,7 @@ class SmartInterface {
     /**
      * Gets preferred controllers, excluding mice and keyboards.
      */
-    private static void getControllers() {
+    private static void initControllers() {
         // Copy controllers into ArrayList so they can be removed easily
         controllers = new ArrayList<>(Arrays.asList(ControllerEnvironment
                 .getDefaultEnvironment().getControllers()));
@@ -835,14 +850,105 @@ class SmartInterface {
     }
 
     /**
+     * Initializes settings based on the general config file, creating one if none is found.
+     */
+    private static void initConfig() {
+        try {
+            //* START IP/port config
+            BufferedReader input = new BufferedReader((new FileReader("general.cfg")));
+            input.readLine();
+            input.readLine();
+            input.readLine();
+            input.readLine();
+
+            String line = input.readLine();
+            if (line == null || line.isEmpty()) {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "general.cfg incorrect!",
+                        "Network Configuration Error", JOptionPane.ERROR_MESSAGE);
+                System.exit(1);
+            }
+
+            String[] addr = line.split(":");
+            if (addr.length != 2) {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "general.cfg incorrect!",
+                        "Network Configuration Error", JOptionPane.ERROR_MESSAGE);
+                System.exit(1);
+            }
+            String host = addr[0];
+            String port = addr[1];
+
+            client = new Client(host, Integer.parseInt(port));
+            client.start();
+            //* END IP/port config
+
+            //* START Minimize UI config
+            input.readLine();
+            input.readLine();
+            input.readLine();
+
+            line = input.readLine();
+            if (line == null || line.isEmpty()) {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "general.cfg incorrect!",
+                        "General Configuration Error", JOptionPane.ERROR_MESSAGE);
+                System.exit(1);
+            }
+
+            int minimize = Integer.parseInt(line);
+            minimizeOnStart = minimize == 1;
+            //* END Minimize UI config
+
+            //* START Ignored controllers config
+            input.readLine();
+            input.readLine();
+
+            while((line = input.readLine()) != null) {
+                ignoredControllers.add(line);
+            }
+            //* START Ignored controllers config
+
+            input.close();
+        } catch (FileNotFoundException fnfe) {
+            try {
+                File file = new File("general.cfg");
+                FileWriter output = new FileWriter(file, false);
+                output.write("### Please do not remove any lines of this cfg; simply edit them.\n");
+                output.write("## Network config\n");
+                output.write("# Host/port of PSX server\n");
+                output.write("# Example - localhost:10747\n");
+                output.write("localhost:10747\n");
+                output.write("## General config\n");
+                output.write("# Minimize window on add-on startup\n");
+                output.write("# Use 0 for 'No' or 1 for 'Yes'\n");
+                output.write("0\n");
+                output.write("# Ignored controller names (one per line)\n");
+                output.write("# The controller name is the part before the dash of each line in the main UI\n");
+                output.write("Mouse\n");
+                output.write("Keyboard\n");
+                output.close();
+
+                initConfig();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
+                        "Configuration Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
+                    "Configuration Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
      * Determines if a controller should be ignored.
      *
      * @param controller the controller to be observed
      * @return true if the controller should be ignored or false if the controller should not be ignored.
      */
     private static boolean shouldIgnore(Controller controller) {
-        return controller.getName().toUpperCase().contains("KEYBOARD") ||
-                controller.getName().toUpperCase().contains("MOUSE");
+        String name = controller.getName().toUpperCase();
+        for (String ignored : ignoredControllers)
+            if (name.contains(ignored.toUpperCase()))
+                return true;
+        return false;
     }
 
     /**
@@ -852,6 +958,7 @@ class SmartInterface {
      * @throws FileNotFoundException if file not found
      */
     private static void stop() throws IOException {
+        // Write current components to config file (saving them)
         File file = new File("saved.cfg");
         FileWriter output = new FileWriter(file, false);
         for (String line : savedComponents) {

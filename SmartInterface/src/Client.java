@@ -29,7 +29,7 @@ class Client extends Thread {
             this.output = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException ioe) {
             String error = "Error connecting to PSX! Please ensure that a PSX server " +
-                    "is running on localhost and that port 10747 is unrestricted.";
+                    "is running on the host and port specified in general.cfg";
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
                     error, "PSX SmartInterface Error",
                     JOptionPane.ERROR_MESSAGE);
