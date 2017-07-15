@@ -50,7 +50,6 @@ class SmartInterface {
     private static Component tillerCpt, tillerFo;
 
     // Toe brakes (Qs357)
-    // TODO Add deadzone of 100 to values
     private static Component toeBrakeLCpt, toeBrakeRCpt;
     private static Component toeBrakeLFo, toeBrakeRFo;
 
@@ -106,7 +105,8 @@ class SmartInterface {
 
     // Buffers to be combined as String sent for radar panel button values (Qs104)
     private static char[] rdrStrCpt, rdrStrFo;
-    private static char[] rdrStrMisc = new char[3];
+    private static char[] rdrStrMisc = {'A', 'R', 'E'};
+    private static long[] ticks = {0, 0, 0};
 
     public static void main(String[] args) {
         client = new Client("localhost", 10747);
@@ -147,30 +147,38 @@ class SmartInterface {
             }
 
             //* START Update analog values
+            // TODO Verify deadzone functionality
             if (aileronCpt != null || aileronFo != null ||
                     elevatorCpt != null || elevatorFo != null ||
                     rudderCpt != null || rudderFo != null) {
                 int aileron = Utils.combineAnalog(aileronCpt, aileronFo);
                 int elevator = Utils.combineAnalog(elevatorCpt, elevatorFo);
                 int rudder = Utils.combineAnalog(rudderCpt, rudderFo);
+                aileron = Utils.deadzone(aileron, 50);
+                elevator = Utils.deadzone(elevator, 50);
+                rudder = Utils.deadzone(rudder, 50);
                 fltControlsVal.setStr("Qs120=" + Integer.toString(elevator) + ";" +
                         Integer.toString(aileron) + ";" + Integer.toString(rudder));
                 if (fltControlsVal.hasChanged())
                     client.send(fltControlsVal.getStr());
             }
 
+            // TODO Verify deadzone functionality
             if (tillerCpt != null || tillerFo != null) {
                 int tiller = Utils.combineAnalog(tillerCpt, tillerFo);
+                tiller = Utils.deadzone(tiller, 50);
                 tillersVal.setStr("Qh426=" + Integer.toString(tiller));
                 if (tillersVal.hasChanged())
                     client.send(tillersVal.getStr());
             }
 
-            // TODO Add deadzone of 100
+            // TODO Verify deadzone functionality
             if (toeBrakeLCpt != null || toeBrakeRCpt != null ||
                     toeBrakeLFo != null || toeBrakeRFo != null) {
                 int toeBrakeL = Utils.combineAnalog(toeBrakeLCpt, toeBrakeLFo) + 1;
                 int toeBrakeR = Utils.combineAnalog(toeBrakeRCpt, toeBrakeRFo) + 1;
+                toeBrakeL = Utils.deadzone(toeBrakeL, 100);
+                toeBrakeR = Utils.deadzone(toeBrakeR, 100);
                 toeBrakesVal.setStr("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
                 if (toeBrakesVal.hasChanged())
                     client.send(toeBrakesVal.getStr());
@@ -250,18 +258,36 @@ class SmartInterface {
 
                 // Middle (misc) row
                 // TODO Make these toggle
+                // TODO Comment this process
                 if (Utils.isPushed(auto))
-                    rdrStrMisc[0] = 'a';
-                else
-                    rdrStrMisc[0] = 'A';
+                    if (ticks[0] <= 0) {
+                        ticks[0] = 5;
+                        if (rdrStrMisc[0] == 'a')
+                            rdrStrMisc[0] = 'A';
+                        else
+                            rdrStrMisc[0] = 'a';
+                    }
+                ticks[0]--;
+
                 if (Utils.isPushed(lr))
-                    rdrStrMisc[1] = 'r';
-                else
-                    rdrStrMisc[1] = 'R';
+                    if (ticks[1] <= 0) {
+                        ticks[1] = 5;
+                        if (rdrStrMisc[1] == 'r')
+                            rdrStrMisc[1] = 'R';
+                        else
+                            rdrStrMisc[1] = 'r';
+                    }
+                ticks[1]--;
+
                 if (Utils.isPushed(test))
-                    rdrStrMisc[2] = 'e';
-                else
-                    rdrStrMisc[2] = 'E';
+                    if (ticks[2] <= 0) {
+                        ticks[2] = 5;
+                        if (rdrStrMisc[2] == 'e')
+                            rdrStrMisc[2] = 'E';
+                        else
+                            rdrStrMisc[2] = 'e';
+                    }
+                ticks[2]--;
 
                 // First officer (right) row
                 if (Utils.isPushed(tfrFo))
@@ -621,7 +647,7 @@ class SmartInterface {
                         else
                             lcpOutbdFo = modifySavedComponents(index, true, item);
                         break;
-                    case "LCP Inbd - Capt":
+                    case "LCP ND - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             lcpNdCpt = modifySavedComponents(index, false, item);
                         else
@@ -633,7 +659,7 @@ class SmartInterface {
                         else
                             lcpOutbdFo = modifySavedComponents(index, true, item);
                         break;
-                    case "LCP Inbd - F/O":
+                    case "LCP ND - F/O":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             lcpNdFo = modifySavedComponents(index, false, item);
                         else
@@ -686,8 +712,8 @@ class SmartInterface {
                 "Tilt - F/O", "Gain - F/O",
                 "Jettison Fuel-to-Remain",
                 "Landing Altitude",
-                "LCP Outbd - Capt", "LCP Inbd - Capt",
-                "LCP Outbd - F/O", "LCP Inbd - F/O",
+                "LCP Outbd - Capt", "LCP ND - Capt",
+                "LCP Outbd - F/O", "LCP ND - F/O",
                 "EICAS BRT - Upr",
                 "EICAS BRT - Lwr Inner",
                 "EICAS BRT - Lwr Outer"
@@ -743,7 +769,7 @@ class SmartInterface {
         // 569 used to offset width of bar itself
         scrollPane.setPreferredSize(new Dimension(800, 569));
 
-        JFrame frame = new JFrame("PSX SmartInterface v1.1: Pre-1.2 TEST 7");
+        JFrame frame = new JFrame("PSX SmartInterface v1.1: Pre-1.2 Test");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);
@@ -825,7 +851,6 @@ class SmartInterface {
      * @throws UnsupportedEncodingException if encoding unsupported
      * @throws FileNotFoundException if file not found
      */
-    // TODO FIX BUG
     private static void stop() throws IOException {
         File file = new File("saved.cfg");
         FileWriter output = new FileWriter(file, false);

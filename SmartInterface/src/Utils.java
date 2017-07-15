@@ -69,6 +69,14 @@ class Utils {
         return component != null && component.getPollData() > 0;
     }
 
+    // TODO Documentation
+    static int deadzone(int original, int threshold) {
+        if (Math.abs(original) <= threshold)
+            return 0;
+        else
+            return original;
+    }
+
     /**
      * Determines the setting of a gain dial at which a component is set.
      *
