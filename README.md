@@ -27,15 +27,15 @@ This add-on relies on TCP port **10747** to interface with the PSX server, so th
 ## Changelog
 
 ### 1.0
-* Added flight control functionality with combined analog inputs (aileron, elevator, rudder, tiller)
-* Added UI for easy user assignment of hardware components to components within PSX
-* Added network interface for add-on to communicate with PSX
+* Added flight control functionality with combined analog inputs.
+* Added UI for easy user assignment of hardware components to components within PSX.
+* Added network interface for add-on to communicate with PSX.
 
 ### 1.1
-* Improved stability and efficiency of add-on with CPU threading and fewer ticks per second
-* Improved error catching and error notifications for easier problem solving
+* Improved stability and efficiency of add-on with CPU threading and fewer ticks per second.
+* Improved error catching and error notifications for easier problem solving.
 
 ### 1.2 (not yet released)
-* Added function that saves user-defined components to config file for use in next launch
-* Added functionality for toe brakes, various captain/first officer controls, weather radar panel buttons and rotaries, and many miscellaneous rotaries
-* Improved network efficiency and fixed a critical network bug that was causing PSX server to freeze/crash
+* Added feature that saves user definitions for persistent use.
+* Added functionality with many more analog, button, and rotary components.
+* Improved network efficiency and fixed a critical network bug that was causing PSX server to freeze/crash.
