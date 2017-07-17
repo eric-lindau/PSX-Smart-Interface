@@ -1,5 +1,5 @@
 # Aerowinx PSX Smart Interface
-[![Packagist](https://img.shields.io/badge/version-1.1-brightgreen.svg)](SmartInterface)
+[![Packagist](https://img.shields.io/badge/version-1.2-brightgreen.svg)](SmartInterface)
 [![Packagist](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/eric-lindau/PSX-Smart-Interface)
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](LICENSE.md)
 
@@ -36,7 +36,7 @@ This add-on relies on the IP address and TCP port specified in the automatically
 * Improved stability and efficiency of add-on with CPU threading and fewer ticks per second.
 * Improved error catching and error notifications for easier problem solving.
 
-### 1.2 (not yet released)
+### 1.2
 * Added feature that saves user definitions for persistent use as well as allows for user configuration of advanced settings.
 * Added functionality with many more analog, button, and rotary components.
 * Improved network efficiency and fixed a critical network bug that was causing PSX server to freeze/crash.

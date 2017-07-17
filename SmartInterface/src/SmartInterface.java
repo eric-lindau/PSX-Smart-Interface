@@ -13,14 +13,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * PSX Smart Interface: This add-on allows a user to differentiate hardware
- * components as either "Captain" or "First Officer" controls, combining
- * inputs logically while interfacing with the main PSX server. This allows
- * physical setups without mechanically synchronized pilot and co-pilot
- * controls to operate logically.
+ * An add-on for Aerowinx PSX that provides easy, smart configuration of hardware
+ * components as they relate to PSX.
+ *
+ * https://github.com/eric-lindau/PSX-Smart-Interface
  *
  * @author Eric Lindau
- * @version 1.1
+ * @version 1.2
  */
 class SmartInterface {
 
@@ -798,7 +797,7 @@ class SmartInterface {
         // 569 used to offset width of bar itself
         scrollPane.setPreferredSize(new Dimension(800, 569));
 
-        JFrame frame = new JFrame("PSX SmartInterface v1.1: Pre-1.2 FINAL Test 2");
+        JFrame frame = new JFrame("PSX SmartInterface v1.2");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);
