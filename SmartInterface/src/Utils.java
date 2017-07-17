@@ -91,23 +91,23 @@ class Utils {
      */
     static int getGainValue(Component component) {
         int value = getAnalogValue(component);
-        if (value < 101)
+        if (value < -800)
             return -6;
-        else if (value < 201)
+        else if (value < -601)
             return -5;
-        else if (value < 301)
+        else if (value < -401)
             return -4;
-        else if (value < 401)
+        else if (value < -201)
             return -3;
-        else if (value < 501)
+        else if (value < 1)
             return -2;
-        else if (value < 601)
+        else if (value < 201)
             return -1;
-        else if (value < 701)
+        else if (value < 401)
             return 0;
-        else if (value < 801)
+        else if (value < 601)
             return 1;
-        else if (value < 901)
+        else if (value < 801)
             return 2;
         else if (value < 1000)
             return 3;

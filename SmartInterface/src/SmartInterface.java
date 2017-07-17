@@ -38,9 +38,11 @@ class SmartInterface {
     private static ArrayList<Component> components = new ArrayList<>();
     // Master component list for components that are to be saved in saved.cfg
     private static ArrayList<String> savedComponents = new ArrayList<>();
+    // Master controller name label list
     private static ArrayList<JLabel> labels = new ArrayList<>();
     // Master value label list
     private static ArrayList<JLabel> valueLabels = new ArrayList<>();
+    private static ArrayList<Boolean> inverted = new ArrayList<>();
 
     //* START Stored components specified by user
     // Flight controls (Qs120)
@@ -164,7 +166,6 @@ class SmartInterface {
                     client.send(fltControlsVal.getStr());
             }
 
-            // TODO Verify deadzone functionality
             if (tillerCpt != null || tillerFo != null) {
                 int tiller = Utils.combineAnalog(tillerCpt, tillerFo);
                 tiller = Utils.deadzone(tiller, 50);
@@ -173,7 +174,6 @@ class SmartInterface {
                     client.send(tillersVal.getStr());
             }
 
-            // TODO Verify deadzone functionality
             if (toeBrakeLCpt != null || toeBrakeRCpt != null ||
                     toeBrakeLFo != null || toeBrakeRFo != null) {
                 int toeBrakeL = Utils.combineAnalog(toeBrakeLCpt, toeBrakeLFo) + 1;
@@ -315,9 +315,9 @@ class SmartInterface {
 
             // Rotaries
             if (tiltCpt != null || gainCpt != null || tiltFo != null || gainFo != null) {
-                int tiltCptInt = Utils.getAnalogValue(tiltCpt, 4713, true);
+                int tiltCptInt = Utils.getAnalogValue(tiltCpt, 2356, true) + 2356;
                 int gainCptInt = Utils.getGainValue(gainCpt);
-                int tiltFoInt = Utils.getAnalogValue(tiltFo, 4713, true);
+                int tiltFoInt = Utils.getAnalogValue(tiltFo, 2356, true) + 2356;
                 int gainFoInt = Utils.getGainValue(gainFo);
                 rdrPanelRotVal.setStr("Qs105=" + Integer.toString(tiltCptInt) + ";" + Integer.toString(gainCptInt) +
                         ";" + Integer.toString(tiltFoInt) + ";" + Integer.toString(gainFoInt));
@@ -405,8 +405,18 @@ class SmartInterface {
      */
     private static void initUI() {
 
-        // Detect and react to UI (JComboBox) changes
-        ItemListener itemListener = new ItemListener() {
+        // Detect and react to UI changes
+        ItemListener checkListener = new ItemListener() {
+            public void itemStateChanged(ItemEvent itemEvent) {
+                CheckBox box = (CheckBox) itemEvent.getSource();
+                int index = box.getIndex();
+                if (box.isSelected())
+                    inverted.set(index, true);
+                else
+                    inverted.set(index, false);
+            }
+        };
+        ItemListener comboListener = new ItemListener() {
             public void itemStateChanged(ItemEvent itemEvent) {
                 String item = (String) itemEvent.getItem();
                 ComboBox combo = (ComboBox) itemEvent.getSource();
@@ -724,9 +734,11 @@ class SmartInterface {
         String[] savedStrs = loadSavedComponents();
         String[] splitStrs;
         // Go through each controller and add its components to the UI
-        ComboBox comboBox;
         JLabel label;
         JLabel valueLabel;
+        CheckBox checkBox;
+        JLabel nullLabel;
+        ComboBox comboBox;
         for (Controller controller : controllers) {
             for (Component component : controller.getComponents()) {
                 components.add(component);
@@ -742,25 +754,44 @@ class SmartInterface {
                 panel.add(valueLabel);
                 valueLabels.add(valueLabel);
 
+                // Checkbox: For analog input inversion
+                checkBox = new CheckBox("Inverted", components.size() - 1);
+                nullLabel = new JLabel("");
+                if (component.isAnalog()) {
+                    panel.add(checkBox);
+                    checkBox.addItemListener(checkListener);
+                } else
+                    panel.add(nullLabel);
+                inverted.add(false);
+
                 // ComboBox: Select which components act for which operations
                 comboBox = new ComboBox(dropBoxStrings, components.size() - 1);
                 comboBox.setMaximumRowCount(30);
-                comboBox.addItemListener(itemListener);
+                comboBox.addItemListener(comboListener);
                 panel.add(comboBox);
 
                 // Configure saved components
                 if (savedStrs != null) {
                     for (String line : savedStrs) {
                         splitStrs = line.split("`");
-                        if (splitStrs[0].equals(label.getText()))
+                        if (splitStrs.length != 3) {
+                            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "saved.cfg incorrect!",
+                                    "Network Configuration Error", JOptionPane.ERROR_MESSAGE);
+                            System.exit(1);
+                        }
+                        if (splitStrs[0].equals(label.getText())) {
                             comboBox.setSelectedItem(splitStrs[1]);
+                            if (component.isAnalog())
+                                if (Integer.parseInt(splitStrs[2]) == 1)
+                                    checkBox.setSelected(true);
+                        }
                     }
                 }
             }
         }
 
         // TODO Add another column for "Neutral" (dead zone)
-        GridLayout grid = new GridLayout(components.size(), 3, 10, 0);
+        GridLayout grid = new GridLayout(components.size(), 4, 0, 0);
         panel.setLayout(grid);
         panel.setPreferredSize(new Dimension(780, components.size() * 30));
 
@@ -836,7 +867,7 @@ class SmartInterface {
     }
 
     /**
-     * Gets preferred controllers, excluding mice and keyboards.
+     * Gets preferred controllers.
      */
     private static void initControllers() {
         // Copy controllers into ArrayList so they can be removed easily
@@ -856,7 +887,6 @@ class SmartInterface {
         try {
             //* START IP/port config
             BufferedReader input = new BufferedReader((new FileReader("general.cfg")));
-            input.readLine();
             input.readLine();
             input.readLine();
             input.readLine();
@@ -884,7 +914,6 @@ class SmartInterface {
             //* START Minimize UI config
             input.readLine();
             input.readLine();
-            input.readLine();
 
             line = input.readLine();
             if (line == null || line.isEmpty()) {
@@ -898,7 +927,6 @@ class SmartInterface {
             //* END Minimize UI config
 
             //* START Ignored controllers config
-            input.readLine();
             input.readLine();
 
             while((line = input.readLine()) != null) {
@@ -914,14 +942,11 @@ class SmartInterface {
                 output.write("### Please do not remove any lines of this cfg; simply edit them.\n");
                 output.write("## Network config\n");
                 output.write("# Host/port of PSX server\n");
-                output.write("# Example - localhost:10747\n");
                 output.write("localhost:10747\n");
                 output.write("## General config\n");
                 output.write("# Minimize window on add-on startup\n");
-                output.write("# Use 0 for 'No' or 1 for 'Yes'\n");
                 output.write("0\n");
                 output.write("# Ignored controller names (one per line)\n");
-                output.write("# The controller name is the part before the dash of each line in the main UI\n");
                 output.write("Mouse\n");
                 output.write("Keyboard\n");
                 output.close();
@@ -962,7 +987,9 @@ class SmartInterface {
         File file = new File("saved.cfg");
         FileWriter output = new FileWriter(file, false);
         for (String line : savedComponents) {
-            output.write(line + "\n");
+            int index = Integer.parseInt(line.substring(2, line.indexOf('.')));
+            int invert = inverted.get(index) ? 1 : 0;
+            output.write(line + "`" + invert + "\n");
         }
         output.close();
 
