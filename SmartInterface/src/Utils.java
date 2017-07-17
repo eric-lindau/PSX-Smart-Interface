@@ -1,11 +1,16 @@
 import net.java.games.input.Component;
 
+import java.util.ArrayList;
+
 /**
  * Static utilities for calculation and logic.
  *
  * @author Eric Lindau
  */
 class Utils {
+
+    // List to keep track of which components are inverted to apply multiplier
+    static ArrayList<Component> inverted = new ArrayList<>();
 
     /**
      * Corrects a component's analog value to the default analog range in PSX.
@@ -15,7 +20,10 @@ class Utils {
      */
     static int getAnalogValue(Component component) {
         if (component != null)
-            return Math.round(component.getPollData() * 999);
+            if (inverted.contains(component))
+                return Math.round(component.getPollData() * 999) * -1;
+            else
+                return Math.round(component.getPollData() * 999);
         else
             return 0;
     }
@@ -30,7 +38,10 @@ class Utils {
      */
     static int getAnalogValue(Component component, int modifier, boolean centered) {
         if (component != null)
-            return Math.round(component.getPollData() * modifier);
+            if (inverted.contains(component))
+                return Math.round(component.getPollData() * modifier) * -1;
+            else
+                return Math.round(component.getPollData() * modifier);
         else
             if (centered)
                 return modifier / 2;

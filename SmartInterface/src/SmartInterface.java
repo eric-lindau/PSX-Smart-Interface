@@ -9,8 +9,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
-import java.lang.reflect.Array;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -42,6 +40,7 @@ class SmartInterface {
     private static ArrayList<JLabel> labels = new ArrayList<>();
     // Master value label list
     private static ArrayList<JLabel> valueLabels = new ArrayList<>();
+    // Master list to tell if each component is inverted for saving purposes
     private static ArrayList<Boolean> inverted = new ArrayList<>();
 
     //* START Stored components specified by user
@@ -123,7 +122,7 @@ class SmartInterface {
                 update();
             stop();
         } catch(Exception e) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage() + e.getStackTrace(),
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -150,7 +149,6 @@ class SmartInterface {
             }
 
             //* START Update analog values
-            // TODO Verify deadzone functionality
             if (aileronCpt != null || aileronFo != null ||
                     elevatorCpt != null || elevatorFo != null ||
                     rudderCpt != null || rudderFo != null) {
@@ -258,8 +256,7 @@ class SmartInterface {
                     rdrStrCpt[4] = 'G';
 
                 // Middle (misc) row
-                // TODO Make these toggle
-                // TODO Comment this process
+                // Toggle functionality, with 5 ticks (100 ms) between each allowed toggle
                 if (Utils.isPushed(auto))
                     if (ticks[0] <= 0) {
                         ticks[0] = 5;
@@ -327,7 +324,6 @@ class SmartInterface {
             //* END Update radar panel buttons/rotaries
 
             //* START Misc rotaries
-            // TODO Verify all of these are correct
             if (jettRemain != null) {
                 int jettRemainInt = Utils.getAnalogValue(jettRemain, 62830, false);
                 jettRemainVal.setStr("Qh273=" + Integer.toString(jettRemainInt));
@@ -390,13 +386,12 @@ class SmartInterface {
                 if (eicasBrtLwrOuterVal.hasChanged())
                     client.send(eicasBrtLwrOuterVal.getStr());
             }
-            // TODO Verify all of these are correct
             //* END Misc rotaries
 
             Thread.sleep(50); // 20 Hz
         } catch(Exception e) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
-                    e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -410,10 +405,13 @@ class SmartInterface {
             public void itemStateChanged(ItemEvent itemEvent) {
                 CheckBox box = (CheckBox) itemEvent.getSource();
                 int index = box.getIndex();
-                if (box.isSelected())
+                if (box.isSelected()) {
                     inverted.set(index, true);
-                else
+                    Utils.inverted.add(components.get(index));
+                } else {
                     inverted.set(index, false);
+                    Utils.inverted.remove(components.get(index));
+                }
             }
         };
         ItemListener comboListener = new ItemListener() {
@@ -770,7 +768,7 @@ class SmartInterface {
                 comboBox.addItemListener(comboListener);
                 panel.add(comboBox);
 
-                // Configure saved components
+                // Configure saved components (combobox, checkbox)
                 if (savedStrs != null) {
                     for (String line : savedStrs) {
                         splitStrs = line.split("`");
@@ -790,7 +788,6 @@ class SmartInterface {
             }
         }
 
-        // TODO Add another column for "Neutral" (dead zone)
         GridLayout grid = new GridLayout(components.size(), 4, 0, 0);
         panel.setLayout(grid);
         panel.setPreferredSize(new Dimension(780, components.size() * 30));
@@ -801,7 +798,7 @@ class SmartInterface {
         // 569 used to offset width of bar itself
         scrollPane.setPreferredSize(new Dimension(800, 569));
 
-        JFrame frame = new JFrame("PSX SmartInterface v1.1: Pre-1.2 Test 1");
+        JFrame frame = new JFrame("PSX SmartInterface v1.1: Pre-1.2 FINAL Test 2");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);
