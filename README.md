@@ -7,6 +7,7 @@ This add-on for Aerowinx PSX provides a variety of features that are necessary f
 * It provides a way to combine analog inputs, such as those of flight controls, in multi-pilot setups that are not mechanically linked.
 * It allows a user to differentiate hardware components as either "Captain" or "First Officer" controls, creating a clear separation between controls while integrating their inputs.
 * It allows assignment of certain components to controls such as tilt & gain dials, brightness dials, and weather radar buttons, seamlessly integrating with PSX.
+
 ... all configurable with a UI that is easy to use, much like that of PSX itself.
 
 ## Usage
