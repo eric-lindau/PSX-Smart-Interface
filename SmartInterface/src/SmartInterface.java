@@ -19,7 +19,7 @@ import java.util.Arrays;
  * https://github.com/eric-lindau/PSX-Smart-Interface
  *
  * @author Eric Lindau
- * @version 1.2.2
+ * @version 1.2.3
  */
 class SmartInterface {
 
@@ -79,6 +79,8 @@ class SmartInterface {
     private static Component lcpNdCpt;
     private static Component lcpOutbdFo;
     private static Component lcpNdFo;
+    private static Component lcpWxrCpt;
+    private static Component lcpWxrFo;
     private static Component eicasBrtUpr;
     private static Component eicasBrtLwrInner;
     private static Component eicasBrtLwrOuter;
@@ -101,6 +103,8 @@ class SmartInterface {
     private static Value lcpNdCptVal = new Value();
     private static Value lcpOutbdFoVal = new Value();
     private static Value lcpNdFoVal = new Value();
+    private static Value lcpWxrCptVal = new Value();
+    private static Value lcpWxrFoVal = new Value();
     private static Value eicasBrtUprVal = new Value();
     private static Value eicasBrtLwrInnerVal = new Value();
     private static Value eicasBrtLwrOuterVal = new Value();
@@ -364,6 +368,20 @@ class SmartInterface {
                 lcpNdFoVal.setStr("Qh100=" + Integer.toString(lcpNdFoInt));
                 if (lcpNdFoVal.hasChanged())
                     client.send(lcpNdFoVal.getStr());
+            }
+
+            if (lcpWxrCpt != null) {
+                int lcpWxrCptInt = Utils.getAnalogValue(lcpWxrCpt, 4713, false);
+                lcpWxrCptVal.setStr("Qh88=" + Integer.toString(lcpWxrCptInt));
+                if (lcpWxrCptVal.hasChanged())
+                    client.send(lcpWxrCptVal.getStr());
+            }
+
+            if (lcpWxrFo != null) {
+                int lcpWxrFoInt = Utils.getAnalogValue(lcpWxrFo, 4713, false);
+                lcpWxrFoVal.setStr("Qh99=" + Integer.toString(lcpWxrFoInt));
+                if (lcpWxrFoVal.hasChanged())
+                    client.send(lcpWxrFoVal.getStr());
             }
 
             if (eicasBrtUpr != null) {
@@ -674,6 +692,18 @@ class SmartInterface {
                         else
                             lcpNdFo = modifySavedComponents(index, true, item);
                         break;
+                    case "LCP WXR - Capt":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            lcpWxrCpt = modifySavedComponents(index, false, item);
+                        else
+                            lcpWxrCpt = modifySavedComponents(index, true, item);
+                        break;
+                    case "LCP WXR - F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            lcpWxrFo = modifySavedComponents(index, false, item);
+                        else
+                            lcpWxrFo = modifySavedComponents(index, false, item);
+                        break;
                     case "EICAS BRT - Upr":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
                             eicasBrtUpr = modifySavedComponents(index, false, item);
@@ -723,6 +753,7 @@ class SmartInterface {
                 "Landing Altitude",
                 "LCP Outbd - Capt", "LCP ND - Capt",
                 "LCP Outbd - F/O", "LCP ND - F/O",
+                "LCP WXR - Capt", "LCP WXR - F/O",
                 "EICAS BRT - Upr",
                 "EICAS BRT - Lwr Inner",
                 "EICAS BRT - Lwr Outer"
@@ -798,7 +829,7 @@ class SmartInterface {
         // 569 used to offset width of bar itself
         scrollPane.setPreferredSize(new Dimension(800, 569));
 
-        JFrame frame = new JFrame("PSX SmartInterface v1.2.2");
+        JFrame frame = new JFrame("PSX SmartInterface v1.2.3");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);
