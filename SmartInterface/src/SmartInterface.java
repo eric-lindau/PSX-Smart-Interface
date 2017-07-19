@@ -19,7 +19,7 @@ import java.util.Arrays;
  * https://github.com/eric-lindau/PSX-Smart-Interface
  *
  * @author Eric Lindau
- * @version 1.2
+ * @version 1.2.2
  */
 class SmartInterface {
 
@@ -108,8 +108,8 @@ class SmartInterface {
     // Buffers to be combined as String sent for radar panel button values (Qs104)
     private static char[] rdrStrCpt, rdrStrFo;
     private static char[] rdrStrMisc = {'A', 'R', 'E'};
-    // Keeps track of ticks since last misc radar panel button presses for toggling
-    private static long[] ticks = {0, 0, 0};
+    // Keeps track of radar panel unpressing for toggling functionality
+    private static boolean[] unPressed = {false, false, false};
 
     public static void main(String[] args) {
         initConfig();
@@ -255,36 +255,37 @@ class SmartInterface {
                     rdrStrCpt[4] = 'G';
 
                 // Middle (misc) row
-                // Toggle functionality, with 5 ticks (100 ms) between each allowed toggle
-                if (Utils.isPushed(auto))
-                    if (ticks[0] <= 0) {
-                        ticks[0] = 5;
-                        if (rdrStrMisc[0] == 'a')
-                            rdrStrMisc[0] = 'A';
-                        else
-                            rdrStrMisc[0] = 'a';
-                    }
-                ticks[0]--;
+                // Toggled radar panel buttons
+                if (!unPressed[0] && !Utils.isPushed(auto))
+                    unPressed[0] = true;
+                if (!unPressed[1] && !Utils.isPushed(lr))
+                    unPressed[1] = true;
+                if (!unPressed[2] && !Utils.isPushed(test))
+                    unPressed[2] = true;
 
-                if (Utils.isPushed(lr))
-                    if (ticks[1] <= 0) {
-                        ticks[1] = 5;
-                        if (rdrStrMisc[1] == 'r')
-                            rdrStrMisc[1] = 'R';
-                        else
-                            rdrStrMisc[1] = 'r';
-                    }
-                ticks[1]--;
+                if (unPressed[0] && Utils.isPushed(auto)) {
+                    if (rdrStrMisc[0] == 'a')
+                        rdrStrMisc[0] = 'A';
+                    else
+                        rdrStrMisc[0] = 'a';
+                    unPressed[0] = false;
+                }
 
-                if (Utils.isPushed(test))
-                    if (ticks[2] <= 0) {
-                        ticks[2] = 5;
-                        if (rdrStrMisc[2] == 'e')
-                            rdrStrMisc[2] = 'E';
-                        else
-                            rdrStrMisc[2] = 'e';
-                    }
-                ticks[2]--;
+                if (unPressed[1] && Utils.isPushed(lr)) {
+                    if (rdrStrMisc[1] == 'r')
+                        rdrStrMisc[1] = 'R';
+                    else
+                        rdrStrMisc[1] = 'r';
+                    unPressed[1] = false;
+                }
+
+                if (unPressed[2] && Utils.isPushed(test)) {
+                    if (rdrStrMisc[2] == 'e')
+                        rdrStrMisc[2] = 'E';
+                    else
+                        rdrStrMisc[2] = 'e';
+                    unPressed[2] = false;
+                }
 
                 // First officer (right) row
                 if (Utils.isPushed(tfrFo))
@@ -797,7 +798,7 @@ class SmartInterface {
         // 569 used to offset width of bar itself
         scrollPane.setPreferredSize(new Dimension(800, 569));
 
-        JFrame frame = new JFrame("PSX SmartInterface v1.2.1");
+        JFrame frame = new JFrame("PSX SmartInterface v1.2.2");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);
