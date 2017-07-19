@@ -3,12 +3,14 @@
 [![Packagist](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/eric-lindau/PSX-Smart-Interface)
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](LICENSE.md)
 
-This add-on for Aerowinx PSX provides a variety of features that are necessary for those that have extensive flight simulator hardware setups:
+This add-on for Aerowinx PSX provides a variety of features that are necessary for those that have extensive flight simulator hardware:
 * It provides a way to combine analog inputs, such as those of flight controls, in multi-pilot setups that are not mechanically linked.
 * It allows a user to differentiate hardware components as either "Captain" or "First Officer" controls, creating a clear separation between controls while integrating their inputs.
 * It allows assignment of certain components to controls such as tilt & gain dials, brightness dials, and weather radar buttons, seamlessly integrating with PSX.
 
 ... all configurable with a UI that is easy to use, much like that of PSX itself.
+
+For even more information about what this add-on provides, please visit the [Wiki](wiki).
 
 ## Usage
 **Note:** This software is an add-on for [*Aerowinx PSX*](http://www.aerowinx.com/). PSX is required and should be running for this add-on to operate properly.
