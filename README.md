@@ -10,7 +10,7 @@ This add-on for Aerowinx PSX provides a variety of features that are necessary f
 
 ... all configurable with a UI that is easy to use, much like that of PSX itself.
 
-For even more information about what this add-on provides, please visit the [Wiki](wiki).
+For even more information about what this add-on provides, please visit the [Wiki](https://github.com/eric-lindau/PSX-Smart-Interface/wiki).
 
 ## Usage
 **Note:** This software is an add-on for [*Aerowinx PSX*](http://www.aerowinx.com/). PSX is required and should be running for this add-on to operate properly.
