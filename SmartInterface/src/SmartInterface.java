@@ -353,7 +353,7 @@ class SmartInterface {
 
             if (lcpOutbdFo != null) {
                 int lcpOutbdFoInt = Utils.getAnalogValue(lcpOutbdFo, 4713, false);
-                lcpOutbdFoVal.setStr("Qh87=" + Integer.toString(lcpOutbdFoInt));
+                lcpOutbdFoVal.setStr("Qh98=" + Integer.toString(lcpOutbdFoInt));
                 if (lcpOutbdFoVal.hasChanged())
                     client.send(lcpOutbdFoVal.getStr());
             }
@@ -797,7 +797,7 @@ class SmartInterface {
         // 569 used to offset width of bar itself
         scrollPane.setPreferredSize(new Dimension(800, 569));
 
-        JFrame frame = new JFrame("PSX SmartInterface v1.2");
+        JFrame frame = new JFrame("PSX SmartInterface v1.2.1");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);
