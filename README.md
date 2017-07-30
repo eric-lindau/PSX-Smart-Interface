@@ -1,5 +1,5 @@
 # Aerowinx PSX Smart Interface
-[![Packagist](https://img.shields.io/badge/version-1.2.3-brightgreen.svg)](SmartInterface)
+[![Packagist](https://img.shields.io/badge/version-1.2.4-brightgreen.svg)](SmartInterface)
 [![Packagist](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/eric-lindau/PSX-Smart-Interface)
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](LICENSE.md)
 

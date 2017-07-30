@@ -19,7 +19,7 @@ import java.util.Arrays;
  * https://github.com/eric-lindau/PSX-Smart-Interface
  *
  * @author Eric Lindau
- * @version 1.2.3
+ * @version 1.2.4
  */
 class SmartInterface {
 
@@ -58,7 +58,7 @@ class SmartInterface {
     // Misc buttons (Qh398, Qh399, Qh400, Qh82, Qh93)
     private static Component stabTrimUpCpt, stabTrimDnCpt;
     private static Component stabTrimUpFo, stabTrimDnFo;
-    private static Component apDisc;
+    private static Component apDiscCapt, apDiscFo;
     private static Component lcpPttCpt, lcpPttFo;
 
     // Radar panel buttons/rotaries (Qs104, Qs105)
@@ -92,7 +92,8 @@ class SmartInterface {
     private static Value toeBrakesVal = new Value();
     private static Value stabTrimCptVal = new Value();
     private static Value stabTrimFoVal = new Value();
-    private static Value apDiscVal = new Value();
+    private static Value apDiscCaptVal = new Value();
+    private static Value apDiscFoVal = new Value();
     private static Value lcpPttCptVal = new Value();
     private static Value lcpPttFoVal = new Value();
     private static Value rdrPanelVal = new Value();
@@ -210,13 +211,22 @@ class SmartInterface {
                     client.send(stabTrimFoVal.getStr());
             }
 
-            if (apDisc != null) {
-                if (Utils.isPushed(apDisc))
-                    apDiscVal.setStr("Qh400=1");
+            if (apDiscCapt != null) {
+                if (Utils.isPushed(apDiscCapt))
+                    apDiscCaptVal.setStr("Qh400=1");
                 else
-                    apDiscVal.setStr("Qh400=0");
-                if (apDiscVal.hasChanged())
-                    client.send(apDiscVal.getStr());
+                    apDiscCaptVal.setStr("Qh400=0");
+                if (apDiscCaptVal.hasChanged())
+                    client.send(apDiscCaptVal.getStr());
+            }
+
+            if (apDiscFo != null) {
+                if (Utils.isPushed(apDiscFo))
+                    apDiscFoVal.setStr("Qh400=1");
+                else
+                    apDiscFoVal.setStr("Qh400=0");
+                if (apDiscFoVal.hasChanged())
+                    client.send(apDiscFoVal.getStr());
             }
 
             if (lcpPttCpt != null) {
@@ -536,11 +546,17 @@ class SmartInterface {
                         else
                             stabTrimDnFo = modifySavedComponents(index, true, item);
                         break;
-                    case "AP Disc":
+                    case "AP Disc - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
-                            apDisc = modifySavedComponents(index, false, item);
+                            apDiscCapt = modifySavedComponents(index, false, item);
                         else
-                            apDisc = modifySavedComponents(index, true, item);
+                            apDiscCapt = modifySavedComponents(index, true, item);
+                        break;
+                    case "AP Disc - F/O":
+                        if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                            apDiscFo = modifySavedComponents(index, false, item);
+                        else
+                            apDiscFo = modifySavedComponents(index, true, item);
                         break;
                     case "PTT - Capt":
                         if (itemEvent.getStateChange() == ItemEvent.SELECTED)
@@ -740,7 +756,7 @@ class SmartInterface {
                 "Toe Brake Left - F/O", "Toe Brake Right - F/O",
                 "Stab Trim UP - Capt", "Stab Trim DN - Capt",
                 "Stab Trim UP - F/O", "Stab Trim DN - F/O",
-                "AP Disc",
+                "AP Disc - Capt", "AP Disc - F/O",
                 "PTT - Capt", "PTT - F/O",
                 "TFR - Capt", "WX - Capt", "WX+T - Capt",
                 "MAP - Capt", "GC - Capt",
@@ -805,7 +821,7 @@ class SmartInterface {
                         splitStrs = line.split("`");
                         if (splitStrs.length != 3) {
                             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "saved.cfg incorrect!",
-                                    "Network Configuration Error", JOptionPane.ERROR_MESSAGE);
+                                    "Saved Configuration Error", JOptionPane.ERROR_MESSAGE);
                             System.exit(1);
                         }
                         if (splitStrs[0].equals(label.getText())) {
@@ -829,7 +845,7 @@ class SmartInterface {
         // 569 used to offset width of bar itself
         scrollPane.setPreferredSize(new Dimension(800, 569));
 
-        JFrame frame = new JFrame("PSX SmartInterface v1.2.3");
+        JFrame frame = new JFrame("PSX SmartInterface v1.2.4");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);
