@@ -10,7 +10,7 @@ import java.util.ArrayList;
 class Utils {
 
     // List to keep track of which components are inverted to apply multiplier
-    static ArrayList<Component> inverted = new ArrayList<>();
+    static ArrayList<Component> inverted = new ArrayList();
 
     /**
      * Corrects a component's analog value to the default analog range in PSX.

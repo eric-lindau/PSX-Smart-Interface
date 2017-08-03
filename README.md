@@ -1,5 +1,5 @@
 # Aerowinx PSX Smart Interface
-[![Packagist](https://img.shields.io/badge/version-1.2.4-brightgreen.svg)](SmartInterface)
+[![Packagist](https://img.shields.io/badge/version-1.2.5-brightgreen.svg)](SmartInterface)
 [![Packagist](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/eric-lindau/PSX-Smart-Interface)
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](LICENSE.md)
 
@@ -20,7 +20,7 @@ For even more information about what this add-on provides, please visit the [Wik
 **Note:** The *SmartInterface.jar* file must be in the same directory as the included *.dll* files (natives) due to library dependencies. Alternatively, if the *.dll* files are moved to a directory that is part of the Java PATH, *SmartInterface.jar* can run independently.
 
 ### Networking
-This add-on relies on the IP address and TCP port specified in the automatically generated **general.cfg** file (generated in the same directory as the *.jar* file) to interface with the PSX server, so the server must be unrestricted on the network and configured to run based on the settings in the configuration file. **By default, this configuration specifies a connection to localhost:10747.**
+This add-on relies on the IP address and TCP port specified in the automatically generated ***general.cfg*** file (generated in the same directory as the *.jar* file) to interface with the PSX server, so the server must be unrestricted on the network and configured to run based on the settings in the configuration file. **By default, this configuration specifies a connection to localhost:10747.**
 
 ## Built with
 * [JInput](https://github.com/jinput/jinput) - Used to detect and interface with hardware controllers
@@ -31,14 +31,14 @@ This add-on relies on the IP address and TCP port specified in the automatically
 ### 1.0
 * Added flight control functionality with combined analog inputs.
 * Added UI for easy user assignment of hardware components to components within PSX.
-* Added network interface for add-on to communicate with PSX.
+* Added network interface for communication with PSX.
 
 ### 1.1
-* Improved stability and efficiency of add-on with CPU threading and fewer ticks per second.
+* Drastically improved stability and efficiency.
 * Improved error handling and error notifications.
 
 ### 1.2
 * Added feature that saves user definitions for persistent use and allows for user configuration of more advanced settings.
 * Added functionality for many more analog, button, and rotary components in PSX.
 * Improved network efficiency and fixed a critical network bug that was causing PSX server to freeze/crash.
-* Implemented several bugfixes.
+* Implemented several bugfixes and improvements.
