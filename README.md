@@ -1,6 +1,5 @@
 # Aerowinx PSX Smart Interface
-[![Packagist](https://img.shields.io/badge/version-1.2.5-brightgreen.svg)](SmartInterface)
-[![Packagist](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/eric-lindau/PSX-Smart-Interface)
+[![Packagist](https://img.shields.io/badge/version-1.2.6-brightgreen.svg)](SmartInterface)
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](LICENSE.md)
 
 This add-on for Aerowinx PSX provides a variety of features that are necessary for those using extensive flight simulator hardware:
@@ -15,9 +14,9 @@ For even more information about what this add-on provides, please visit the [Wik
 **Note:** This software is an add-on for [*Aerowinx PSX*](http://www.aerowinx.com/). PSX is required and should be running for this add-on to operate properly.
 
 ### General
-**Extract the *SmartInterface* folder from the *SmartInterface-1.2.3.zip* archive. Inside that folder, run *SmartInterface.jar* by double-clicking on it.**
-
-**Note:** The *SmartInterface.jar* file must be in the same directory as the included *.dll* files (natives) due to library dependencies. Alternatively, if the *.dll* files are moved to a directory that is part of the Java PATH, *SmartInterface.jar* can run independently.
+**Run *SmartInterface-1.2.6.jar* by double clicking on it or using Java in a command line.**<br>
+A window will appear showing all connected controllers that are not "ignored" in *general.cfg*.<br>
+Please see the **Networking** section below if you have connection issues.
 
 ### Networking
 This add-on relies on the IP address and TCP port specified in the automatically generated ***general.cfg*** file (generated in the same directory as the *.jar* file) to interface with the PSX server, so the server must be unrestricted on the network and configured to run based on the settings in the configuration file. **By default, this configuration specifies a connection to localhost:10747.**
@@ -42,3 +41,4 @@ This add-on relies on the IP address and TCP port specified in the automatically
 * Added functionality for many more analog, button, and rotary components in PSX.
 * Improved network efficiency and fixed a critical network bug that was causing PSX server to freeze/crash.
 * Implemented several bugfixes and improvements.
+* Included native libraries with .jar for reduced file clutter.

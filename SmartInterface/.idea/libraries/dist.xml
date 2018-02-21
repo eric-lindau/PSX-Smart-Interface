@@ -4,10 +4,6 @@
     <JAVADOC />
     <NATIVE>
       <root url="file://$PROJECT_DIR$/../JInput/dist" />
-      <root url="file://$PROJECT_DIR$/../JInput/dist" />
-      <root url="file://$PROJECT_DIR$/../JInput/dist" />
-      <root url="file://$PROJECT_DIR$/../JInput/dist" />
-      <root url="file://$PROJECT_DIR$/../JInput/dist" />
     </NATIVE>
     <SOURCES />
   </library>
