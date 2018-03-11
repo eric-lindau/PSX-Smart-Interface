@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SmartInterface.iml" filepath="$PROJECT_DIR$/SmartInterface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PSX Smart Interface.iml" filepath="$PROJECT_DIR$/PSX Smart Interface.iml" />
     </modules>
   </component>
 </project>
