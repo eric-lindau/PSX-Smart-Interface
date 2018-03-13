@@ -1,12 +1,10 @@
-package com.lindautech.psx.data;
+package com.lindautech.psx.network;
 
 import java.io.Closeable;
 
 /**
- * Handles
+ * An object that sends network to an external source - likely a server.
  */
 public interface NetworkClient extends Closeable {
-
   public void sendData(CharSequence data);
-
 }

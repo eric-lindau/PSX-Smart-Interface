@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
- * Handles socket creation, destruction, and data exchange between the PSX server and the client.
+ * Handles socket creation, destruction, and network exchange between the PSX server and the client.
  *
  * @author Eric Lindau
  */
@@ -51,9 +51,9 @@ class Client extends Thread {
     }
 
     /**
-     * Sends data to the PSX server.
+     * Sends network to the PSX server.
      *
-     * @param data the data to be sent
+     * @param data the network to be sent
      */
     void send(String data) {
         if (!data.isEmpty())
