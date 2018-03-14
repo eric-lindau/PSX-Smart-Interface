@@ -24,21 +24,3 @@ This add-on relies on the IP address and TCP port specified in the automatically
 ## Built with
 * [JInput](https://github.com/jinput/jinput) - Used to detect and interface with hardware controllers
 * [Aerowinx Network](http://aerowinx.com/assets/networkers/Network%20Documentation.txt) - Used to interface with PSX over network (**documentation only**)
-
-## Changelog
-
-### 1.0
-* Added flight control functionality with combined analog inputs.
-* Added UI for easy user assignment of hardware components to components within PSX.
-* Added network interface for communication with PSX.
-
-### 1.1
-* Drastically improved stability and efficiency.
-* Improved error handling and error notifications.
-
-### 1.2
-* Added feature that saves user definitions for persistent use and allows for user configuration of more advanced settings.
-* Added functionality for many more analog, button, and rotary components in PSX.
-* Improved network efficiency and fixed a critical network bug that was causing PSX server to freeze/crash.
-* Implemented several bugfixes and improvements.
-* Included native libraries with .jar for reduced file clutter.
