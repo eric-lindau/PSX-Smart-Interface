@@ -5,7 +5,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class TCPClient extends Thread implements NetworkClient {
+class TCPClient extends Thread implements NetworkClient {
   private Closeable socket;
   private BufferedReader buffer;
   private PrintWriter dataWriter;
