@@ -24,6 +24,7 @@ abstract class Input implements DataSource {
   public void refresh() {
     int presentValue = pollData();
     if (value != presentValue) {
+      value = presentValue;
       updateListeners();
     }
   }
