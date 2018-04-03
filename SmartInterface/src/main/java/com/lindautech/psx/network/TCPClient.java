@@ -1,5 +1,8 @@
 package com.lindautech.psx.network;
 
+import com.lindautech.psx.data.inputs.AnalogInput;
+import com.lindautech.psx.data.inputs.DataSource;
+
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
@@ -18,7 +21,6 @@ class TCPClient extends Thread implements NetworkClient {
 
   @Override
   public void run() {
-
   }
 
   public void sendData(CharSequence data) {

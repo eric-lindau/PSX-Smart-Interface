@@ -1,4 +1,4 @@
-package com.lindautech.psx.data;
+package com.lindautech.psx.data.inputs;
 
 import net.java.games.input.Component;
 
@@ -10,10 +10,5 @@ public class DigitalInput extends Input {
   @Override
   public int pollData() {
     return 0;
-  }
-
-  @Override
-  public void addChangeListener() {
-
   }
 }
