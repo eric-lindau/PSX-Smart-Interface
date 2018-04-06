@@ -1,4 +1,4 @@
-package com.lindautech.psx.data.inputs;
+package com.lindautech.psx.data.input;
 
 import net.java.games.input.Component;
 
@@ -7,11 +7,10 @@ import java.util.ArrayList;
 /**
  * An object that serves as a source of data from a physical input, like an embedded controller.
  *
- * This class should only be instantiated by children.
+ * <p>Only children of this class should be instantiated.
  */
 abstract class Input implements DataSource {
   private ArrayList<UpdateListener> listeners;
-  // The protected modifier will be valid with full implementation
   Component component;
   private int value;
 

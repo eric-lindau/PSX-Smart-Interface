@@ -6,5 +6,5 @@ import java.io.Closeable;
  * An object that sends network to an external source - likely a server.
  */
 public interface NetworkClient extends Closeable {
-  public void sendData(CharSequence data);
+  void sendData(CharSequence data);
 }

@@ -1,4 +1,4 @@
-package com.lindautech.psx.data.inputs;
+package com.lindautech.psx.data.input;
 
 public interface DataSource {
   void refresh();
