@@ -25,7 +25,7 @@ import java.util.Arrays;
  * @author Eric Lindau
  * @version 1.2.6
  */
-class SmartInterface {
+class SmartInterfaceOld {
 
     private static boolean running = true;
     private static boolean minimizeOnStart;
@@ -801,7 +801,7 @@ class SmartInterface {
         // 569 used to offset width of bar itself
         scrollPane.setPreferredSize(new Dimension(800, 569));
 
-        JFrame frame = new JFrame("PSX SmartInterface v1.2.6");
+        JFrame frame = new JFrame("PSX SmartInterfaceOld v1.2.6");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);

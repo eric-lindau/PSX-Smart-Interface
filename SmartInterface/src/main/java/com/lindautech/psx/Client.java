@@ -33,7 +33,7 @@ class Client extends Thread {
             String error = "Error connecting to PSX! Please ensure that a PSX server " +
                     "is running on the host and port specified in general.cfg";
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
-                    error, "PSX SmartInterface Error",
+                    error, "PSX SmartInterfaceOld Error",
                     JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }
