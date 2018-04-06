@@ -31,12 +31,23 @@
       <file leaf-file-name="EntryManager.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lindautech/psx/orchestration/EntryManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+            <state relative-caret-position="210">
+              <caret line="14" column="31" lean-forward="true" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#258#259#0" expanded="true" />
-                <element signature="e#321#322#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PrimaryPanel.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/lindautech/psx/ui/PrimaryPanel.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="16" lean-forward="true" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="16" />
+              <folding>
+                <element signature="e#122#123#0" expanded="true" />
+                <element signature="e#180#181#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -147,7 +158,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/lindautech/psx/network/TCPClientFactory.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lindautech/psx/SmartInterface.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lindautech/psx/ui/PrimaryWindow.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lindautech/psx/ui/PrimaryPanel.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lindautech/psx/data/Component.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lindautech/psx/data/Pollable.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lindautech/psx/data/AnalogInput.java" />
@@ -170,6 +180,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/lindautech/psx/SmartInterfaceOld.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lindautech/psx/ui/EntryPanel.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lindautech/psx/orchestration/EntryManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lindautech/psx/ui/PrimaryPanel.java" />
       </list>
     </option>
   </component>
@@ -844,14 +855,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lindautech/psx/ui/PrimaryPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lindautech/psx/Client.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -927,14 +930,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lindautech/psx/ui/PrimaryPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="16" lean-forward="true" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="16" />
+          <folding>
+            <element signature="e#122#123#0" expanded="true" />
+            <element signature="e#180#181#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lindautech/psx/orchestration/EntryManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+        <state relative-caret-position="210">
+          <caret line="14" column="31" lean-forward="true" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#258#259#0" expanded="true" />
-            <element signature="e#321#322#0" expanded="true" />
           </folding>
         </state>
       </provider>
