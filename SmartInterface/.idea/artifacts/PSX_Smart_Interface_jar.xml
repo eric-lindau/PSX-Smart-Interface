@@ -2,10 +2,13 @@
   <artifact type="jar" name="PSX Smart Interface:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/PSX_Smart_Interface_jar</output-path>
     <root id="archive" name="PSX Smart Interface.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/META-INF/MANIFEST.MF" />
+      </element>
       <element id="module-output" name="PSX Smart Interface" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jinput/jinput-platform/2.0.7/jinput-platform-2.0.7-natives-linux.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jinput/jinput/2.0.7/jinput-2.0.7.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jinput/jinput-platform/2.0.7/jinput-platform-2.0.7-natives-osx.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jinput/jinput/2.0.7/jinput-2.0.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jinput/jinput-platform/2.0.7/jinput-platform-2.0.7-natives-linux.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jinput/jinput-platform/2.0.7/jinput-platform-2.0.7-natives-windows.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jutils/jutils/1.0.0/jutils-1.0.0.jar" path-in-jar="/" />
     </root>

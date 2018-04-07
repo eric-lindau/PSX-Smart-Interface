@@ -9,8 +9,8 @@
         <module name="PSX Smart Interface" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.6">
-      <module name="PSX Smart Interface" target="1.5" />
+    <bytecodeTargetLevel target="1.8">
+      <module name="PSX Smart Interface" target="" />
     </bytecodeTargetLevel>
   </component>
 </project>
