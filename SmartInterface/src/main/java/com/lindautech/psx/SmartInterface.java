@@ -1,7 +1,5 @@
 package com.lindautech.psx;
 
-import com.lindautech.psx.network.NetworkClient;
-import com.lindautech.psx.network.TCPClientFactory;
 import net.java.games.input.ControllerEnvironment;
 import net.java.games.input.Controller;
 import net.java.games.input.Component;
@@ -25,11 +23,11 @@ import java.util.Arrays;
  * @author Eric Lindau
  * @version 1.2.6
  */
-class SmartInterfaceOld {
+class SmartInterface {
 
     private static boolean running = true;
     private static boolean minimizeOnStart;
-    private static NetworkClient client;
+    private static Client client;
 
     private static ArrayList<String> ignoredControllers = new ArrayList();
 
@@ -136,7 +134,7 @@ class SmartInterfaceOld {
     }
 
     /**
-     * Polls controllers, updates labels, and sends network to update the PSX server.
+     * Polls controllers, updates labels, and sends data to update the PSX server.
      */
     private static void update() {
         try {
@@ -169,7 +167,7 @@ class SmartInterfaceOld {
                 fltControlsVal.setStr("Qs120=" + Integer.toString(elevator) + ";" +
                         Integer.toString(aileron) + ";" + Integer.toString(rudder));
                 if (fltControlsVal.hasChanged())
-                    client.sendData(fltControlsVal.getStr());
+                    client.send(fltControlsVal.getStr());
             }
 
             if (tillerCpt != null || tillerFo != null) {
@@ -177,7 +175,7 @@ class SmartInterfaceOld {
                 tiller = Utils.deadzone(tiller, 50);
                 tillersVal.setStr("Qh426=" + Integer.toString(tiller));
                 if (tillersVal.hasChanged())
-                    client.sendData(tillersVal.getStr());
+                    client.send(tillersVal.getStr());
             }
 
             if (toeBrakeLCpt != null || toeBrakeRCpt != null ||
@@ -188,7 +186,7 @@ class SmartInterfaceOld {
                 toeBrakeR = Utils.deadzone(toeBrakeR, 100);
                 toeBrakesVal.setStr("Qs357=" + Integer.toString(toeBrakeL) + ";" + Integer.toString(toeBrakeR));
                 if (toeBrakesVal.hasChanged())
-                    client.sendData(toeBrakesVal.getStr());
+                    client.send(toeBrakesVal.getStr());
             }
             //* END Update analog values
 
@@ -201,7 +199,7 @@ class SmartInterfaceOld {
                 else
                     stabTrimCptVal.setStr("Qh398=0");
                 if (stabTrimCptVal.hasChanged())
-                    client.sendData(stabTrimCptVal.getStr());
+                    client.send(stabTrimCptVal.getStr());
             }
 
             if (stabTrimUpFo != null || stabTrimDnFo != null) {
@@ -212,7 +210,7 @@ class SmartInterfaceOld {
                 else
                     stabTrimFoVal.setStr("Qh399=0");
                 if (stabTrimFoVal.hasChanged())
-                    client.sendData(stabTrimFoVal.getStr());
+                    client.send(stabTrimFoVal.getStr());
             }
 
             if (apDiscCapt != null) {
@@ -221,7 +219,7 @@ class SmartInterfaceOld {
                 else
                     apDiscCaptVal.setStr("Qh400=0");
                 if (apDiscCaptVal.hasChanged())
-                    client.sendData(apDiscCaptVal.getStr());
+                    client.send(apDiscCaptVal.getStr());
             }
 
             if (apDiscFo != null) {
@@ -230,7 +228,7 @@ class SmartInterfaceOld {
                 else
                     apDiscFoVal.setStr("Qh400=0");
                 if (apDiscFoVal.hasChanged())
-                    client.sendData(apDiscFoVal.getStr());
+                    client.send(apDiscFoVal.getStr());
             }
 
             if (lcpPttCpt != null) {
@@ -239,7 +237,7 @@ class SmartInterfaceOld {
                 else
                     lcpPttCptVal.setStr("Qh82=0");
                 if (lcpPttCptVal.hasChanged())
-                    client.sendData(lcpPttCptVal.getStr());
+                    client.send(lcpPttCptVal.getStr());
             }
 
             if (lcpPttFo != null) {
@@ -248,7 +246,7 @@ class SmartInterfaceOld {
                 else
                     lcpPttFoVal.setStr("Qh93=0");
                 if (lcpPttFoVal.hasChanged())
-                    client.sendData(lcpPttFoVal.getStr());
+                    client.send(lcpPttFoVal.getStr());
             }
             //* END Update misc buttons
 
@@ -325,7 +323,7 @@ class SmartInterfaceOld {
                 String rdrPanelString = new String(rdrStrCpt) + new String(rdrStrMisc) + new String(rdrStrFo);
                 rdrPanelVal.setStr("Qs104=" + rdrPanelString);
                 if (rdrPanelVal.hasChanged())
-                    client.sendData(rdrPanelVal.getStr());
+                    client.send(rdrPanelVal.getStr());
             }
 
             // Rotaries
@@ -337,7 +335,7 @@ class SmartInterfaceOld {
                 rdrPanelRotVal.setStr("Qs105=" + Integer.toString(tiltCptInt) + ";" + Integer.toString(gainCptInt) +
                         ";" + Integer.toString(tiltFoInt) + ";" + Integer.toString(gainFoInt));
                 if (rdrPanelRotVal.hasChanged())
-                    client.sendData(rdrPanelRotVal.getStr());
+                    client.send(rdrPanelRotVal.getStr());
             }
             //* END Update radar panel buttons/rotaries
 
@@ -346,77 +344,77 @@ class SmartInterfaceOld {
                 int jettRemainInt = Utils.getAnalogValue(jettRemain, 62830, false);
                 jettRemainVal.setStr("Qh273=" + Integer.toString(jettRemainInt));
                 if (jettRemainVal.hasChanged())
-                    client.sendData(jettRemainVal.getStr());
+                    client.send(jettRemainVal.getStr());
             }
 
             if (ldgAltTurn != null) {
                 int ldgAltTurnInt = Utils.getAnalogValue(ldgAltTurn, 62830, false);
                 ldgAltTurnVal.setStr("Qh297=" + Integer.toString(ldgAltTurnInt));
                 if (ldgAltTurnVal.hasChanged())
-                    client.sendData(ldgAltTurnVal.getStr());
+                    client.send(ldgAltTurnVal.getStr());
             }
 
             if (lcpOutbdCpt != null) {
                 int lcpOutbdCptInt = Utils.getAnalogValue(lcpOutbdCpt, 4713, false);
                 lcpOutbdCptVal.setStr("Qh87=" + Integer.toString(lcpOutbdCptInt));
                 if (lcpOutbdCptVal.hasChanged())
-                    client.sendData(lcpOutbdCptVal.getStr());
+                    client.send(lcpOutbdCptVal.getStr());
             }
 
             if (lcpNdCpt != null) {
                 int lcpNdCptInt = Utils.getAnalogValue(lcpNdCpt, 4713, false);
                 lcpNdCptVal.setStr("Qh89=" + Integer.toString(lcpNdCptInt));
                 if (lcpNdCptVal.hasChanged())
-                    client.sendData(lcpNdCptVal.getStr());
+                    client.send(lcpNdCptVal.getStr());
             }
 
             if (lcpOutbdFo != null) {
                 int lcpOutbdFoInt = Utils.getAnalogValue(lcpOutbdFo, 4713, false);
                 lcpOutbdFoVal.setStr("Qh98=" + Integer.toString(lcpOutbdFoInt));
                 if (lcpOutbdFoVal.hasChanged())
-                    client.sendData(lcpOutbdFoVal.getStr());
+                    client.send(lcpOutbdFoVal.getStr());
             }
 
             if (lcpNdFo != null) {
                 int lcpNdFoInt = Utils.getAnalogValue(lcpNdFo, 4713, false);
                 lcpNdFoVal.setStr("Qh100=" + Integer.toString(lcpNdFoInt));
                 if (lcpNdFoVal.hasChanged())
-                    client.sendData(lcpNdFoVal.getStr());
+                    client.send(lcpNdFoVal.getStr());
             }
 
             if (lcpWxrCpt != null) {
                 int lcpWxrCptInt = Utils.getAnalogValue(lcpWxrCpt, 4713, false);
                 lcpWxrCptVal.setStr("Qh88=" + Integer.toString(lcpWxrCptInt));
                 if (lcpWxrCptVal.hasChanged())
-                    client.sendData(lcpWxrCptVal.getStr());
+                    client.send(lcpWxrCptVal.getStr());
             }
 
             if (lcpWxrFo != null) {
                 int lcpWxrFoInt = Utils.getAnalogValue(lcpWxrFo, 4713, false);
                 lcpWxrFoVal.setStr("Qh99=" + Integer.toString(lcpWxrFoInt));
                 if (lcpWxrFoVal.hasChanged())
-                    client.sendData(lcpWxrFoVal.getStr());
+                    client.send(lcpWxrFoVal.getStr());
             }
 
             if (eicasBrtUpr != null) {
                 int eicasBrtUprInt = Utils.getAnalogValue(eicasBrtUpr, 4713, false);
                 eicasBrtUprVal.setStr("Qh139=" + Integer.toString(eicasBrtUprInt));
                 if (eicasBrtUprVal.hasChanged())
-                    client.sendData(eicasBrtUprVal.getStr());
+                    client.send(eicasBrtUprVal.getStr());
             }
 
             if (eicasBrtLwrInner != null) {
                 int eicasBrtLwrInnerInt = Utils.getAnalogValue(eicasBrtLwrInner, 4713, false);
                 eicasBrtLwrInnerVal.setStr("Qh140=" + Integer.toString(eicasBrtLwrInnerInt));
                 if (eicasBrtLwrInnerVal.hasChanged())
-                    client.sendData(eicasBrtLwrInnerVal.getStr());
+                    client.send(eicasBrtLwrInnerVal.getStr());
             }
 
             if (eicasBrtLwrOuter != null) {
                 int eicasBrtLwrOuterInt = Utils.getAnalogValue(eicasBrtLwrOuter, 4713, false);
                 eicasBrtLwrOuterVal.setStr("Qh141=" + Integer.toString(eicasBrtLwrOuterInt));
                 if (eicasBrtLwrOuterVal.hasChanged())
-                    client.sendData(eicasBrtLwrOuterVal.getStr());
+                    client.send(eicasBrtLwrOuterVal.getStr());
             }
             //* END Misc rotaries
 
@@ -801,7 +799,7 @@ class SmartInterfaceOld {
         // 569 used to offset width of bar itself
         scrollPane.setPreferredSize(new Dimension(800, 569));
 
-        JFrame frame = new JFrame("PSX SmartInterfaceOld v1.2.6");
+        JFrame frame = new JFrame("PSX SmartInterface v1.2.6");
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.getContentPane().add(scrollPane);
@@ -907,7 +905,8 @@ class SmartInterfaceOld {
             String host = addr[0];
             String port = addr[1];
 
-            client = new TCPClientFactory().getClient(host, Integer.parseInt(port));
+            client = new Client(host, Integer.parseInt(port));
+            client.start();
             //* END IP/port config
 
             //* START Minimize UI config
@@ -992,8 +991,7 @@ class SmartInterfaceOld {
         }
         output.close();
 
-        // TODO: Surround w/ Try/Finally instead of throwing IOException
-        client.close();
+        client.destroyConnection();
         System.exit(0);
     }
 
