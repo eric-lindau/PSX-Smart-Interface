@@ -6,11 +6,11 @@
         <element id="file-copy" path="$PROJECT_DIR$/src/main/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="PSX Smart Interface" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jinput/jinput-platform/2.0.7/jinput-platform-2.0.7-natives-osx.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jinput/jinput/2.0.7/jinput-2.0.7.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jinput/jinput-platform/2.0.7/jinput-platform-2.0.7-natives-linux.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jinput/jinput-platform/2.0.7/jinput-platform-2.0.7-natives-osx.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jinput/jinput-platform/2.0.7/jinput-platform-2.0.7-natives-windows.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jutils/jutils/1.0.0/jutils-1.0.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/jinput/jinput-platform/2.0.7/jinput-platform-2.0.7-natives-linux.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
