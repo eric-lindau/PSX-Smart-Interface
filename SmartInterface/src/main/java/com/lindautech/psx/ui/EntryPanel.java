@@ -2,10 +2,25 @@ package com.lindautech.psx.ui;
 
 import javax.swing.*;
 
-public class EntryPanel extends JPanel {
+public abstract class EntryPanel extends JPanel {
+  private JLabel nameLabel;
   private JComboBox optionComboBox;
+  private JLabel valueLabel;
+  private final int id;
 
-  public JComboBox getOptionComboBox() {
+  EntryPanel(String name, int id) {
+    nameLabel = new JLabel(name);
+    optionComboBox = new JComboBox();
+    valueLabel = new JLabel();
+    this.id = id;
+  }
+
+  JComboBox getOptionComboBox() {
     return optionComboBox;
+  }
+
+  @Override
+  public int hashCode() {
+    return id;
   }
 }

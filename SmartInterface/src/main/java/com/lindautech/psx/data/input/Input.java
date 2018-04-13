@@ -9,7 +9,8 @@ import java.util.ArrayList;
  *
  * <p>Only children of this class should be instantiated.
  */
-abstract class Input implements DataSource {
+// TODO: Remove refreshing/listeners - they should be a part of Value classes.
+abstract class Input {
   private ArrayList<UpdateListener> listeners;
   Component component;
   private int value;
@@ -17,26 +18,6 @@ abstract class Input implements DataSource {
   Input(Component component) {
     listeners = new ArrayList<UpdateListener>();
     this.component = component;
-  }
-
-  @Override
-  public void refresh() {
-    int presentValue = pollData();
-    if (value != presentValue) {
-      value = presentValue;
-      updateListeners();
-    }
-  }
-
-  @Override
-  public void addListener(UpdateListener listener) {
-    listeners.add(listener);
-  }
-
-  private void updateListeners() {
-    for (UpdateListener listener : listeners) {
-      listener.update();
-    }
   }
 
   abstract int pollData();
