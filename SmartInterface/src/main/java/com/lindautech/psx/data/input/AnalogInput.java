@@ -27,4 +27,9 @@ public class AnalogInput extends Input {
   public void setInverted(boolean isInverted) {
     this.isInverted = isInverted;
   }
+
+  @Override
+  public String toString() {
+    return Integer.toString(pollData());
+  }
 }

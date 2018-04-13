@@ -7,8 +7,15 @@ public class DigitalInput extends Input {
     super(component);
   }
 
+  // TODO: Consider changing this to boolean, removing abstraction
+  // TODO: .. (Value should consider if multiple buttons are pushed and act accordingly)
   @Override
   public int pollData() {
-    return 0;
+    return component.getPollData() > 0 ? 1 : 0;
+  }
+
+  @Override
+  public String toString() {
+    return pollData() == 1 ? "Pushed" : "";
   }
 }

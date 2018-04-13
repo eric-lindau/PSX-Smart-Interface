@@ -1,26 +1,51 @@
 package com.lindautech.psx.ui;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ItemListener;
 
-public abstract class EntryPanel extends JPanel {
+class EntryPanel extends JPanel implements Entry {
   private JLabel nameLabel;
-  private JComboBox optionComboBox;
   private JLabel valueLabel;
-  private final int id;
+  private JCheckBox invertedCheckBox;
+  private JComboBox optionComboBox;
 
-  EntryPanel(String name, int id) {
+  EntryPanel(String name, boolean invertible) {
+    setLayout(new GridLayout(1, 4, 0, 0));
     nameLabel = new JLabel(name);
-    optionComboBox = new JComboBox();
+    if (invertible) {
+      invertedCheckBox = new JCheckBox("Inverted");
+    }
     valueLabel = new JLabel();
-    this.id = id;
+    optionComboBox = new JComboBox();
+    addComponents();
   }
 
-  JComboBox getOptionComboBox() {
-    return optionComboBox;
+  private void addComponents() {
+    add(nameLabel);
+    if (invertedCheckBox != null) {
+      add(invertedCheckBox);
+    } else {
+      add(new JLabel(""));
+    }
+    add(valueLabel);
+    add(optionComboBox);
+  }
+
+  void addInvertedListener(ItemListener listener) {
+    invertedCheckBox.addItemListener(listener);
+  }
+
+  void addOptionListener(ItemListener listener) {
+    optionComboBox.addItemListener(listener);
+  }
+
+  void setOption(String option) {
+    optionComboBox.setSelectedItem(option);
   }
 
   @Override
-  public int hashCode() {
-    return id;
+  public void setValueText(String text) {
+    valueLabel.setText(text);
   }
 }
