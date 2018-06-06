@@ -18,7 +18,6 @@ public class AnalogInput extends Input {
     this.multiplier = multiplier;
   }
 
-  // TODO: Add toString / method for setting text in UI
   @Override
   public int pollData() {
     return Math.round(component.getPollData() * multiplier) * (isInverted ? -1 : 1);
@@ -26,10 +25,5 @@ public class AnalogInput extends Input {
 
   public void setInverted(boolean isInverted) {
     this.isInverted = isInverted;
-  }
-
-  @Override
-  public String toString() {
-    return Integer.toString(pollData());
   }
 }

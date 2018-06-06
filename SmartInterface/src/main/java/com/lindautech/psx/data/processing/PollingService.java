@@ -1,24 +1,20 @@
 package com.lindautech.psx.data.processing;
 
+import com.lindautech.psx.network.NetworkClient;
+
 /**
  * A service that polls data sources at a controlled rate on a distinct thread.
  */
-public class PollingService extends Thread {
-  /** The rate in Hz at which the polling service will poll sources for data. */
-  private static final int POLL_RATE = 20; // Should preferably be a divisor of 1000
+// TODO: Add support for checking if values have changed?
+// TODO: *** INSTEAD: Let network (Value) portion handle checking changed values in order to avoid unnecessary checks
+public class PollingService {
+  // TODO: Here, use a NetworkClient to send data over wire, while in ui package, simply update based
+  // TODO: ... on components
 
   /** Constructs a new polling service with no data sources. */
-  public PollingService() {
+  public PollingService(Value[] values, NetworkClient client) {
+
   }
 
-  @Override
-  // TODO: Constantly poll, schedule every (1000 / POLL_RATE) to update network
-  public void run() {
-    try {
-      sleep(1000 / POLL_RATE);
-    } catch (InterruptedException e) {
-      // TODO: Catch this properly
-      throw new RuntimeException(e);
-    }
-  }
+  // TODO: Constantly poll, but only update Values/network every (1000 / POLL_RATE) ms,
 }

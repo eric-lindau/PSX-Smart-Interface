@@ -9,14 +9,11 @@ import java.util.ArrayList;
  *
  * <p>Only children of this class should be instantiated.
  */
-// TODO: Remove refreshing/listeners - they should be a part of Value classes.
-public abstract class Input {
-  private ArrayList<UpdateListener> listeners;
+abstract class Input {
   Component component;
   private int value;
 
   Input(Component component) {
-    listeners = new ArrayList<UpdateListener>();
     this.component = component;
   }
 
