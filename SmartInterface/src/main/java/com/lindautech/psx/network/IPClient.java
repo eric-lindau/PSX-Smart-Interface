@@ -1,5 +1,7 @@
 package com.lindautech.psx.network;
 
+import com.sun.istack.internal.Nullable;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -56,6 +58,20 @@ public class IPClient extends Thread implements NetworkClient {
       dataWriter.close();
     } catch (IOException e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  @Nullable
+  public static NetworkClient getTCPClient(String address, int port) {
+    try {
+      Socket socket = new Socket(address, port);
+      BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      PrintWriter dataWriter = new PrintWriter(socket.getOutputStream());
+      IPClient client = new IPClient(socket, buffer, dataWriter);
+      client.start();
+      return client;
+    } catch(IOException e) {
+      return null;
     }
   }
 }
