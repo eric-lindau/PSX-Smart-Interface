@@ -2,23 +2,22 @@ package com.lindautech.psx.data.input;
 
 import net.java.games.input.Component;
 
-public class AnalogInput extends Input {
+public class AnalogInput extends AbstractInput {
   private boolean isInverted;
   private int multiplier;
 
   public AnalogInput(Component component) {
-    super(component);
+    super(component, 0);
     isInverted = false;
     multiplier = 999;
   }
 
   public AnalogInput(Component component, int multiplier) {
-    super(component);
+    super(component, 0);
     isInverted = false;
     this.multiplier = multiplier;
   }
 
-  @Override
   public int pollData() {
     return Math.round(component.getPollData() * multiplier) * (isInverted ? -1 : 1);
   }

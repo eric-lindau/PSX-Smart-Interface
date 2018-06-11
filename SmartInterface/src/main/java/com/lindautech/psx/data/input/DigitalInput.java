@@ -2,9 +2,10 @@ package com.lindautech.psx.data.input;
 
 import net.java.games.input.Component;
 
-public class DigitalInput extends Input {
+public class DigitalInput extends AbstractInput {
+  // TODO: Fix constructor
   public DigitalInput(Component component) {
-    super(component);
+    super(component, 0);
   }
 
   // TODO: Consider changing this to boolean, removing abstraction

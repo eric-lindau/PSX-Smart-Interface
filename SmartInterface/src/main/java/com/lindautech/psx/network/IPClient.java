@@ -23,7 +23,7 @@ public class IPClient extends Thread implements NetworkClient {
    * @param inputBuffer the data buffer associated with the socket for reading responses.
    * @param dataWriter the data writer associated with the socket for sending data.
    */
-  public IPClient(Closeable socket, BufferedReader inputBuffer, PrintWriter dataWriter) {
+  IPClient(Closeable socket, BufferedReader inputBuffer, PrintWriter dataWriter) {
     reading = true;
     this.socket = socket;
     this.inputBuffer = inputBuffer;
@@ -56,20 +56,6 @@ public class IPClient extends Thread implements NetworkClient {
       dataWriter.close();
     } catch (IOException e) {
       throw new RuntimeException(e);
-    }
-  }
-
-  public static IPClient getTCPClient(String address, int port) {
-    try {
-      Socket socket = new Socket(address, port);
-      BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      PrintWriter dataWriter = new PrintWriter(socket.getOutputStream());
-      IPClient client = new IPClient(socket, buffer, dataWriter);
-      client.start();
-      return client;
-    } catch(IOException e) {
-      // TODO: Document this
-      return null;
     }
   }
 }
