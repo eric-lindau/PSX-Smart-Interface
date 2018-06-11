@@ -1,5 +1,7 @@
 package com.lindautech.psx.ui;
 
+import com.lindautech.psx.data.input.AnalogInput;
+import com.lindautech.psx.data.input.DigitalInput;
 import com.lindautech.psx.data.input.Input;
 import com.lindautech.psx.data.input.InputOption;
 import net.java.games.input.Component;
@@ -34,10 +36,25 @@ public class Manager implements Runnable {
     updateEntries();
   }
 
+  /** Updates the presented value for each UI entry. */
   private void updateEntries() {
     for (Map.Entry<Input, EntryPanel> entry : inputs.entrySet()) {
+      Input key = entry.getKey();
+      EntryPanel value = entry.getValue();
 
-      entry.getValue().setValueText(Integer.toString(entry.getKey().pollData()));
+      // If the input is known to be analog
+      if (key instanceof AnalogInput) {
+        // Use the literal numeric value
+        int pollData = ((AnalogInput) key).pollData();
+        value.setValueText(Integer.toString(pollData));
+      // Otherwise, if it is known to be digital
+      } else {
+        if (((DigitalInput) key).isPushed()) {
+          value.setValueText("Pushed");
+        } else {
+          value.setValueText("");
+        }
+      }
     }
   }
 

@@ -1,10 +1,24 @@
 package com.lindautech.psx.data.input;
 
-/**
- * An object that serves as a source of data from a physical input, like an embedded controller.
- *
- * <p>Only children of this class should be instantiated.
- */
-public interface Input {
-  int pollData();
+import net.java.games.input.Component;
+
+public abstract class Input {
+  Component component;
+  int number;
+  private int value;
+
+  Input(Component component, int number) {
+    this.component = component;
+    this.number = number;
+  }
+
+  @Override
+  public int hashCode() {
+    return number;
+  }
+
+  @Override
+  public String toString() {
+    return Integer.toString(number) + ". " + component.getName();
+  }
 }

@@ -25,7 +25,7 @@ public class IPClient extends Thread implements NetworkClient {
    * @param inputBuffer the data buffer associated with the socket for reading responses.
    * @param dataWriter the data writer associated with the socket for sending data.
    */
-  IPClient(Closeable socket, BufferedReader inputBuffer, PrintWriter dataWriter) {
+  private IPClient(Closeable socket, BufferedReader inputBuffer, PrintWriter dataWriter) {
     reading = true;
     this.socket = socket;
     this.inputBuffer = inputBuffer;
