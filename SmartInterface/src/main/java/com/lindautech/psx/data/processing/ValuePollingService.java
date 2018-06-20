@@ -7,12 +7,12 @@ import com.lindautech.psx.network.NetworkClient;
  */
 // TODO: Add support for checking if values have changed?
 // TODO: *** INSTEAD: Let network (Value) portion handle checking changed values in order to avoid unnecessary checks
-public class PollingService {
+public class ValuePollingService {
   // TODO: Here, use a NetworkClient to send data over wire, while in ui package, simply update based
   // TODO: ... on components
 
   /** Constructs a new polling service with no data sources. */
-  public PollingService(Value[] values, NetworkClient client) {
+  public ValuePollingService(Value[] values, NetworkClient client) {
 
   }
 
