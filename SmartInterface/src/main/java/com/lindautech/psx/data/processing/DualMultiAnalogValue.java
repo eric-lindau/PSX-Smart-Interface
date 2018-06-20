@@ -1,4 +1,12 @@
 package com.lindautech.psx.data.processing;
 
-public class DualMultiAnalogValue implements Value {
+class DualMultiAnalogValue extends AbstractValue {
+  DualMultiAnalogValue(String name) {
+    super(name);
+  }
+
+  @Override
+  public String getCurrentData() {
+    return "";
+  }
 }

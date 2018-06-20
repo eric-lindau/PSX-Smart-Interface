@@ -6,7 +6,6 @@ import com.lindautech.psx.data.input.Input;
 import com.lindautech.psx.data.input.InputOption;
 import net.java.games.input.Component;
 
-import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.HashMap;
@@ -19,7 +18,6 @@ public class Manager implements Runnable {
   // Manages combo boxes
   private HashMap<InputOption, EntryPanel> activeInputs;
   private PrimaryPanel primaryPanel;
-  private int currentId;
 
   public Manager(PrimaryPanel primaryPanel, InputOption[] options) {
     activeInputs = new HashMap<InputOption, EntryPanel>();
@@ -27,12 +25,20 @@ public class Manager implements Runnable {
       activeInputs.put(option, null);
     }
     this.primaryPanel = primaryPanel;
-    currentId = 0;
   }
 
   @Override
   public void run() {
     updateEntries();
+  }
+
+  /** Registers a new component. */
+  public void registerComponent(Component component) {
+    if (component.isAnalog()) {
+      primaryPanel.add(registerAnalogEntry(component));
+    } else {
+      primaryPanel.add(registerDigitalEntry(component));
+    }
   }
 
   /** Updates the presented value for each UI entry. */
@@ -46,7 +52,7 @@ public class Manager implements Runnable {
         // Use the literal numeric value
         int pollData = ((AnalogInput) key).pollData();
         value.setValueText(Integer.toString(pollData));
-      // Otherwise, if it is known to be digital
+        // Otherwise, if it is known to be digital
       } else {
         if (((DigitalInput) key).isPushed()) {
           value.setValueText("Pushed");
@@ -54,15 +60,6 @@ public class Manager implements Runnable {
           value.setValueText("");
         }
       }
-    }
-  }
-
-  /** Registers a new component. */
-  public void registerComponent(Component component) {
-    if (component.isAnalog()) {
-      primaryPanel.add(registerAnalogEntry(component));
-    } else {
-      primaryPanel.add(registerDigitalEntry(component));
     }
   }
 

@@ -1,4 +1,12 @@
 package com.lindautech.psx.data.processing;
 
-public class RotaryValue {
+class RotaryValue extends AbstractValue {
+  RotaryValue(String name) {
+    super(name);
+  }
+
+  @Override
+  public String getCurrentData() {
+    return "";
+  }
 }

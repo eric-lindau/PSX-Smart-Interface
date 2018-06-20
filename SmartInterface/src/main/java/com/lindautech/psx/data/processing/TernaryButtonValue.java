@@ -1,4 +1,12 @@
 package com.lindautech.psx.data.processing;
 
-public class TernaryButtonValue implements Value {
+class TernaryButtonValue extends AbstractValue {
+  TernaryButtonValue(String name) {
+    super(name);
+  }
+
+  @Override
+  public String getCurrentData() {
+    return "";
+  }
 }
