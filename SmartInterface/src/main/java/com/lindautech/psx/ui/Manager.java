@@ -11,9 +11,7 @@ import java.awt.event.ItemListener;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Rename
-// ** TODO: Turn this into a factory! Take in a Component, add Listeners, initialize Inputs, etc
-// .. TODO: ... as needed, then return an Entry (intf) object (only Entry.update needed externally)
+/** Creates and links UI components to their respective data models. */
 public class Manager implements Runnable {
   // Model - View relationship is made here
   private HashMap<Input, EntryPanel> inputs;
