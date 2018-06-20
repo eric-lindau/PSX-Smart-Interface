@@ -6,6 +6,7 @@ import com.lindautech.psx.data.input.Input;
 import com.lindautech.psx.data.input.InputOption;
 import net.java.games.input.Component;
 
+import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.HashMap;
