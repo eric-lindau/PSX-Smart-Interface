@@ -8,7 +8,7 @@ public class DigitalInput extends Input {
     super(component, 0);
   }
 
-  public boolean isPushed() {
+  public boolean isActive() {
     return component.getPollData() > 0;
   }
 }

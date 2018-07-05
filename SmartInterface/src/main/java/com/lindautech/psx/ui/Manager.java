@@ -54,7 +54,7 @@ public class Manager implements Runnable {
         value.setValueText(Integer.toString(pollData));
         // Otherwise, if it is known to be digital
       } else {
-        if (((DigitalInput) key).isPushed()) {
+        if (((DigitalInput) key).isActive()) {
           value.setValueText("Pushed");
         } else {
           value.setValueText("");

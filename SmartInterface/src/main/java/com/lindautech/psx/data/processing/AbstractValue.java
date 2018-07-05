@@ -9,27 +9,28 @@ abstract class AbstractValue implements Value {
     this.name = name;
   }
 
-  int[] getCurrentData() {
-    return currentData;
-  }
-
+  // TODO: Do something when inner if passes (boolean or separate check?)
   void setCurrentData(int[] newData) {
-    boolean shouldUpdateListeners = false;
-
     if (newData.length == currentData.length) {
       for (int i = 0; i < newData.length; i++) {
         if (newData[i] != currentData[i]) {
           currentData[i] = newData[i];
-          shouldUpdateListeners = true;
         }
       }
     } else {
       // TODO: Replace with custom exception
       throw new RuntimeException();
     }
+  }
 
-    if (shouldUpdateListeners) {
-      // TODO: Update listeners
+  void setCurrentData(int newData) {
+    if (currentData.length == 1) {
+      if (currentData[0] != newData) {
+        currentData[0] = newData;
+      }
+    } else {
+      // TODO: Replace with custom exception
+      throw new RuntimeException();
     }
   }
 

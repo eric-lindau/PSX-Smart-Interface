@@ -2,19 +2,19 @@ package com.lindautech.psx.data.processing;
 
 import com.lindautech.psx.data.input.DigitalInput;
 
-class ButtonValue extends AbstractValue {
+class DigitalValue extends AbstractValue {
   private DigitalInput button;
 
-  ButtonValue(String name) {
+  DigitalValue(String name) {
     super(name);
   }
 
   @Override
   public void update() {
-    if (button.isPushed()) {
-      setCurrentData(new int[]{1});
+    if (button.isActive()) {
+      setCurrentData(1);
     } else {
-      setCurrentData(new int[]{0});
+      setCurrentData(0);
     }
   }
 
