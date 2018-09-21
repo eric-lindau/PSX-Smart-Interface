@@ -1,6 +1,6 @@
 package com.lindautech.psx;
 
-import com.lindautech.psx.data.processing.ValuePollingService;
+import com.lindautech.psx.data.processing.PollingService;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -19,7 +19,7 @@ class SmartInterface {
   private static final int NETWORK_POLL_RATE = 20;
 
   public static void main(String[] args) {
-    ValuePollingService poller = new ValuePollingService(null, null);
+    PollingService poller = new PollingService(null, null);
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     scheduler.scheduleAtFixedRate(poller, 0, 1000 / NETWORK_POLL_RATE,
         TimeUnit.MILLISECONDS);
