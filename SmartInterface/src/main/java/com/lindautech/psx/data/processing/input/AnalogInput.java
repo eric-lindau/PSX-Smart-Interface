@@ -1,10 +1,11 @@
-package com.lindautech.psx.data.input;
+package com.lindautech.psx.data.processing.input;
 
 import net.java.games.input.Component;
 
-public class AnalogInput extends Input {
+public class AnalogInput extends AbstractInput {
   private boolean isInverted;
 
+  // TODO: Necessary to specify range so that 0.0->1.0 value can be properly scaled
   public AnalogInput(Component component) {
     super(component, 0);
     isInverted = false;
@@ -20,5 +21,10 @@ public class AnalogInput extends Input {
 
   public void setInverted(boolean isInverted) {
     this.isInverted = isInverted;
+  }
+
+  @Override
+  public Object processed() {
+    return null;
   }
 }

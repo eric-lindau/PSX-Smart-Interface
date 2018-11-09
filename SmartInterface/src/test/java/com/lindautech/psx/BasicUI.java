@@ -1,6 +1,6 @@
 package com.lindautech.psx;
 
-import com.lindautech.psx.data.input.InputOption;
+import com.lindautech.psx.data.processing.input.InputOption;
 import com.lindautech.psx.ui.Manager;
 import com.lindautech.psx.ui.PrimaryPanel;
 import org.junit.Test;

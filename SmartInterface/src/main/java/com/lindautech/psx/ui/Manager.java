@@ -1,9 +1,9 @@
 package com.lindautech.psx.ui;
 
-import com.lindautech.psx.data.input.AnalogInput;
-import com.lindautech.psx.data.input.DigitalInput;
-import com.lindautech.psx.data.input.Input;
-import com.lindautech.psx.data.input.InputOption;
+import com.lindautech.psx.data.processing.input.AbstractInput;
+import com.lindautech.psx.data.processing.input.AnalogInput;
+import com.lindautech.psx.data.processing.input.DigitalInput;
+import com.lindautech.psx.data.processing.input.InputOption;
 import net.java.games.input.Component;
 
 import java.awt.event.ItemEvent;
@@ -14,7 +14,7 @@ import java.util.Map;
 /** Creates and links UI components to their respective data models. */
 public class Manager implements Runnable {
   // Model - View relationship is made here
-  private HashMap<Input, EntryPanel> inputs;
+  private HashMap<AbstractInput, EntryPanel> inputs;
   // Manages combo boxes
   private HashMap<InputOption, EntryPanel> activeInputs;
   private PrimaryPanel primaryPanel;
@@ -43,8 +43,8 @@ public class Manager implements Runnable {
 
   /** Updates the presented value for each UI entry. */
   private void updateEntries() {
-    for (Map.Entry<Input, EntryPanel> entry : inputs.entrySet()) {
-      Input key = entry.getKey();
+    for (Map.Entry<AbstractInput, EntryPanel> entry : inputs.entrySet()) {
+      AbstractInput key = entry.getKey();
       EntryPanel value = entry.getValue();
 
       // If the input is known to be analog
@@ -70,7 +70,7 @@ public class Manager implements Runnable {
       @Override
       public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
-          // TODO: Invert Input
+          // TODO: Invert AbstractInput
           int i = 0;
         }
       }

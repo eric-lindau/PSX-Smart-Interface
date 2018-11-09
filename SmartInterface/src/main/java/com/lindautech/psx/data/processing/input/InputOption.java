@@ -1,4 +1,4 @@
-package com.lindautech.psx.data.input;
+package com.lindautech.psx.data.processing.input;
 
 public class InputOption {
   private String name;
