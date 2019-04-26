@@ -2,6 +2,8 @@
 [![Packagist](https://img.shields.io/badge/version-1.2.6-brightgreen.svg)](SmartInterface)
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](LICENSE.md)
 
+![](https://i.imgur.com/XqFml8h.jpg)
+
 This add-on for Aerowinx PSX provides a variety of features that are necessary for those using extensive flight simulator hardware:
 * It combines analog inputs, such as those of separated flight controls, in multi-pilot setups that are not mechanically linked.
 * It allows assignment of hardware components to controls in PSX, such as tillers & brakes, EICAS brightness dials, and weather radar buttons & rotaries, seamlessly integrating with PSX.
