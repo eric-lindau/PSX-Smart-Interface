@@ -2,9 +2,28 @@
 [![Packagist](https://img.shields.io/badge/version-1.2.6-brightgreen.svg)](SmartInterface)
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](LICENSE.md)
 
-![](https://i.imgur.com/XqFml8h.jpg)
+<p align="center">
+  <img src="https://i.imgur.com/XqFml8h.jpg" height="450" align="center">\
+</p>
+<p align="center"><i>a simulator using PSX Smart Interface</i></p>
 
-This add-on for Aerowinx PSX provides a variety of features that are necessary for those using extensive flight simulator hardware:
+Currently used in the following locations for interfacing hardware with existing flight simulator software:
+* Tokyo, Japan
+* Chengdu, China
+* Abu Dhabi, UAE
+* Bahrain
+* Frankfurt, Germany
+* Berlin, Germany
+* Brussels, Belgium
+* London, England
+* Fort Collins, USA
+* Las Vegas, USA
+* South America
+* Australia
+
+**NOTE:** Given the increased usage of this software, it is being deprecated and rewritten in a more modular and extensible fashion.
+
+Communicates with Aerowinx PSX over a network to provide a variety of necessary features for extensive flight simulator setups:
 * It combines analog inputs, such as those of separated flight controls, in multi-pilot setups that are not mechanically linked.
 * It allows assignment of hardware components to controls in PSX, such as tillers & brakes, EICAS brightness dials, and weather radar buttons & rotaries, seamlessly integrating with PSX.
 
